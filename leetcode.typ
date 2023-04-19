@@ -1,6 +1,9 @@
 #import "helpers.typ": *
 #import "reference.typ": *
 
+#outline()
+
+#counter(page).update(0)
 #set page(numbering: "1")
 #set heading(numbering: "0001")
 #show heading: it => {
@@ -8,9 +11,6 @@
   it
   v(1em)
 }
-
-#outline()
-#pagebreak()
 
 = Two Sum
 
@@ -32,7 +32,7 @@ You can return the answer in any order.
   (nums: range(1, 100, step: 3), target: 191),
 ))
 
-= Add Two Numbers
+= Add Two Numbers (N/A)
 
 = Longest Substring Without Repeating Characters
 
