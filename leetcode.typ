@@ -66,6 +66,27 @@ The overall run time complexity should be $cal(O)(log (m+n))$.
   median-of-two-sorted-arrays-ref, (
     (nums1: (1, 3), nums2: (2,)),
     (nums1: (1, 2), nums2: (3, 4)),
+    (nums1: range(100, step: 3), nums2: range(200, step: 6)),
   )
 )
 
+= Longest Palindromic Substring
+
+Given a string `s`, return the *longest palindromic substring* in `s`.
+
+#let longest-palindromic-substring(s) = {
+  // Solve the problem here
+}
+
+#testcases(
+  longest-palindromic-substring,
+  longest-palindromic-substring-ref, (
+    (s: "babad"),
+    (s: "cbbd"),
+    (s: "abcdefgfedcbb"),
+    (s: "accc"),
+    (s: "a"),
+    (s: "aa"),
+    (s: "asasfsafdaasfsaasa")
+  )
+)
