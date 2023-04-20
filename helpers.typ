@@ -45,10 +45,29 @@
 
 #let display(value) = {
   if type(value) == "array" {
+    // display arrays
     [[#value.map(display).join(", ")]]
+  } else if type(value) == "dictionary" and value.type == "linkedlist" {
+    // display linked lists
+    let ret = ()
+    let now = value
+    while now.next != none {
+      ret.push(display(now.val))
+      now = now.next
+    }
+    [#ret.join(" -> ")]
   } else {
     repr(value)
   }
+}
+
+// The implementation is not efficient since we can only do clones
+#let linkedlist(arr) = {
+  let now = (val: none, next: none, type: "linkedlist")
+  for i in range(arr.len()) {
+    now = (val: arr.at(arr.len() - 1 - i), next: now, type: "linkedlist")
+  }
+  now
 }
 
 #let testcases(solution, reference, inputs) = {
