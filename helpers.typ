@@ -87,7 +87,7 @@
 
   table(
     align: center,
-    columns: (..fill(1fr, inputs.first().len()), auto, auto),
+    columns: fill(1fr, inputs.first().len() + 2),
     ..cells,
   )
 }
