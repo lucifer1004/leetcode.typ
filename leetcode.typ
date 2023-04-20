@@ -1,5 +1,11 @@
 #import "helpers.typ": *
 
+#align(center)[
+  #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)] 
+  #h(12pt)
+  #text(48pt)[*Leetcode.typ*]
+]
+#v(2em)
 #outline()
 
 #counter(page).update(0)
