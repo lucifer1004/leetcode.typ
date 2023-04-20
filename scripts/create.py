@@ -22,10 +22,5 @@ if __name__ == '__main__':
     with open(pathlib.Path('solutions', f's{args.id:04}.typ'), 'w') as f:
         f.write('#import "../helpers.typ": *\n')
 
-    f = open('leetcode.typ', 'r')
-    lines = f.readlines()[:-1]
-    f.close()
-
-    with open('leetcode.typ', 'w') as f:
-        f.write(''.join(lines))
+    with open('leetcode.typ', 'a') as f:
         f.write(f'#include "problems/p{args.id:04}.typ"\n')
