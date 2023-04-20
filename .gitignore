@@ -1,2 +1,4 @@
 *.pdf
 /draft.typ
+
+!/build/leetcode.pdf
