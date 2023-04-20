@@ -38,8 +38,7 @@
 }
 
 #let longest-substring-without-repeating-charaters-ref(s) = {
-  let s = s.split("")
-  let s = s.slice(1, s.len() - 1)
+  let s = s.clusters()
   let n = s.len()
   let ans = 1
   let l = 0
@@ -98,8 +97,7 @@
 }
 
 #let longest-palindromic-substring-ref(s) = {
-  let s = s.split("")
-  let s = s.slice(1, s.len() - 1)
+  let s = s.clusters()
   let t = ()
   for c in s {
     t.push("$")
@@ -147,8 +145,7 @@
     return s
   }
 
-  let s = s.split("")
-  let s = s.slice(1, s.len() - 1)
+  let s = s.clusters()
   let n = s.len()
   let ret = ()
   let cycleLen = 2 * numRows - 2
@@ -187,8 +184,7 @@
 #let string-to-integer-ref(s) = {
   let numerics = "0123456789"
   let d = ("0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9)
-  let s = s.split("")
-  let s = s.slice(1, s.len() - 1)
+  let s = s.clusters()
   let n = s.len()
   let i = 0
   let sign = 1
@@ -239,10 +235,8 @@
 }
 
 #let regular-expression-matching-ref(s, p) = {
-  let s = s.split("")
-  let s = s.slice(1, s.len() - 1)
-  let p = p.split("")
-  let p = p.slice(1, p.len() - 1)
+  let s = s.clusters()
+  let p = p.clusters()
   let m = s.len()
   let n = p.len()
   let dp = fill(fill(false, n + 1), m + 1)
