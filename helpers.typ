@@ -85,6 +85,8 @@
     cells.push(display(solution(..input.values())))
   }
 
+  v(2em)
+  heading(level: 2, outlined: false, numbering: none, [Test Cases])
   table(
     align: center,
     columns: fill(1fr, inputs.first().len() + 2),

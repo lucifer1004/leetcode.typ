@@ -20,7 +20,9 @@
   chars.rev().join() + "."
 })
 #show heading: it => {
-  pagebreak(weak: true)
+  if it.level == 1 {
+    pagebreak(weak: true)
+  }
   it
   v(1em)
 }
@@ -42,3 +44,4 @@
 #include "problems/p0015.typ"
 #include "problems/p0016.typ"
 #include "problems/p0017.typ"
+#include "problems/p0018.typ"
