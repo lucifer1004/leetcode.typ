@@ -32,3 +32,4 @@
 #include "problems/p0011.typ"
 #include "problems/p0012.typ"
 #include "problems/p0013.typ"
+#include "problems/p0014.typ"
