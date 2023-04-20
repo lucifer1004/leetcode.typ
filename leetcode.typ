@@ -7,7 +7,7 @@
 #set smartquote(enabled: false)
 #set par(justify: true)
 #set page(numbering: "1")
-#set heading(numbering: "0001")
+#set heading(numbering: "1")
 #show heading: it => {
   pagebreak(weak: true)
   it
@@ -35,6 +35,10 @@ You can return the answer in any order.
 ))
 
 = Add Two Numbers (N/A)
+
+You are given two *non-empty* linked lists representing two non-negative integers. The digits are stored in *reverse order*, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
 
 = Longest Substring Without Repeating Characters
 
@@ -189,5 +193,31 @@ Given an integer `x`, return `true` if `x` is a *palindrome*, and `false` otherw
     (x: 121),
     (x: -121),
     (x: 10),
+  )
+)
+
+= Regular Expression Matching
+
+Given an input string s and a pattern p, implement regular expression matching with support for `'.'` and `'*'` where:
+
+- `'.'` Matches any single character.​​​​
+- `'*'` Matches zero or more of the preceding element.
+The matching should cover the *entire* input string (not partial).
+
+#let regular-expression-matching(s, p) = {
+  // Solve the problem here
+}
+
+#testcases(
+  regular-expression-matching,
+  regular-expression-matching-ref, (
+    (s: "aa", p: "a"),
+    (s: "aa", p: "a*"),
+    (s: "ab", p: ".*"),
+    (s: "aab", p: "c*a*b"),
+    (s: "mississippi", p: "mis*is*p*."),
+    (s: "ab", p: ".*c"),
+    (s: "ab", p: ".*c*"),
+    (s: "香蕉x牛奶", p: "香.*牛.")
   )
 )
