@@ -29,3 +29,5 @@
 #include "problems/p0008.typ"
 #include "problems/p0009.typ"
 #include "problems/p0010.typ"
+#include "problems/p0011.typ"
+#include "problems/p0012.typ"
