@@ -8,7 +8,7 @@
     let y = if l2.val != none { l2.val } else { 0 }
     let sum = x + y + carry
     carry = calc.floor(sum / 10)
-    p.push(calc.mod(sum, 10))
+    p.push(calc.rem(sum, 10))
     if l1.next != none {
       l1 = l1.next
     }
