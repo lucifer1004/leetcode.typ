@@ -33,7 +33,7 @@
     }
   }
 
-  if calc.mod(m + n, 2) == 0 {
+  if calc.rem(m + n, 2) == 0 {
     (med1 + med2) / 2
   } else {
     med1

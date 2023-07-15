@@ -7,16 +7,16 @@
   if x == 0 {
     return true
   }
-  if calc.mod(x, 10) == 0 {
+  if calc.rem(x, 10) == 0 {
     return false
   }
 
   let rev = 0
   while x > rev {
-    if rev > 214748364 or (rev == 214748364 and calc.mod(x, 10) > 7) {
+    if rev > 214748364 or (rev == 214748364 and calc.rem(x, 10) > 7) {
       return false
     }
-    rev = rev * 10 + calc.mod(x, 10)
+    rev = rev * 10 + calc.rem(x, 10)
     x = calc.floor(x / 10)
   }
   x == rev or x == calc.floor(rev / 10)

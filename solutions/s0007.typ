@@ -9,7 +9,7 @@
 
   x = calc.abs(x)
   while x != 0 {
-    let pop = calc.mod(x, 10)
+    let pop = calc.rem(x, 10)
     x = calc.floor(x / 10)
     if ans > 214748364 or (ans == 214748364 and pop - sign > 7) {
       return 0
