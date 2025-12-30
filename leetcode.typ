@@ -1,20 +1,16 @@
 #import "lib.typ": problem, solution, test
 #import "helpers.typ": testcases
-
 #align(center)[
   #v(3fr)
   #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)]
   #h(12pt)
   #text(48pt)[*Leetcode.typ*]
   #v(6fr)
-
   // Authors
   #text(
     size: 24pt,
   )[Gabriel Wu (#link("https://github.com/lucifer1004", "@lucifer1004"))]
-
   #v(1fr)
-
   // Build date
   #text(size: 20pt)[
     #datetime.today().display("[month repr:long] [day], [year]")
@@ -23,7 +19,6 @@
 ]
 #pagebreak()
 #outline()
-
 #counter(page).update(0)
 #set smartquote(enabled: false)
 #set par(justify: true)
@@ -42,20 +37,16 @@
   it
   v(1em)
 }
-
 #let solution-placeholder(..args) = {
   none
 }
-
 // Helper function to display a problem with its reference solution
 #let show-problem(id) = {
   // Show problem description
   problem(id)
-
   // Test with placeholder (to show built-in test results)
   test(id, solution-placeholder)
 }
-
 #let available-problems = (
   1,
   2,
@@ -77,9 +68,9 @@
   18,
   19,
   20,
+  21,
   51,
 )
-
 // Display all problems
 #for problem in available-problems {
   show-problem(problem)
