@@ -1,6 +1,3 @@
-#import "../helpers.typ": *
-#import "../solutions/s0008.typ": *
-
 = String to Integer (atoi)
 
 Implement the `myAtoi(string s)` function, which converts a string to a 32-bit signed integer (similar to C/C++'s atoi function).
@@ -17,16 +14,3 @@ The algorithm for `myAtoi(string s)` is as follows:
 
 - Only the space character ' ' is considered a whitespace character.
 - *Do not ignore* any characters other than the leading whitespace or the rest of the string after the digits.
-
-#let string-to-integer(s) = {
-  // Solve the problem here
-}
-
-#testcases(
-  string-to-integer,
-  string-to-integer-ref, (
-    (s: "42"),
-    (s: "   -42"),
-    (s: "4193 with words")
-  )
-)

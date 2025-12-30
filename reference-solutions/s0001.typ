@@ -11,6 +11,6 @@
       d.insert(str(num), i)
     }
   }
-  
+
   ans
 }

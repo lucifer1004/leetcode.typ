@@ -17,7 +17,11 @@
         if j >= 2 {
           dp.at(i).at(j) = dp.at(i).at(j) or dp.at(i).at(j - 2)
         }
-        if i >= 1 and j >= 2 and (p.at(j - 2) == "." or p.at(j - 2) == s.at(i - 1)) {
+        if (
+          i >= 1
+            and j >= 2
+            and (p.at(j - 2) == "." or p.at(j - 2) == s.at(i - 1))
+        ) {
           dp.at(i).at(j) = dp.at(i).at(j) or dp.at(i - 1).at(j)
         }
       }

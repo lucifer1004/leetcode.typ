@@ -1,7 +1,7 @@
 #import "helpers.typ": *
 
 #align(center)[
-  #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)] 
+  #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)]
   #h(12pt)
   #text(48pt)[*Leetcode.typ*]
 ]
@@ -27,21 +27,22 @@
   v(1em)
 }
 
-#include "problems/p0001.typ"
-#include "problems/p0002.typ"
-#include "problems/p0003.typ"
-#include "problems/p0004.typ"
-#include "problems/p0005.typ"
-#include "problems/p0006.typ"
-#include "problems/p0007.typ"
-#include "problems/p0008.typ"
-#include "problems/p0009.typ"
-#include "problems/p0010.typ"
-#include "problems/p0011.typ"
-#include "problems/p0012.typ"
-#include "problems/p0013.typ"
-#include "problems/p0014.typ"
-#include "problems/p0015.typ"
-#include "problems/p0016.typ"
-#include "problems/p0017.typ"
-#include "problems/p0018.typ"
+#include "user-solutions/u0001.typ"
+#include "user-solutions/u0002.typ"
+#include "user-solutions/u0003.typ"
+#include "user-solutions/u0004.typ"
+#include "user-solutions/u0005.typ"
+#include "user-solutions/u0006.typ"
+#include "user-solutions/u0007.typ"
+#include "user-solutions/u0008.typ"
+#include "user-solutions/u0009.typ"
+#include "user-solutions/u0010.typ"
+#include "user-solutions/u0011.typ"
+#include "user-solutions/u0012.typ"
+#include "user-solutions/u0013.typ"
+#include "user-solutions/u0014.typ"
+#include "user-solutions/u0015.typ"
+#include "user-solutions/u0016.typ"
+#include "user-solutions/u0017.typ"
+#include "user-solutions/u0018.typ"
+#include "user-solutions/u0019.typ"

@@ -1,61 +1,20 @@
-#let zip(..lists) = {
-  let lists = lists.pos()
-  if lists == () {
-    ()
-  } else {
-    let ret = ()
-    let len = lists.fold(
-      lists.first().len(), 
-      (a, b) => if a > b.len() { b.len() } else { a }
-    )
-
-    for i in range(0, len) {
-      let curr = ()
-      for list in lists {
-        curr.push(list.at(i))
-      }
-      ret.push(curr)
-    }
-
-    ret
-  }
-}
-
-#let flatten(list) = {
-  let ret = ()
-  for item in list {
-    if type(item) == "array" {
-      for sub in flatten(item) {
-        ret.push(sub)
-      }
-    } else {
-      ret.push(item)
-    }
-  }
-  ret
-}
-
-#let fill(value, n) = {
-  let ret = ()
-  for i in range(n) {
-    ret.push(value)
-  }
-  ret
-}
+#let fill(value, n) = range(n).map(_ => value)
 
 #let display(value) = {
-  if type(value) == "array" {
-    // display arrays
+  if type(value) == array {
     [[#value.map(display).join(", ")]]
-  } else if type(value) == "dictionary" and value.type == "linkedlist" {
-    // display linked lists
+  } else if type(value) == dictionary and value.type == "linkedlist" {
     let ret = ()
     let now = value
     while now.next != none {
       ret.push(display(now.val))
       now = now.next
     }
-    [#ret.join(" -> ")]
+    if ret.len() == 0 {
+      $emptyset$
+    } else {
+      ret.join(" -> ")
+    }
   } else {
     repr(value)
   }
@@ -72,24 +31,40 @@
 
 #let testcases(solution, reference, inputs) = {
   let cells = ()
+
+  // Header
   for key in inputs.first().keys() {
     cells.push(strong(key))
   }
-  cells.push([*answer*])
-  cells.push([*yours*])
+  cells.push([*Expected*])
+  cells.push([*Your Output*])
+  cells.push([*Status*])
+
+  // Test cases
   for input in inputs {
     for key in input.keys() {
       cells.push(display(input.at(key)))
     }
-    cells.push(display(reference(..input.values())))
-    cells.push(display(solution(..input.values())))
+
+    let expected = reference(..input.values())
+    let yours = solution(..input.values())
+
+    cells.push(display(expected))
+    cells.push(display(yours))
+
+    // Status indicator
+    if expected == yours {
+      cells.push(text(fill: green)[✓ Pass])
+    } else {
+      cells.push(text(fill: red)[✗ Fail])
+    }
   }
 
   v(2em)
-  heading(level: 2, outlined: false, numbering: none, [Test Cases])
+  heading(level: 2, outlined: false, numbering: none, [Test Results])
   table(
     align: center,
-    columns: fill(1fr, inputs.first().len() + 2),
+    columns: fill(1fr, inputs.first().len() + 3), // +3 for expected, yours, status
     ..cells,
   )
 }

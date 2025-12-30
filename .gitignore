@@ -2,3 +2,5 @@
 /draft.typ
 
 !/build/leetcode.pdf
+
+.ruff_cache/

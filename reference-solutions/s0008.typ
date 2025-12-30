@@ -2,7 +2,18 @@
 
 #let string-to-integer-ref(s) = {
   let numerics = "0123456789"
-  let d = ("0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9)
+  let d = (
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+  )
   let s = s.clusters()
   let n = s.len()
   let i = 0
@@ -28,5 +39,5 @@
     ans = ans * 10 + d.at(s.at(i))
     i += 1
   }
-  ans * sign 
+  ans * sign
 }
