@@ -45,6 +45,28 @@ Create a new `.typ` file:
 #test(1, solution)
 ```
 
+If you want to display your solution, you can try
+
+```typst
+#import "@preview/leetcode:0.1.0": solve
+
+#solve(1, ```typc
+let solution(nums, target) = {
+  let d = (:)
+  let ans = (-1, -1)
+  for (i, num) in nums.enumerate() {
+    if str(target - num) in d {
+      return (d.at(str(target - num)), i)
+    }
+    d.insert(str(num), i)
+  }
+  ans
+}
+```)
+```
+
+- The main function name needs to be `solution` when using the `solve()` API.
+
 Compile:
 ```bash
 typst compile my-solution.typ

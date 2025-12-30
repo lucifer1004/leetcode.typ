@@ -1,4 +1,4 @@
-#import "lib.typ": problem, solution, test
+#import "lib.typ": problem, test
 #import "helpers.typ": testcases
 #align(center)[
   #v(3fr)
@@ -69,6 +69,7 @@
   19,
   20,
   21,
+  22,
   51,
 )
 // Display all problems

@@ -91,7 +91,7 @@
 }
 
 // Display reference solution code (for learning)
-#let solution(id) = {
+#let answer(id) = {
   let id-str = format-id(id)
   let path = "problems/" + id-str + "/"
 
@@ -111,6 +111,23 @@
   let end-line = lines.len()
   let solution-code = lines.slice(start-line, end-line).join("\n").trim()
 
-  heading(level: 2, outlined: false, numbering: none)[Reference Solution]
+  heading(level: 2, outlined: false, numbering: none)[Reference Solution \##id]
   raw(solution-code, block: true, lang: "typst")
+}
+
+// Complete workflow: display code + test solution
+// Usage: pass a raw block with function definition ending with the function name
+// The main function name must be "solution"
+#let solve(id, code-block) = {
+  // Display problem
+  problem(id)
+
+  // Display user's solution code
+  heading(level: 2, outlined: false, numbering: none)[My Solution \##id]
+  show raw: it => block(stroke: 0.8pt + gray, inset: 0.6em, it)
+  code-block
+
+  // Execute the code and test
+  let solution-fn = eval(code-block.text + "\n" + "solution")
+  test(id, solution-fn)
 }
