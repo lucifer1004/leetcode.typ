@@ -46,4 +46,5 @@
 #include "user-solutions/u0017.typ"
 #include "user-solutions/u0018.typ"
 #include "user-solutions/u0019.typ"
+#include "user-solutions/u0020.typ"
 #include "user-solutions/u0051.typ"

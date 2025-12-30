@@ -5,3 +5,7 @@ fmt:
 
 create id:
   python3 scripts/create.py {{id}}
+
+build:
+  typst compile leetcode.typ build/leetcode.pdf
+  pdfcpu optimize build/leetcode.pdf

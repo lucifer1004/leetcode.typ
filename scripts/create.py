@@ -73,6 +73,46 @@ def slugify(title):
     return slug
 
 
+def update_leetcode_typ(problem_id: int):
+    """Insert problem include line in sorted order."""
+    with open("leetcode.typ", "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    # Find where includes start (after the header setup)
+    include_start = 0
+    for i, line in enumerate(lines):
+        if line.strip().startswith('#include "user-solutions/'):
+            include_start = i
+            break
+
+    # Extract existing includes
+    includes = []
+    other_lines = lines[:include_start]
+
+    for line in lines[include_start:]:
+        stripped = line.strip()
+        if stripped.startswith('#include "user-solutions/'):
+            includes.append(line)
+        elif stripped:  # Non-include, non-empty line
+            other_lines.append(line)
+
+    # Add new include
+    new_include = f'#include "user-solutions/u{problem_id:04}.typ"\n'
+    includes.append(new_include)
+
+    # Sort by problem ID extracted from filename
+    def extract_id(include_line):
+        match = re.search(r"u(\d{4})\.typ", include_line)
+        return int(match.group(1)) if match else 0
+
+    includes.sort(key=extract_id)
+
+    # Write back
+    with open("leetcode.typ", "w", encoding="utf-8") as f:
+        f.writelines(other_lines)
+        f.writelines(includes)
+
+
 def create_problem(
     problem_id: int, title: str = None, func_name: str = None, params: str = ""
 ) -> bool:
@@ -132,9 +172,8 @@ def create_problem(
         solution_path.write_text(ref_content)
         print(f"✓ Created {solution_path}")
 
-        # Update main file
-        with open("leetcode.typ", "a", encoding="utf-8") as f:
-            f.write(f'#include "user-solutions/u{problem_id:04}.typ"\n')
+        # Update main file with sorted insertion
+        update_leetcode_typ(problem_id)
         print("✓ Updated leetcode.typ")
 
         print(f"\n✅ Problem {problem_id:04} created successfully!")

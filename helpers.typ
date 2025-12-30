@@ -121,9 +121,9 @@
       width: 100%,
     )[
       #heading(level: 2, outlined: false, numbering: none, [
-        Case #(idx + 1) 
+        Case #(idx + 1)
         #h(1fr)
-        #if pass {"✅"} else {"❌"}
+        #if pass { "✅" } else { "❌" }
       ])
       #v(0.3em)
 
