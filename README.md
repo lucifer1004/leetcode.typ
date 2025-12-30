@@ -1,256 +1,292 @@
-# leetcode.typ - Solving LeetCode problems in Typst
+# leetcode - LeetCode Problem-Solving Framework in Typst
 
 ![Logo](images/logo.png)
 
-A showcase project demonstrating Typst's capabilities by implementing LeetCode solutions entirely in Typst's scripting language, with automatic test case visualization.
+A Typst package for solving LeetCode problems with beautiful PDF output and automatic test case visualization. Import the package and start coding – built-in test cases included!
 
 ## Features
 
-- 🎨 Beautiful PDF output with automatic formatting
-- 📝 Test case visualization with side-by-side comparison
-- 🔧 Live preview while coding
-- ✅ Automatic pass/fail indicators for test cases
-- 🚀 Clean separation between problems, solutions, and references
+- 📦 **Zero Setup**: Import and start solving – built-in test cases for all problems
+- 🎨 **Beautiful Output**: Automatic formatting with professional PDF rendering  
+- 📝 **Test Visualization**: Side-by-side comparison of your output vs. expected results
+- ✅ **Auto-Validation**: Instant pass/fail indicators
+- 🚀 **21 Problems**: Curated collection of classic LeetCode problems
+- 🔧 **Extensible**: Custom comparators, chessboard rendering, and more
 
-## Prerequisites
+## Installation
 
-Install [typst](https://github.com/typst/typst):
-
-```bash
-# macOS
-brew install typst
-
-# Other platforms: see https://github.com/typst/typst#installation
+```typst
+#import "@preview/leetcode:0.1.0": problem, test
 ```
 
 ## Quick Start
 
-### Working on a Problem
-
-1. **Open a user solution file**
-   ```bash
-   # For example, Problem 1 - Two Sum
-   code user-solutions/u0001.typ
-   ```
-
-2. **Start live preview**
-   ```bash
-   typst watch user-solutions/u0001.typ
-   ```
-   Or use [Tinymist](https://github.com/Myriad-Dreamin/tinymist), which is a powerful integrated language service for Typst.
-
-3. **Write your solution**
-   Find the "Your Solution" section in the file and implement the function:
-   ```typst
-   #let two-sum(nums, target) = {
-     // Your implementation here
-   }
-   ```
-
-4. **See results instantly**
-   The PDF updates automatically, showing:
-   - Your output
-   - Expected output
-   - ✓ Pass / ✗ Fail status
-
-### Creating a New Problem
-
-```bash
-python3 scripts/create.py 19
-```
-
-This will interactively prompt you for:
-- Problem title
-- Function name (auto-generated from title)
-- Function parameters
-- Problem description (optional)
-
-And automatically creates:
-- `problems/p0019.typ` - Problem description
-- `user-solutions/u0019.typ` - Your workspace
-- `reference-solutions/s0019.typ` - Reference solution
-- Updates `leetcode.typ` to include the new problem
-
-**Non-interactive mode:**
-```bash
-python3 scripts/create.py 20 \
-  --title "Valid Parentheses" \
-  --func "valid-parentheses" \
-  --params "s"
-```
-
-### Building the Complete PDF
-
-```bash
-typst compile leetcode.typ
-```
-
-This generates `leetcode.pdf` with all problems.
-
-## Project Structure
-
-```
-leetcode.typ/
-├── problems/              # Problem descriptions (read-only)
-│   ├── p0001.typ         # Two Sum
-│   ├── p0002.typ         # Add Two Numbers
-│   └── ...
-│
-├── user-solutions/        # Your workspace (edit here!)
-│   ├── u0001.typ         # Problem + your code + tests
-│   ├── u0002.typ
-│   └── ...
-│
-├── reference-solutions/   # Reference implementations
-│   ├── s0001.typ
-│   ├── s0002.typ
-│   └── ...
-│
-├── helpers.typ           # Utility functions
-├── leetcode.typ          # Main file (includes all problems)
-└── scripts/
-    └── create.py         # Tool to create new problems
-```
-
-## File Format
-
-### User Solution File (`user-solutions/u0001.typ`)
-
-This is your main workspace. Each file contains:
+Create a new `.typ` file:
 
 ```typst
-#import "../helpers.typ": *
+#import "@preview/leetcode:0.1.0": problem, test
 
-// ========================================
-// Problem Description
-// ========================================
-#include "../problems/p0001.typ"
+// Display the problem
+#problem(1)
 
-// ========================================
-// Your Solution - Write your code here
-// ========================================
-#let two-sum(nums, target) = {
-  // TODO: Implement your solution
-  
+// Write your solution
+#let solution(nums, target) = {
+  let d = (:)
+  for (i, num) in nums.enumerate() {
+    if str(target - num) in d {
+      return (d.at(str(target - num)), i)
+    }
+    d.insert(str(num), i)
+  }
   none
 }
 
-// ========================================
-// Test Cases
-// ========================================
-#import "../reference-solutions/s0001.typ": two-sum-ref
-#testcases(two-sum, two-sum-ref, (
-  (nums: (2, 7, 11, 15), target: 9),
-  (nums: (3, 2, 4), target: 6),
-  (nums: (3, 3), target: 6),
-))
+// Test with built-in test cases!
+#test(1, solution)
 ```
 
-**Key sections:**
-1. **Problem Description** - Automatically included from `problems/`
-2. **Your Solution** - Write your implementation here
-3. **Test Cases** - Automatically compares your output with reference
-
-### Problem File (`problems/p0001.typ`)
-
-Pure problem statement, reusable across the project:
-
-```typst
-= Two Sum
-
-Given an array of integers `nums` and an integer `target`, return indices...
-```
-
-### Reference Solution (`reference-solutions/s0001.typ`)
-
-The expected implementation:
-
-```typst
-#import "../helpers.typ": *
-
-#let two-sum-ref(nums, target) = {
-  // Reference implementation
-  ...
-}
-```
-
-## Tips & Tricks
-
-### Viewing a Single Problem
-
+Compile:
 ```bash
-# Quick preview of just one problem
-typst watch user-solutions/u0005.typ
+typst compile my-solution.typ
 ```
 
-### Hiding Reference Solutions
-
-Comment out the import if you want to work without seeing the reference:
-
-```typst
-// #import "../reference-solutions/s0001.typ": two-sum-ref
+Or live preview:
+```bash
+typst watch my-solution.typ
 ```
 
-### Adding More Test Cases
+## Available Problems
 
-Just add entries to the test cases tuple:
+| ID | Title | Difficulty |
+|----|-------|------------|
+| 1 | Two Sum | Easy |
+| 2 | Add Two Numbers | Medium |
+| 3 | Longest Substring Without Repeating Characters | Medium |
+| 4 | Median of Two Sorted Arrays | Hard |
+| 5 | Longest Palindromic Substring | Medium |
+| 6 | Zigzag Conversion | Medium |
+| 7 | Reverse Integer | Medium |
+| 8 | String to Integer (atoi) | Medium |
+| 9 | Palindrome Number | Easy |
+| 10 | Regular Expression Matching | Hard |
+| 11 | Container With Most Water | Medium |
+| 12 | Integer to Roman | Medium |
+| 13 | Roman to Integer | Easy |
+| 14 | Longest Common Prefix | Easy |
+| 15 | 3Sum | Medium |
+| 16 | 3Sum Closest | Medium |
+| 17 | Letter Combinations of a Phone Number | Medium |
+| 18 | 4Sum | Medium |
+| 19 | Remove Nth Node From End of List | Medium |
+| 20 | Valid Parentheses | Easy |
+| 51 | N-Queens | Hard |
+
+## Multiple Problems in One File
+
+Solve multiple problems by reusing the `solution` name:
 
 ```typst
-#testcases(two-sum, two-sum-ref, (
-  (nums: (2, 7, 11, 15), target: 9),
-  (nums: (3, 2, 4), target: 6),
-  // Add your own:
-  (nums: (0, 0), target: 0),
+#import "@preview/leetcode:0.1.0": problem, test
+
+// Problem 1
+#problem(1)
+#let solution(nums, target) = { /* ... */ }
+#test(1, solution)
+
+// Problem 2
+#pagebreak()
+#problem(2)
+#let solution(l1, l2) = { /* ... */ }
+#test(2, solution)
+```
+
+## Advanced Usage
+
+### Adding Extra Test Cases
+
+Add your own test cases on top of built-in ones:
+
+```typst
+#import "@preview/leetcode:0.1.0": problem, test
+
+#problem(1)
+#let solution(nums, target) = { /* ... */ }
+
+// Built-in cases + your extra cases
+#test(1, solution, extra-cases: (
+  (nums: (99, 1), target: 100),
+  (nums: range(1000), target: 999),
 ))
 ```
 
-### Helper Functions Available
+### Using Only Custom Test Cases
 
-See `helpers.typ` for utilities:
-- `linkedlist(array)` - Create a linked list
-- `display(value)` - Format output
-- `testcases(fn, ref, inputs)` - Run test suite
-- `testcases(fn, ref, inputs, comparator: fn)` - Run test suite with custom comparator
-- `unordered-compare` - Comparator for problems where order doesn't matter
-
-#### Using Custom Comparators
-
-For problems that specify "You may return the answer in any order", use the `unordered-compare` comparator:
+Override built-in cases completely:
 
 ```typst
-#testcases(solution, solution-ref, (
-  (input: value),
-), comparator: unordered-compare)
+#test(1, solution, 
+  extra-cases: (
+    (nums: (1, 2, 3), target: 5),
+  ),
+  default-cases: false)
 ```
 
-You can also define your own comparators for special cases:
+### Unordered Output
+
+For problems with "return answer in any order":
 
 ```typst
-// Example: Compare with floating point tolerance
-#let float-compare(a, b) = {
-  calc.abs(a - b) < 0.0001
-}
+#import "@preview/leetcode:0.1.0": problem, test
 
-#testcases(solution, solution-ref, inputs, comparator: float-compare)
+#problem(15)  // 3Sum
+#let solution(nums) = { /* ... */ }
+
+// Metadata is handled automatically!
+#test(15, solution)  // Uses unordered-compare automatically
+```
+
+### Chessboard Rendering
+
+For problems like N-Queens:
+
+```typst
+#import "@preview/leetcode:0.1.0": problem, test
+
+#problem(51)
+#let solution(n) = { /* ... */ }
+
+// Chessboard rendering enabled automatically!
+#test(51, solution)
+```
+
+### Viewing Reference Solutions
+
+Stuck on a problem? View the reference solution code:
+
+```typst
+#import "@preview/leetcode:0.1.0": problem, solution
+
+#problem(1)
+// ... tried but couldn't solve it ...
+
+// Display the reference solution code
+#solution(1)
+```
+
+### Manual Reference Access
+
+For advanced control:
+
+```typst
+#import "@preview/leetcode:0.1.0": problem, get-test-cases, get-problem-path
+
+// Get built-in test cases
+#let cases = get-test-cases(1)
+
+// Get problem directory path
+#let path = get-problem-path(1)
+#import (path + "solution.typ"): solution-ref
+```
+
+## API Reference
+
+### Main Functions
+
+- `problem(id)` - Display problem statement
+- `test(id, fn)` - Test with built-in cases (recommended)
+- `test(id, fn, extra-cases: (...), default-cases: false)` - Customize test cases
+- `solution(id)` - Display reference solution code (when stuck)
+- `get-test-cases(id)` - Get built-in test cases
+- `get-problem-path(id)` - Get problem directory path
+
+### Helper Functions
+
+- `testcases(fn, ref, cases, ...)` - Manual test comparison
+- `linkedlist(array)` - Create linked list from array
+- `display(value)` - Format values for output
+- `unordered-compare(a, b)` - Compare ignoring order
+- `fill(value, n)` - Create array with n copies
+- `chessboard(board)` - Render chessboard visualization
+
+## Examples
+
+Check out [templates/](templates/) for examples:
+- `single-problem.typ` - Single problem workflow
+- `multiple-problems.typ` - Multiple problems in one file
+
+## Architecture
+
+Each problem is organized as:
+
+```
+problems/XXXX/
+├── description.typ    # Problem statement
+├── solution.typ       # Reference solution
+└── testcases.typ      # Test cases + metadata
+```
+
+**Testcases can use helper functions**:
+```typst
+// testcases.typ
+#import "../../helpers.typ": linkedlist
+
+#let cases = (
+  (head: linkedlist((1, 2, 3)), n: 2),
+)
+```
+
+This design ensures:
+- **High cohesion**: All files for a problem are together
+- **Built-in tests**: No need to write test cases
+- **Metadata support**: Comparators and rendering options included
+- **Helper access**: Testcases can use linkedlist, fill, etc.
+
+## Tips
+
+### Linked Lists
+
+```typst
+#import "@preview/leetcode:0.1.0": linkedlist
+
+#let l1 = linkedlist((1, 2, 3))
+#let l2 = linkedlist((4, 5, 6))
+```
+
+### Live Preview
+
+Use Typst's watch mode or [Tinymist](https://github.com/Myriad-Dreamin/tinymist) for instant feedback.
+
+### Adding Your Own Test Cases
+
+Mix built-in and custom cases:
+
+```typst
+#test(1, solution, extra-cases: (
+  (nums: (0, 0), target: 0),
+  (nums: range(100), target: 99),
+))
 ```
 
 ## Why Typst?
 
-This project explores using Typst not just as a typesetting system, but as a functional programming language for algorithm implementation. While not optimal for production code, it demonstrates:
+This project explores Typst as a functional programming language for algorithms, demonstrating:
 
-- Typst's expressiveness as a scripting language
-- Pattern matching and functional programming concepts
-- Beautiful output generation
-- An interesting constraint for problem-solving
-
-## Example Output
-
-See [build/leetcode.pdf](./build/leetcode.pdf) for example output.
+- **Expressive syntax** for pattern matching and FP
+- **Beautiful output** with minimal effort
+- **Rapid feedback** with live preview
+- **Creative constraints** that enhance problem-solving
 
 ## Contributing
 
-Feel free to add more problems! Use `python3 scripts/create.py <id>` to maintain consistency.
+Maintained at [github.com/lucifer1004/leetcode.typ](https://github.com/lucifer1004/leetcode.typ).
+
+To add problems, use:
+```bash
+python3 scripts/create.py <problem-id>
+```
 
 ## License
 
-This is a personal learning project. LeetCode problems belong to LeetCode.
+MIT License - see LICENSE file for details.
+
+LeetCode problems © LeetCode.

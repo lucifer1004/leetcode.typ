@@ -1,0 +1,21 @@
+[package]
+name = "leetcode"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["lucifer1004"]
+license = "MIT"
+description = "LeetCode problem-solving framework in Typst"
+repository = "https://github.com/lucifer1004/leetcode.typ"
+keywords = ["leetcode", "algorithms", "testing"]
+
+exclude = [
+  "build/",
+  "*.pdf",
+  "scripts/",
+  "Justfile",
+  "templates/",
+  ".git*",
+  "AGENTS.md",
+  "leetcode.typ",
+  "example.typ",
+]

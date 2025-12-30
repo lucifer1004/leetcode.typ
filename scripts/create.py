@@ -12,35 +12,19 @@ PROBLEM_TEMPLATE = """= {title}
 {description}
 """
 
-USER_SOLUTION_TEMPLATE = """#import "../helpers.typ": *
+TESTCASES_TEMPLATE = """// Test cases for Problem {id:04}
+// Import helpers if needed (e.g., linkedlist, fill, etc.)
+// #import "../../helpers.typ": linkedlist
 
-// ========================================
-// Problem Description
-// ========================================
-#include "../problems/p{id:04}.typ"
-
-// ========================================
-// Your Solution - Write your code here
-// ========================================
-#let {func_name}({params}) = {{
-  // TODO: Implement your solution
-  
-  none
-}}
-
-// ========================================
-// Test Cases
-// ========================================
-#import "../reference-solutions/s{id:04}.typ": {func_name}-ref
-#testcases({func_name}, {func_name}-ref, (
+#let cases = (
   // Add test cases here
   // Example: (input: value),
-))
+)
 """
 
-REFERENCE_SOLUTION_TEMPLATE = """#import "../helpers.typ": *
+SOLUTION_TEMPLATE = """#import "../../helpers.typ": *
 
-#let {func_name}-ref({params}) = {{
+#let solution-ref({params}) = {{
   // Reference solution implementation
   
   none
@@ -75,13 +59,17 @@ def slugify(title):
 
 def update_leetcode_typ(problem_id: int):
     """Insert problem include line in sorted order."""
+    # Note: leetcode.typ is now excluded from package, but we keep this for local development
+    if not Path("leetcode.typ").exists():
+        return
+
     with open("leetcode.typ", "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     # Find where includes start (after the header setup)
     include_start = 0
     for i, line in enumerate(lines):
-        if line.strip().startswith('#include "user-solutions/'):
+        if line.strip().startswith('#include "problems/'):
             include_start = i
             break
 
@@ -91,18 +79,17 @@ def update_leetcode_typ(problem_id: int):
 
     for line in lines[include_start:]:
         stripped = line.strip()
-        if stripped.startswith('#include "user-solutions/'):
+        if stripped.startswith('#include "problems/'):
             includes.append(line)
         elif stripped:  # Non-include, non-empty line
             other_lines.append(line)
 
-    # Add new include
-    new_include = f'#include "user-solutions/u{problem_id:04}.typ"\n'
-    includes.append(new_include)
+    # Add new include - note: we don't have user-solutions anymore, skip if that's what this was for
+    # For now, we'll skip adding to leetcode.typ since it's not part of the package workflow
 
     # Sort by problem ID extracted from filename
     def extract_id(include_line):
-        match = re.search(r"u(\d{4})\.typ", include_line)
+        match = re.search(r"problems/(\d{4})/", include_line)
         return int(match.group(1)) if match else 0
 
     includes.sort(key=extract_id)
@@ -117,19 +104,14 @@ def create_problem(
     problem_id: int, title: str = None, func_name: str = None, params: str = ""
 ) -> bool:
     """Create new problem files. Returns True on success."""
-    problem_path = Path("problems") / f"p{problem_id:04}.typ"
-    user_path = Path("user-solutions") / f"u{problem_id:04}.typ"
-    solution_path = Path("reference-solutions") / f"s{problem_id:04}.typ"
+    problem_dir = Path("problems") / f"{problem_id:04}"
+    problem_path = problem_dir / "description.typ"
+    testcases_path = problem_dir / "testcases.typ"
+    solution_path = problem_dir / "solution.typ"
 
-    # Check if files already exist
-    if problem_path.exists():
-        print(f"❌ Problem file {problem_path} already exists!")
-        return False
-    if user_path.exists():
-        print(f"❌ User solution file {user_path} already exists!")
-        return False
-    if solution_path.exists():
-        print(f"❌ Reference solution file {solution_path} already exists!")
+    # Check if directory already exists
+    if problem_dir.exists():
+        print(f"❌ Problem directory {problem_dir} already exists!")
         return False
 
     # Interactive input (if not provided)
@@ -153,22 +135,21 @@ def create_problem(
 
     # Create files
     try:
-        # Create pure problem file
+        # Create problem directory
+        problem_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create problem description
         problem_content = PROBLEM_TEMPLATE.format(title=title, description=description)
         problem_path.write_text(problem_content)
         print(f"✓ Created {problem_path}")
 
-        # Create user solution file
-        user_content = USER_SOLUTION_TEMPLATE.format(
-            id=problem_id, func_name=func_name, params=params
-        )
-        user_path.write_text(user_content)
-        print(f"✓ Created {user_path}")
+        # Create testcases file
+        testcases_content = TESTCASES_TEMPLATE.format(id=problem_id)
+        testcases_path.write_text(testcases_content)
+        print(f"✓ Created {testcases_path}")
 
         # Create reference solution file
-        ref_content = REFERENCE_SOLUTION_TEMPLATE.format(
-            func_name=func_name, params=params
-        )
+        ref_content = SOLUTION_TEMPLATE.format(params=params)
         solution_path.write_text(ref_content)
         print(f"✓ Created {solution_path}")
 
@@ -178,17 +159,19 @@ def create_problem(
 
         print(f"\n✅ Problem {problem_id:04} created successfully!")
         print("\n📝 Next steps:")
-        print(f"   1. Edit {user_path} to start solving")
-        print(f"   2. Preview: typst watch {user_path}")
-        print("   3. Add test cases in the user solution file")
+        print(f"   1. Add test cases to {testcases_path}")
+        print(f"   2. Implement reference solution in {solution_path}")
+        print('   3. Use: #import "@preview/leetcode:0.1.0": problem, test')
+        print(f"   4. Then: #problem({problem_id}) and #test({problem_id}, solution)")
 
         return True
 
     except (OSError, UnicodeEncodeError) as e:
-        # Clean up created files
-        problem_path.unlink(missing_ok=True)
-        user_path.unlink(missing_ok=True)
-        solution_path.unlink(missing_ok=True)
+        # Clean up created directory
+        if problem_dir.exists():
+            import shutil
+
+            shutil.rmtree(problem_dir)
         print(f"❌ Error: {e}", file=sys.stderr)
         return False
 

@@ -1,11 +1,27 @@
-#import "helpers.typ": *
+#import "lib.typ": problem, solution, test
+#import "helpers.typ": testcases
 
 #align(center)[
+  #v(3fr)
   #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)]
   #h(12pt)
   #text(48pt)[*Leetcode.typ*]
+  #v(6fr)
+
+  // Authors
+  #text(
+    size: 24pt,
+  )[Gabriel Wu (#link("https://github.com/lucifer1004", "@lucifer1004"))]
+
+  #v(1fr)
+
+  // Build date
+  #text(size: 20pt)[
+    #datetime.today().display("[month repr:long] [day], [year]")
+  ]
+  #v(2cm)
 ]
-#v(2em)
+#pagebreak()
 #outline()
 
 #counter(page).update(0)
@@ -27,24 +43,44 @@
   v(1em)
 }
 
-#include "user-solutions/u0001.typ"
-#include "user-solutions/u0002.typ"
-#include "user-solutions/u0003.typ"
-#include "user-solutions/u0004.typ"
-#include "user-solutions/u0005.typ"
-#include "user-solutions/u0006.typ"
-#include "user-solutions/u0007.typ"
-#include "user-solutions/u0008.typ"
-#include "user-solutions/u0009.typ"
-#include "user-solutions/u0010.typ"
-#include "user-solutions/u0011.typ"
-#include "user-solutions/u0012.typ"
-#include "user-solutions/u0013.typ"
-#include "user-solutions/u0014.typ"
-#include "user-solutions/u0015.typ"
-#include "user-solutions/u0016.typ"
-#include "user-solutions/u0017.typ"
-#include "user-solutions/u0018.typ"
-#include "user-solutions/u0019.typ"
-#include "user-solutions/u0020.typ"
-#include "user-solutions/u0051.typ"
+#let solution-placeholder(..args) = {
+  none
+}
+
+// Helper function to display a problem with its reference solution
+#let show-problem(id) = {
+  // Show problem description
+  problem(id)
+
+  // Test with placeholder (to show built-in test results)
+  test(id, solution-placeholder)
+}
+
+#let available-problems = (
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  51,
+)
+
+// Display all problems
+#for problem in available-problems {
+  show-problem(problem)
+}

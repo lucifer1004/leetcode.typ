@@ -1,59 +1,251 @@
 # AGENTS Guide
 
-This repository solves LeetCode problems entirely in [Typst](https://typst.app/). Each problem lives in its own pair of user/reference solution files with a shared helpers module for rendering rich PDF output. Use this guide to onboard quickly.
+This repository is a Typst package for solving LeetCode problems. It provides a framework with built-in test cases, reference solutions, and beautiful PDF rendering. Use this guide to understand the architecture and contribute.
 
-## Project Map
+## Project Architecture
 
-- `problems/pXXXX.typ` — read-only problem statements.
-- `user-solutions/uXXXX.typ` — editable workspace for each problem: imports helpers, includes the problem text, exposes a `#let` function you must implement, and defines local tests.
-- `reference-solutions/sXXXX.typ` — canonical implementations; used as ground-truth for tests.
-- `helpers.typ` — shared utilities such as `fill`, `display`, chessboard rendering, and `testcases`.
-- `leetcode.typ` — roots the PDF; simply imports every `user-solutions/*`.
-- `scripts/create.py` — scaffolds new problems and keeps `leetcode.typ` sorted.
+This is now a **Typst package** (`@preview/leetcode`) with domain-driven design:
+
+```
+problems/XXXX/           # Each problem is self-contained
+├── description.typ      # Problem statement
+├── solution.typ         # Reference solution (#let solution-ref)
+└── testcases.typ        # Built-in test cases + metadata
+```
+
+### Key Files
+
+- `lib.typ` — Package API entrypoint (exports `problem()`, `test()`, etc.)
+- `helpers.typ` — Shared utilities (`linkedlist`, `display`, `testcases`, comparators)
+- `leetcode.typ` — Generates complete PDF with all problems (excluded from package)
+- `templates/` — Example usage files for package users (excluded from package)
+- `scripts/create.py` — Scaffolds new problems in the correct structure
+- `typst.toml` — Package manifest
 
 ## Adding a Problem
 
-1. Run `python3 scripts/create.py <id>` (or the non-interactive form described in `README.md`) to generate:
-   - `problems/p<id>.typ`
-   - `user-solutions/u<id>.typ`
-   - `reference-solutions/s<id>.typ`
-   and to update `leetcode.typ`.
-2. Review the generated stubs. The script lets you override the function name and parameters; ensure the names stay in kebab-case to match Typst conventions.
-3. When committing, include all three new files plus the updated `leetcode.typ`.
+1. Run `just create <id>` or `python3 scripts/create.py <id>` to generate:
+   ```
+   problems/XXXX/
+   ├── description.typ
+   ├── solution.typ
+   └── testcases.typ
+   ```
 
-## Solving a Problem
+2. Fill in the generated files:
+   - **description.typ**: Problem title and description
+   - **testcases.typ**: Add test cases (can import helpers if needed)
+     ```typst
+     #import "../../helpers.typ": linkedlist
+     #let cases = (
+       (input: value),
+     )
+     ```
+   - **solution.typ**: Implement `solution-ref` function
 
-1. Work inside `user-solutions/uXXXX.typ`:
-   - Keep the `#import "../helpers.typ": *` at the top.
-   - Implement the function in the “Your Solution” section. Typst functions return values directly; avoid global state because Typst closures capture by value.
-2. Use `typst watch user-solutions/uXXXX.typ` (or Tinymist) for a rapid PDF preview focused on one problem.
-3. The `#testcases` macro compares your solution with the reference. Arguments:
-   - `solution` / `reference` functions
-   - a tuple of dictionaries describing inputs (`(n: 4,)`, etc.)
-   - optional `comparator` (e.g., `unordered-compare` for order-insensitive arrays)
-   - optional `render-chessboard: true` to use the chessboard visualizer for board-like outputs (N-Queens).
-4. When you need custom comparators or displays, add them to `helpers.typ` and import them where needed.
+3. For problems needing special handling, add metadata to `testcases.typ`:
+   ```typst
+   #let metadata = (
+     comparator: "unordered-compare",
+     render-chessboard: true,
+   )
+   ```
 
-## Improving Display & Helpers
+## Testing Your Changes
 
-- `helpers.typ` offers:
-  - `display(value, render-chessboard: false)` — recursively renders values. Pass `render-chessboard: true` from `#testcases` to render `'Q'`/`.` boards using the built-in `chessboard` helper; otherwise plain arrays are shown.
-  - `testcases(...)` — renders each example as a boxed block mimicking LeetCode’s “Example” layout. It accepts the `render-chessboard` flag to forward into every `display`.
-  - Comparators such as `unordered-compare` for set-like outputs.
-- When extending helpers:
-  - Keep existing function signatures backward-compatible (prefer optional parameters, default values).
-  - Favor reusable utilities over per-problem tweaks.
-  - If you add domain-specific renderers (e.g., linked lists), wire them into `display` via simple type checks.
+### Test a Single Problem
 
-## Reference Solutions
+Package users would use:
+```typst
+#import "@preview/leetcode:0.1.0": problem, test
 
-Reference files mirror the user solution signature with a `-ref` suffix. They should remain deterministic and side-effect free, as `testcases` runs them on every refresh. When updating helpers, ensure you do not break any reference implementations; rebuild `leetcode.typ` locally (`typst compile leetcode.typ`) if in doubt.
+#problem(1)
+#let solution(nums, target) = { /* your implementation */ }
+#test(1, solution)
+```
+
+For local testing, use `lib.typ` directly:
+```typst
+#import "lib.typ": problem, test
+
+#problem(1)
+#let solution(nums, target) = { /* your implementation */ }
+#test(1, solution)
+```
+
+### Generate Complete PDF
+
+```bash
+just build
+# or
+typst compile leetcode.typ build/leetcode.pdf
+```
+
+This creates a comprehensive PDF with all 21 problems and their reference solutions.
+
+## Architecture Principles
+
+### Domain-Driven Design
+
+✅ **High Cohesion**: All files for Problem 1 live in `problems/0001/`
+- Easy to find everything related to a problem
+- Clear ownership and organization
+- Simple to add/remove problems
+
+✅ **Built-in Test Cases**: Users get test cases automatically
+- No need to write test cases manually
+- Consistent testing across all problems
+- Metadata for special requirements (comparators, rendering)
+
+✅ **Unified API**: Single `test()` function with flexible modes
+```typst
+// Use built-in cases
+#test(1, solution)
+
+// Add extra cases
+#test(1, solution, extra-cases: ((nums: (99, 1), target: 100),))
+
+// Only custom cases
+#test(1, solution, extra-cases: (...), default-cases: false)
+```
+
+### Import Patterns
+
+**In testcases.typ** (if using helpers):
+```typst
+#import "../../helpers.typ": linkedlist
+```
+
+**In solution.typ**:
+```typst
+#import "../../helpers.typ": *
+```
+
+**In user code** (package users):
+```typst
+#import "@preview/leetcode:0.1.0": problem, test, linkedlist
+```
+
+## Helpers Module
+
+`helpers.typ` provides:
+
+- **Data structures**: `linkedlist(array)` — creates linked list nodes
+- **Display**: `display(value, render-chessboard: false)` — pretty-prints values
+- **Testing**: `testcases(fn, ref, cases, ...)` — renders test results
+- **Comparators**: `unordered-compare(a, b)` — order-insensitive comparison
+- **Utilities**: `fill(value, n)`, `chessboard(board)`, `is-chessboard(value)`
+
+When extending helpers:
+- Keep backward-compatible signatures
+- Favor reusable utilities over problem-specific code
+- Document complex functions
+
+## Public API Functions
+
+The `lib.typ` exports these functions for users:
+
+- **`problem(id)`** — Display problem description
+- **`test(id, fn, ...)`** — Test solution with built-in/custom cases
+- **`solution(id)`** — Display reference solution code (for learning)
+- **`get-test-cases(id)`** — Get built-in test cases
+- **`get-problem-path(id)`** — Get problem directory path
+
+These are all available via `#import "@preview/leetcode:0.1.0": problem, test, solution`
+
+## Package Development
+
+### Local Testing
+
+Use `lib.typ` directly instead of package import:
+```typst
+#import "lib.typ": problem, test
+```
+
+### Before Releasing
+
+1. ✅ All problems compile without errors: `just build`
+2. ✅ Test the package API with example files in `templates/`
+3. ✅ Update version in `typst.toml`
+4. ✅ Update README with new features
+5. ✅ Verify exclusions are correct (no user-solutions, build/, etc.)
+
+### Excluded from Package
+
+These files exist in the repo but are excluded from the published package:
+- `leetcode.typ` — local development tool
+- `templates/` — examples (referenced in README)
+- `scripts/` — maintenance tools
+- `build/` — compiled PDFs
+- `Justfile`, `AGENTS.md` — development docs
+
+## Common Tasks
+
+### Add a new test case to existing problem
+
+Edit `problems/XXXX/testcases.typ`:
+```typst
+#let cases = (
+  // existing cases
+  (nums: (1, 2, 3), target: 6),  // add this
+)
+```
+
+### Fix a reference solution
+
+Edit `problems/XXXX/solution.typ` and implement `solution-ref` function.
+
+### Update problem description
+
+Edit `problems/XXXX/description.typ`. 
+⚠️ If using images, use path `../../images/pXXXX.png`
+
+### Test metadata handling
+
+Problems with metadata automatically apply comparators/rendering:
+```typst
+// In testcases.typ
+#let metadata = (
+  comparator: "unordered-compare",
+  render-chessboard: true,
+)
+
+// User doesn't need to specify these!
+#test(51, solution)  // Automatically uses metadata
+```
 
 ## Verification Checklist
 
-Before opening a PR or finalizing a change:
-1. Run `typst watch user-solutions/uXXXX.typ` (or compile `leetcode.typ`) to verify the PDF renders without errors.
-2. Ensure all new problems include at least one representative testcase.
-3. Keep documentation (README, this AGENTS guide) in sync when you modify workflows.
+Before committing:
 
-Happy Typst hacking!
+1. ✅ Run `just build` — ensures complete PDF compiles
+2. ✅ Check `just fmt` — format Python code
+3. ✅ New problems have at least one test case
+4. ✅ Reference solution passes its own tests
+5. ✅ Documentation updated (README, AGENTS.md)
+6. ✅ No references to old structure (user-solutions/, reference-solutions/)
+
+## Migration Notes
+
+**Old structure (before package conversion)**:
+```
+problems/pXXXX.typ
+reference-solutions/sXXXX.typ  
+user-solutions/uXXXX.typ
+```
+
+**New structure (domain-driven)**:
+```
+problems/XXXX/
+├── description.typ
+├── solution.typ
+└── testcases.typ
+```
+
+Key changes:
+- Unified `test()` API instead of separate `test-auto()` and `test()`
+- Test cases are data files (can import helpers if needed)
+- Metadata in testcases.typ for special requirements
+- Package-first design for easy distribution
+
+Happy Typst hacking! 🚀

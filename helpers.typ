@@ -60,11 +60,9 @@
       return chessboard(value)
     }
     if render-chessboard and value.len() > 0 and is-chessboard(value.at(0)) {
-      return align(center)[#value.map(chessboard).join(v(0.5em))]
+      return align(center)[#value.map(chessboard).join(line(length: 80%))]
     }
-    [
-      [#value.map(x => display(x)).join(", ")]
-    ]
+    [[#value.map(x => display(x)).join(", ")]]
   } else if type(value) == dictionary and value.type == "linkedlist" {
     let ret = ()
     let now = value
@@ -116,38 +114,31 @@
     let color = if pass { green } else { red }
 
     block(
-      stroke: 0.8pt + color,
       inset: 0.6em,
       width: 100%,
     )[
-      #heading(level: 2, outlined: false, numbering: none, [
-        Case #(idx + 1)
-        #h(1fr)
-        #if pass { "✅" } else { "❌" }
-      ])
-      #v(0.3em)
+      #heading(level: 2, outlined: false, numbering: none, [Case #(idx + 1)])
 
-      #strong("Inputs")
-      #v(0.2em)
       #for key in input.keys() {
         strong(key + ": ")
         display(input.at(key), render-chessboard: render-chessboard)
-        v(0.3em)
+        linebreak()
       }
 
-      #line(stroke: 0.8pt + gray, length: 100%)
-      #strong("Expected")
-      #v(0.2em)
-      #display(expected, render-chessboard: render-chessboard)
-      #v(0.4em)
-      #line(stroke: 0.8pt + gray, length: 100%)
-      #strong("Your Output")
-      #v(0.2em)
-      #display(yours, render-chessboard: render-chessboard)
-      #v(0.4em)
+      #table(
+        columns: (1fr, 1fr),
+        column-gutter: 1em,
+        stroke: 0.8pt + gray,
+        inset: 0.6em,
+        strong("Expected"),
+        table.cell(stroke: color)[#strong("Your Output")],
+        display(expected, render-chessboard: render-chessboard),
+        table.cell(stroke: color)[#display(
+          yours,
+          render-chessboard: render-chessboard,
+        )],
+      )
     ]
-
-    v(1em)
     idx += 1
   }
 }
