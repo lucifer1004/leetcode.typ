@@ -3,12 +3,12 @@
 // ========================================
 // Problem Description
 // ========================================
-#include "../problems/p0015.typ"
+#include "../problems/p0051.typ"
 
 // ========================================
 // Your Solution - Write your code here
 // ========================================
-#let _3sum(nums) = {
+#let n-queens(n) = {
   // TODO: Implement your solution
 
   none
@@ -17,16 +17,15 @@
 // ========================================
 // Test Cases
 // ========================================
-#import "../reference-solutions/s0015.typ": _3sum-ref
+#import "../reference-solutions/s0051.typ": n-queens-ref
 #testcases(
-  _3sum,
-  _3sum-ref,
+  n-queens,
+  n-queens-ref,
   (
-    (nums: (-1, 0, 1, 2, -1, -4)),
-    (nums: (0, 1, 1)),
-    (nums: (0, 0, 0)),
-    (nums: range(-10, 20, step: 3)),
-    (nums: range(-10, 10)),
+    (n: 1),
+    (n: 2),
+    (n: 4),
   ),
   comparator: unordered-compare,
+  render-chessboard: true,
 )

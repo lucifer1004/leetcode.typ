@@ -210,6 +210,29 @@ See `helpers.typ` for utilities:
 - `linkedlist(array)` - Create a linked list
 - `display(value)` - Format output
 - `testcases(fn, ref, inputs)` - Run test suite
+- `testcases(fn, ref, inputs, comparator: fn)` - Run test suite with custom comparator
+- `unordered-compare` - Comparator for problems where order doesn't matter
+
+#### Using Custom Comparators
+
+For problems that specify "You may return the answer in any order", use the `unordered-compare` comparator:
+
+```typst
+#testcases(solution, solution-ref, (
+  (input: value),
+), comparator: unordered-compare)
+```
+
+You can also define your own comparators for special cases:
+
+```typst
+// Example: Compare with floating point tolerance
+#let float-compare(a, b) = {
+  calc.abs(a - b) < 0.0001
+}
+
+#testcases(solution, solution-ref, inputs, comparator: float-compare)
+```
 
 ## Why Typst?
 
