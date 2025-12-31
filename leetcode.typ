@@ -74,6 +74,7 @@
   24,
   25,
   26,
+  42,
   51,
 )
 // Display all problems
