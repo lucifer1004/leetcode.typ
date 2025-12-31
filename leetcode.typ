@@ -27,7 +27,10 @@
 #set smartquote(enabled: false)
 #set par(justify: true)
 #set page(numbering: "1")
-
+#show link: it => {
+  set text(blue)
+  underline(it)
+}
 #show heading.where(level: 1, outlined: true): it => {
   pagebreak(weak: true)
   it
@@ -62,9 +65,12 @@
   25,
   26,
   42,
+  50,
   51,
   94,
   110,
+  112,
+  113,
   144,
   145,
   814,

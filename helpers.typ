@@ -56,6 +56,20 @@
   a.sorted() == b.sorted()
 }
 
+// Compare float numbers by both absolute and relative error
+#let float-compare(a, b) = {
+  if a == b {
+    return true
+  }
+  let abs = calc.abs(a - b)
+  let rel = if a == 0 {
+    calc.abs(b)
+  } else {
+    calc.abs(b - a) / calc.abs(a)
+  }
+  abs < 1e-6 or rel < 1e-6
+}
+
 #let display(value, render-chessboard: false) = {
   if type(value) == array {
     if render-chessboard and is-chessboard(value) {

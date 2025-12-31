@@ -68,6 +68,9 @@
       if comp-name == "unordered-compare" {
         comp = unordered-compare
       }
+      if comp-name == "float-compare" {
+        comp = float-compare
+      }
     }
     render-chess = metadata.at("render-chessboard", default: false)
   }
