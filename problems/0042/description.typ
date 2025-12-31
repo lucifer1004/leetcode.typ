@@ -26,7 +26,10 @@ Given $n$ non-negative integers representing an elevation map where the width of
   }
 
   // Water at each position
-  let water = range(n).map(i => calc.max(0, calc.min(left-max.at(i), right-max.at(i)) - height.at(i)))
+  let water = range(n).map(i => calc.max(
+    0,
+    calc.min(left-max.at(i), right-max.at(i)) - height.at(i),
+  ))
   let max-height = calc.max(..height)
 
   // Render main grid with Y-axis labels

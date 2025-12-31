@@ -76,6 +76,10 @@
   26,
   42,
   51,
+  94,
+  110,
+  144,
+  145,
 )
 // Display all problems
 #for problem in available-problems {

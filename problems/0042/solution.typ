@@ -21,7 +21,10 @@
   }
 
   // Water at each position
-  let water = range(n).map(i => calc.max(0, calc.min(left-max.at(i), right-max.at(i)) - height.at(i)))
+  let water = range(n).map(i => calc.max(
+    0,
+    calc.min(left-max.at(i), right-max.at(i)) - height.at(i),
+  ))
 
   water.sum()
 }

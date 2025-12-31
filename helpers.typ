@@ -1,3 +1,5 @@
+#import "visualize.typ": visualize-binarytree, visualize-linkedlist
+
 #let fill(value, n) = range(n).map(_ => value)
 
 #let is-chessboard(value) = {
@@ -72,18 +74,27 @@
       return [[#start.map(x => display(x)).join(", "), $...$ #omitted items omitted $...$, #end.map(x => display(x)).join(", ")]]
     }
     [[#value.map(x => display(x)).join(", ")]]
-  } else if type(value) == dictionary and value.type == "linkedlist" {
+  } else if (
+    type(value) == dictionary
+      and value.at("type", default: none) == "linkedlist"
+  ) {
     let ret = ()
     let now = value
     while now.next != none {
-      ret.push(display(now.val))
+      ret.push(now.val)
       now = now.next
     }
-    if ret.len() == 0 {
-      $emptyset$
-    } else {
-      ret.join($->$)
+
+    // Only visualize linkedlist if it's small
+    if ret.len() <= 8 {
+      return visualize-linkedlist(value)
     }
+    ret.map(display).join($->$)
+  } else if (
+    type(value) == dictionary
+      and value.at("type", default: none) == "binarytree"
+  ) {
+    return visualize-binarytree(value, show-nulls: false)
   } else if type(value) == str {
     if value.len() > 1050 {
       let start = value.slice(0, 500)
@@ -106,6 +117,59 @@
     now = (val: arr.at(arr.len() - 1 - i), next: now, type: "linkedlist")
   }
   now
+}
+
+#let binarytree(arr) = {
+  let n = arr.len()
+  if n == 0 or arr.at(0) == none {
+    return (val: none, left: none, right: none, type: "binarytree")
+  }
+
+  // left/right child index arrays, length n, init to none
+  let left = ()
+  let right = ()
+  for _ in range(n) {
+    left.push(none)
+    right.push(none)
+  }
+
+  // queue of indices (implemented by array + head pointer)
+  let q = (0,)
+  let qh = 0
+  let pos = 1
+
+  while qh < q.len() and pos < n {
+    let parent = q.at(qh)
+    qh += 1
+
+    // left child
+    if pos < n {
+      if arr.at(pos) != none {
+        left.at(parent) = pos
+        q.push(pos)
+      }
+      pos += 1
+    }
+
+    // right child
+    if pos < n {
+      if arr.at(pos) != none {
+        right.at(parent) = pos
+        q.push(pos)
+      }
+      pos += 1
+    }
+  }
+
+  // expand indices into nested dicts
+  let dfs(i) = (
+    val: arr.at(i),
+    left: if left.at(i) == none { none } else { dfs(left.at(i)) },
+    right: if right.at(i) == none { none } else { dfs(right.at(i)) },
+    type: "binarytree",
+  )
+
+  dfs(0)
 }
 
 #let testcases(

@@ -2,6 +2,7 @@
 /*.typ
 !/example.typ
 !/lib.typ
+!/visualize.typ
 !/helpers.typ
 !/leetcode.typ
 !/build/leetcode.pdf
