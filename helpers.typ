@@ -62,6 +62,15 @@
     if render-chessboard and value.len() > 0 and is-chessboard(value.at(0)) {
       return align(center)[#value.map(chessboard).join(line(length: 80%))]
     }
+    if value.len() == 0 {
+      return [[]]
+    }
+    if value.len() > 210 {
+      let start = value.slice(0, 100)
+      let end = value.slice(-100)
+      let omitted = value.len() - 200
+      return [[#start.map(x => display(x)).join(", "), $...$ #omitted items omitted $...$, #end.map(x => display(x)).join(", ")]]
+    }
     [[#value.map(x => display(x)).join(", ")]]
   } else if type(value) == dictionary and value.type == "linkedlist" {
     let ret = ()
@@ -75,6 +84,14 @@
     } else {
       ret.join($->$)
     }
+  } else if type(value) == str {
+    if value.len() > 1050 {
+      let start = value.slice(0, 500)
+      let end = value.slice(-500)
+      let omitted = value.len() - 1000
+      return display(start + " [..." + str(omitted) + " characters omitted ...] " + end)
+    }
+    "\"" + value.codepoints().join(sym.zws) + "\""
   } else {
     repr(value)
   }

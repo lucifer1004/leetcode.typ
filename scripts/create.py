@@ -58,46 +58,48 @@ def slugify(title):
 
 
 def update_leetcode_typ(problem_id: int):
-    """Insert problem include line in sorted order."""
+    """Insert problem ID into available-problems array in sorted order."""
     # Note: leetcode.typ is now excluded from package, but we keep this for local development
     if not Path("leetcode.typ").exists():
         return
 
     with open("leetcode.typ", "r", encoding="utf-8") as f:
-        lines = f.readlines()
+        content = f.read()
 
-    # Find where includes start (after the header setup)
-    include_start = 0
-    for i, line in enumerate(lines):
-        if line.strip().startswith('#include "problems/'):
-            include_start = i
-            break
+    # Find the available-problems array
+    array_start = content.find("#let available-problems = (")
+    if array_start == -1:
+        return  # Array not found, nothing to do
 
-    # Extract existing includes
-    includes = []
-    other_lines = lines[:include_start]
+    array_end = content.find(")", array_start)
+    if array_end == -1:
+        return  # Malformed array
 
-    for line in lines[include_start:]:
-        stripped = line.strip()
-        if stripped.startswith('#include "problems/'):
-            includes.append(line)
-        elif stripped:  # Non-include, non-empty line
-            other_lines.append(line)
+    # Extract existing problem IDs
+    array_content = content[array_start + len("#let available-problems = ("):array_end]
+    existing_ids = []
+    for line in array_content.split(","):
+        line = line.strip()
+        if line.isdigit():
+            existing_ids.append(int(line))
 
-    # Add new include - note: we don't have user-solutions anymore, skip if that's what this was for
-    # For now, we'll skip adding to leetcode.typ since it's not part of the package workflow
+    # Add new ID and sort
+    if problem_id not in existing_ids:
+        existing_ids.append(problem_id)
+        existing_ids.sort()
 
-    # Sort by problem ID extracted from filename
-    def extract_id(include_line):
-        match = re.search(r"problems/(\d{4})/", include_line)
-        return int(match.group(1)) if match else 0
+    # Rebuild array content with proper formatting
+    new_array_lines = ["#let available-problems = ("]
+    for pid in existing_ids:
+        new_array_lines.append(f"  {pid},")
+    new_array_lines.append(")")
+    new_array = "\n".join(new_array_lines)
 
-    includes.sort(key=extract_id)
+    # Replace old array with new one
+    new_content = content[:array_start] + new_array + content[array_end + 1:]
 
-    # Write back
     with open("leetcode.typ", "w", encoding="utf-8") as f:
-        f.writelines(other_lines)
-        f.writelines(includes)
+        f.write(new_content)
 
 
 def create_problem(
