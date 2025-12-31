@@ -89,7 +89,9 @@
       let start = value.slice(0, 500)
       let end = value.slice(-500)
       let omitted = value.len() - 1000
-      return display(start + " [..." + str(omitted) + " characters omitted ...] " + end)
+      return display(
+        start + " [..." + str(omitted) + " characters omitted ...] " + end,
+      )
     }
     "\"" + value.codepoints().join(sym.zws) + "\""
   } else {

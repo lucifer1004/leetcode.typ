@@ -76,7 +76,9 @@ def update_leetcode_typ(problem_id: int):
         return  # Malformed array
 
     # Extract existing problem IDs
-    array_content = content[array_start + len("#let available-problems = ("):array_end]
+    array_content = content[
+        array_start + len("#let available-problems = (") : array_end
+    ]
     existing_ids = []
     for line in array_content.split(","):
         line = line.strip()
@@ -96,7 +98,7 @@ def update_leetcode_typ(problem_id: int):
     new_array = "\n".join(new_array_lines)
 
     # Replace old array with new one
-    new_content = content[:array_start] + new_array + content[array_end + 1:]
+    new_content = content[:array_start] + new_array + content[array_end + 1 :]
 
     with open("leetcode.typ", "w", encoding="utf-8") as f:
         f.write(new_content)

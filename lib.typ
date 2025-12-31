@@ -1,10 +1,7 @@
 // lib.typ - LeetCode Package API
 // Public entrypoint for @preview/leetcode package
 
-#import "helpers.typ": (
-  chessboard, display, fill, is-chessboard, linkedlist, testcases,
-  unordered-compare,
-)
+#import "helpers.typ": *
 
 // Helper to format problem ID
 #let format-id(id) = {
