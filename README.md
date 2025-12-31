@@ -186,13 +186,13 @@ For problems like N-Queens:
 Stuck on a problem? View the reference solution code:
 
 ```typst
-#import "@preview/leetcode:0.1.0": problem, solution
+#import "@preview/leetcode:0.1.0": problem, answer
 
 #problem(1)
 // ... tried but couldn't solve it ...
 
 // Display the reference solution code
-#solution(1)
+#answer(1)
 ```
 
 ### Manual Reference Access

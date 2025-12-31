@@ -94,22 +94,11 @@
 
   // Read solution file and extract code starting from #let solution-ref
   let solution-content = read(path + "solution.typ")
-  let lines = solution-content.split("\n")
-  let start-line = 0
-
-  for (lineno, line) in lines.enumerate() {
-    if line.contains("#let solution-ref") {
-      start-line = lineno
-      break
-    }
-  }
-
-  // Extract solution code (skip the last empty line if any)
-  let end-line = lines.len()
-  let solution-code = lines.slice(start-line, end-line).join("\n").trim()
+    .replace("#import \"../../helpers.typ\": *\n", "")
+    .trim()
 
   heading(level: 2, outlined: false, numbering: none)[Reference Solution \##id]
-  raw(solution-code, block: true, lang: "typst")
+  raw(solution-content, block: true, lang: "typst")
 }
 
 // Complete workflow: display code + test solution

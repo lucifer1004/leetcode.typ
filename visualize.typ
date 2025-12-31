@@ -68,6 +68,8 @@
   step: .85,
   radius: .25,
 ) = {
+  import "@preview/fletcher:0.5.8": diagram, edge, node
+
   if (
     type(head) != dictionary or head.at("type", default: none) != "linkedlist"
   ) {
@@ -80,51 +82,30 @@
     vals.push(curr.val)
     curr = curr.next
   }
-  cetz.canvas({
-    import cetz.draw: *
 
-    if head.val == none {
-      circle((0, 0), radius: radius, fill: white, stroke: (thickness: 1pt))
-      content((0, 0), "∅")
-      return
-    }
+  let nodes = vals
+    .enumerate()
+    .map(it => {
+      let idx = it.at(0)
+      let val = it.at(1)
+      let display-val = if val != none { repr(val) } else { "∅" }
+      node((idx, 0), display-val)
+    })
 
-    // explicit point construction helpers (avoid tuple concatenation)
-    let pos(i) = if direction == "down" { (0.0, -step * i) } else {
-      (step * i, 0.0)
-    }
-    let x(p) = p.at(0)
-    let y(p) = p.at(1)
-
-    let edge-start(p) = if direction == "down" { (x(p), y(p) - radius) } else {
-      (x(p) + radius, y(p))
-    }
-
-    let edge-end(p) = if direction == "down" { (x(p), y(p) + radius) } else {
-      (x(p) - radius, y(p))
-    }
-
-    // nodes
-    for i in range(vals.len()) {
-      let v = vals.at(i)
-      let p = pos(i)
-      if v != none {
-        circle(p, radius: radius, fill: white, stroke: (thickness: 1pt))
-        content(p, repr(v))
-      }
-    }
-
-    // edges
-    for i in range(vals.len() - 1) {
-      let a = pos(i)
-      let b = pos(i + 1)
-
-      let s = edge-start(a)
-      let t = edge-end(b)
-
-      if vals.at(i + 1) != none {
-        line(s, t, mark: (end: "straight"), stroke: (thickness: 1pt))
-      }
-    }
+  let edges = range(vals.len() - 1).map(i => {
+    edge((i, 0), (i + 1, 0), ``, "-|>")
   })
+
+  set text(6pt)
+  diagram(
+    node-fill: gradient.radial(
+      blue.lighten(80%),
+      blue,
+      center: (30%, 20%),
+      radius: 80%,
+    ),
+    spacing: 1.2em,
+    ..nodes,
+    ..edges,
+  )
 }

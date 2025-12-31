@@ -134,3 +134,51 @@
   }
   linkedlist(ans)
 }
+
+#let solution-py(lists) = {
+  import "@preview/pyrunner:0.3.0" as py
+  let code = ```python
+  import heapq
+
+  def lst_to_array(lst):
+    array = []
+    while lst and lst["val"] is not None:
+      array.append(lst["val"])
+      lst = lst["next"]
+    return array
+
+  def array_to_lst(array):
+    dummy = {"val": None, "next": None}
+    curr = dummy
+    for val in array:
+      curr["next"] = {"val": val, "next": None, "type": "linkedlist"}
+      curr = curr["next"]
+    curr["next"] = {"val": None, "next": None, "type": "linkedlist"}
+    return dummy["next"]
+
+  def merge_k_lists(lists):
+    heap = []
+    lists = list(map(lst_to_array, lists))
+    n = len(lists)
+    heads = [0] * n
+    for i in range(n):
+      if lists[i]:
+        heapq.heappush(heap, (lists[i][0], i))
+
+    ans = []
+    while heap:
+      val, i = heapq.heappop(heap)
+      ans.append(val)
+      if heads[i] + 1 < len(lists[i]):
+        heads[i] += 1
+        heapq.heappush(heap, (lists[i][heads[i]], i))
+
+    if not ans:
+      return {"val": None, "next": None, "type": "linkedlist"}
+    return array_to_lst(ans)
+
+  merge_k_lists(lists)
+  ```
+
+  py.block(code, globals: (lists: lists))
+}

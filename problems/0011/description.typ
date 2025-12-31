@@ -1,7 +1,7 @@
+= 0011. Container With Most Water
+
 #import "../../helpers.typ": display
 #import "testcases.typ": cases
-
-= Container With Most Water
 
 You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the i#super[th] line are `(i, 0)` and `(i, height[i])`.
 

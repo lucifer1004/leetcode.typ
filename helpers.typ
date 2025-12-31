@@ -113,8 +113,8 @@
 // The implementation is not efficient since we can only do clones
 #let linkedlist(arr) = {
   let now = (val: none, next: none, type: "linkedlist")
-  for i in range(arr.len()) {
-    now = (val: arr.at(arr.len() - 1 - i), next: now, type: "linkedlist")
+  for val in arr.rev() {
+    now = (val: val, next: now, type: "linkedlist")
   }
   now
 }

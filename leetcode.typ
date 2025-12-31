@@ -1,5 +1,6 @@
 #import "lib.typ": problem, test
 #import "helpers.typ": testcases
+
 #align(center)[
   #v(3fr)
   #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)]
@@ -18,35 +19,21 @@
   #v(2cm)
 ]
 #pagebreak()
+
+#show outline.entry: set block(above: 1.2em)
 #outline()
+
 #counter(page).update(0)
 #set smartquote(enabled: false)
 #set par(justify: true)
 #set page(numbering: "1")
-#set heading(numbering: (..nums) => {
-  let chars = str(nums.pos().at(0)).clusters().rev()
-  while chars.len() < 4 {
-    chars.push("0")
-  }
-  chars.rev().join() + "."
-})
-#show heading: it => {
-  if it.level == 1 {
-    pagebreak(weak: true)
-  }
+
+#show heading.where(level: 1, outlined: true): it => {
+  pagebreak(weak: true)
   it
-  v(1em)
+  v(1.5em)
 }
-#let solution-placeholder(..args) = {
-  none
-}
-// Helper function to display a problem with its reference solution
-#let show-problem(id) = {
-  // Show problem description
-  problem(id)
-  // Test with placeholder (to show built-in test results)
-  test(id, solution-placeholder)
-}
+
 #let available-problems = (
   1,
   2,
@@ -81,7 +68,10 @@
   144,
   145,
 )
+
 // Display all problems
-#for problem in available-problems {
-  show-problem(problem)
+#for problem-id in available-problems {
+  problem(problem-id)
+  // Test with placeholder (to show built-in test results)
+  test(problem-id, (..args) => none)
 }

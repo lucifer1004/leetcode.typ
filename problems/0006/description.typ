@@ -1,4 +1,4 @@
-= Zigzag Conversion
+= 0006. Zigzag Conversion
 
 The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this:
 

@@ -7,7 +7,7 @@ import re
 import sys
 
 # Template definitions
-PROBLEM_TEMPLATE = """= {title}
+PROBLEM_TEMPLATE = """= {id:04}. {title}
 
 {description}
 """

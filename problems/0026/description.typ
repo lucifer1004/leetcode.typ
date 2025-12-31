@@ -1,4 +1,4 @@
-= Remove Duplicates from Sorted Array (Adapted)
+= 0026. Remove Duplicates from Sorted Array (Adapted)
 
 - This problem is different from the original version since functions in Typst cannot modify the input array in place.
 
