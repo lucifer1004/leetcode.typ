@@ -1,8 +1,8 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(nums1, nums2) = {
+#let solution(nums1, nums2) = {
   if nums1.len() > nums2.len() {
-    return solution-ref(nums2, nums1)
+    return solution(nums2, nums1)
   }
 
   let imax = 4000000000

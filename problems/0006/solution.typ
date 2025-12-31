@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(s, numRows) = {
+#let solution(s, numRows) = {
   if numRows == 1 {
     return s
   }

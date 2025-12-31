@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(height) = {
+#let solution(height) = {
   let n = height.len()
   let l = 0
   let r = n - 1

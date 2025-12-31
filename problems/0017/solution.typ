@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(digits) = {
+#let solution(digits) = {
   let digits = digits.clusters()
   let d = (
     "2": ("a", "b", "c"),

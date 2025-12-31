@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(height) = {
+#let solution(height) = {
   if height.len() == 0 { return }
 
   // Calculate water level at each position

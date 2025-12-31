@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(s, p) = {
+#let solution(s, p) = {
   let s = s.clusters()
   let p = p.clusters()
   let m = s.len()

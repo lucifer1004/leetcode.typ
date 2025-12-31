@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(list1, list2) = {
+#let solution(list1, list2) = {
   let ans = ()
   while list1.val != none or list2.val != none {
     if list1.val != none and (list2.val == none or list1.val < list2.val) {

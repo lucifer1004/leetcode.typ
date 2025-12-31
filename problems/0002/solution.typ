@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(l1, l2) = {
+#let solution(l1, l2) = {
   let p = ()
   let carry = 0
   while l1.val != none or l2.val != none {

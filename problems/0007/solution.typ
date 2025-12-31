@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(x) = {
+#let solution(x) = {
   let ans = 0
   let sign = if x >= 0 { 0 } else { -1 }
   if x == -2147483648 {

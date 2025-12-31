@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(head, n) = {
+#let solution(head, n) = {
   let values = ()
   let node = head
   while node.next != none {

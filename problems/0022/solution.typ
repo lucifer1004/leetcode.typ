@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(n) = {
+#let solution(n) = {
   let current = (("", 0, 0),)
   for i in range(2 * n) {
     let next = ()

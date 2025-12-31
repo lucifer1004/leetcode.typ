@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(nums) = {
+#let solution(nums) = {
   let nums = nums.sorted()
   let n = nums.len()
   let ans = ()

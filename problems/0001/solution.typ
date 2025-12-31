@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(arr, target) = {
+#let solution(arr, target) = {
   let d = (:)
   let ans = (-1, -1)
   for (i, num) in arr.enumerate() {

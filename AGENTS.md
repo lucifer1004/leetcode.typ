@@ -9,7 +9,7 @@ This is now a **Typst package** (`@preview/leetcode`) with domain-driven design:
 ```
 problems/XXXX/           # Each problem is self-contained
 ├── description.typ      # Problem statement
-├── solution.typ         # Reference solution (#let solution-ref)
+├── solution.typ         # Reference solution (#let solution)
 └── testcases.typ        # Built-in test cases + metadata
 ```
 
@@ -41,7 +41,7 @@ problems/XXXX/           # Each problem is self-contained
        (input: value),
      )
      ```
-   - **solution.typ**: Implement `solution-ref` function
+   - **solution.typ**: Implement `solution` function
 
 3. For problems needing special handling, add metadata to `testcases.typ`:
    ```typst
@@ -193,7 +193,7 @@ Edit `problems/XXXX/testcases.typ`:
 
 ### Fix a reference solution
 
-Edit `problems/XXXX/solution.typ` and implement `solution-ref` function.
+Edit `problems/XXXX/solution.typ` and implement `solution` function.
 
 ### Update problem description
 

@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(x) = {
+#let solution(x) = {
   if x < 0 {
     return false
   }

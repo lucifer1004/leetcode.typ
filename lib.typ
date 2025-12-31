@@ -39,7 +39,7 @@
   let id-str = format-id(id)
   let base = "problems/" + id-str + "/"
 
-  import (base + "solution.typ"): solution-ref
+  import (base + "solution.typ"): solution
   import (base + "testcases.typ"): cases
 
   let cases = if default-cases {
@@ -74,7 +74,7 @@
 
   testcases(
     solution-fn,
-    solution-ref,
+    solution,
     cases,
     comparator: comp,
     render-chessboard: render-chess,
@@ -92,7 +92,7 @@
   let id-str = format-id(id)
   let path = "problems/" + id-str + "/"
 
-  // Read solution file and extract code starting from #let solution-ref
+  // Read solution file and extract code
   let solution-content = read(path + "solution.typ")
     .replace("#import \"../../helpers.typ\": *\n", "")
     .trim()

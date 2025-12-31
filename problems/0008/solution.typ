@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(s) = {
+#let solution(s) = {
   let numerics = "0123456789"
   let d = (
     "0": 0,

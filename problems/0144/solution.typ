@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(root) = {
+#let solution(root) = {
   if root == none or root.val == none {
     return ()
   }

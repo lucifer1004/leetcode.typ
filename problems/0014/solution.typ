@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(strs) = {
+#let solution(strs) = {
   let strs = strs.map(x => x.clusters())
   let i = 0
   let n = strs.len()

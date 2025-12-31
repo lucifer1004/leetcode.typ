@@ -207,7 +207,7 @@ For advanced control:
 
 // Get problem directory path
 #let path = get-problem-path(1)
-#import (path + "solution.typ"): solution-ref
+#import (path + "solution.typ"): solution
 ```
 
 ## API Reference

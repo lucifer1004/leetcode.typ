@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(root) = {
+#let solution(root) = {
   let balanced(node) = if node == none or node.val == none {
     (true, 0)
   } else {

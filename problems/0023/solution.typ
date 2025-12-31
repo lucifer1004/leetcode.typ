@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(lists) = {
+#let solution(lists) = {
   let heads = lists.map(list => list)
   let heap = ()
   for (idx, head) in heads.enumerate() {

@@ -1,6 +1,6 @@
 #import "../../helpers.typ": *
 
-#let solution-ref(s) = {
+#let solution(s) = {
   let stack = ()
   let pairs = (
     ")": "(",

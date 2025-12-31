@@ -24,7 +24,7 @@ TESTCASES_TEMPLATE = """// Test cases for Problem {id:04}
 
 SOLUTION_TEMPLATE = """#import "../../helpers.typ": *
 
-#let solution-ref({params}) = {{
+#let solution({params}) = {{
   // Reference solution implementation
   
   none
@@ -143,7 +143,9 @@ def create_problem(
         problem_dir.mkdir(parents=True, exist_ok=True)
 
         # Create problem description
-        problem_content = PROBLEM_TEMPLATE.format(title=title, description=description)
+        problem_content = PROBLEM_TEMPLATE.format(
+            id=problem_id, title=title, description=description
+        )
         problem_path.write_text(problem_content)
         print(f"✓ Created {problem_path}")
 
