@@ -8,7 +8,7 @@ A Typst package for solving LeetCode problems with beautiful PDF output and auto
 - **Beautiful Output**: Automatic formatting with professional PDF rendering
 - **Test Visualization**: Side-by-side comparison of your output vs. expected results
 - **Auto-Validation**: Instant pass/fail indicators
-- **40 Problems**: Curated collection of classic LeetCode problems
+- **45 Problems**: Curated collection of classic LeetCode problems
 - **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
@@ -111,14 +111,19 @@ typst watch my-solution.typ
 | 50  | Pow(x, n)                                      | Medium     |
 | 51  | N-Queens                                       | Hard       |
 | 53  | Maximum Subarray                               | Medium     |
+| 69  | Sqrt(x)                                        | Easy       |
 | 70  | Climbing Stairs                                | Easy       |
 | 94  | Binary Tree Inorder Traversal                  | Easy       |
+| 104 | Maximum Depth of Binary Tree                   | Easy       |
 | 110 | Balanced Binary Tree                           | Easy       |
 | 112 | Path Sum                                       | Easy       |
 | 113 | Path Sum II                                    | Medium     |
+| 121 | Best Time to Buy and Sell Stock                | Easy       |
 | 144 | Binary Tree Preorder Traversal                 | Easy       |
 | 145 | Binary Tree Postorder Traversal                | Easy       |
+| 155 | Min Stack                                      | Medium     |
 | 200 | Number of Islands                              | Medium     |
+| 206 | Reverse Linked List                            | Easy       |
 | 289 | Game of Life                                   | Medium     |
 | 814 | Binary Tree Pruning                            | Medium     |
 

@@ -5,10 +5,21 @@
 #import cetz.tree
 
 // Binary tree visualization defaults
-#let DEFAULT-TREE-SPREAD = 0.8
-#let DEFAULT-TREE-GROW = 0.6
-#let DEFAULT-TREE-RADIUS = 0.3
-#let DEFAULT-STROKE-THICKNESS = 1pt
+#let DEFAULT-TREE-SPREAD = 1.0
+#let DEFAULT-TREE-GROW = 0.8
+#let DEFAULT-TREE-RADIUS = 0.35
+#let DEFAULT-STROKE-THICKNESS = 0.8pt
+
+// Default node fill - gradient matching linked list style
+#let DEFAULT-NODE-FILL = gradient.radial(
+  blue.lighten(80%),
+  blue,
+  center: (30%, 20%),
+  radius: 80%,
+)
+
+// Default edge stroke color
+#let DEFAULT-EDGE-STROKE = blue.darken(20%)
 
 // Linked list visualization defaults
 #let DEFAULT-LIST-SPACING = 1.2em
@@ -22,6 +33,7 @@
   grow: DEFAULT-TREE-GROW,
   radius: DEFAULT-TREE-RADIUS,
   show-nulls: false,
+  node-fill: DEFAULT-NODE-FILL,
 ) = {
   // dict tree -> CeTZ tree node array
   // CeTZ node format: ([content], child1, child2, ...)
@@ -46,8 +58,9 @@
     import cetz.draw: *
 
     if data == none {
-      circle((0, 0), radius: radius, fill: white, stroke: (
+      circle((0, 0), radius: radius, fill: gray.lighten(60%), stroke: (
         thickness: DEFAULT-STROKE-THICKNESS,
+        paint: gray,
       ))
       content((0, 0), "∅")
       return
@@ -61,8 +74,9 @@
 
       draw-node: node => {
         if node.content != none or show-nulls {
-          circle((0, 0), radius: radius, fill: white, stroke: (
+          circle((0, 0), radius: radius, fill: node-fill, stroke: (
             thickness: DEFAULT-STROKE-THICKNESS,
+            paint: DEFAULT-EDGE-STROKE,
           ))
           content((0, 0), if node.content != none { node.content } else { "∅" })
         }
@@ -72,6 +86,7 @@
         if child != none and (child.content != none or show-nulls) {
           line(source + ".south", target + ".north", stroke: (
             thickness: DEFAULT-STROKE-THICKNESS,
+            paint: DEFAULT-EDGE-STROKE,
           ))
         }
       },

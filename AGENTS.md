@@ -356,6 +356,75 @@ Before committing:
 5. Documentation updated (README, AGENTS.md)
 6. No circular dependencies in module imports
 
+## Problem Description Style Guide
+
+Problem descriptions (`description.typ`) should follow consistent formatting rules.
+
+### Text Formatting
+
+| Element                                                 | Syntax          | Example                                        |
+| ------------------------------------------------------- | --------------- | ---------------------------------------------- |
+| **Code identifiers** (variables, functions, parameters) | `` `name` ``    | `` `nums` ``, `` `target` ``, `` `getMin()` `` |
+| **Emphasis** (keywords, important terms)                | `*text*`        | `*exactly one solution*`, `*palindrome*`       |
+| **Mathematical expressions**                            | `$...$`         | `$n$`, `$k$`, `$m times n$`                    |
+| **Numeric ranges/bounds**                               | `$...$`         | `$[-2^31, 2^31 - 1]$`                          |
+| **Complexity notation**                                 | `$cal(O)(...)$` | `$cal(O)(log n)$`, `$cal(O)(n^2)$`             |
+| **Exponents/formulas**                                  | `$...$`         | `$x^n$`, `$2^31$`                              |
+
+### When to Use Each
+
+**Use backticks `` ` `` for:**
+
+- Variable names: `` `nums` ``, `` `head` ``, `` `prices` ``
+- Function/method names: `` `push()` ``, `` `getMin()` ``
+- Parameter names in descriptions: `` `target` ``
+- String literals: `` `'.'` ``, `` `'*'` ``
+- Return values (boolean): `` `true` ``, `` `false` ``
+- Data structure names when referencing code: `` `MinStack` ``
+
+**Use math mode `$...$` for:**
+
+- Mathematical variables: `$n$`, `$k$`, `$m$`, `$x$`
+- Dimensions: `$m times n$` grid
+- Ranges: `$[-2^31, 2^31 - 1]$`
+- Complexity: `$cal(O)(n log n)$`
+- Powers/exponents: `$x^n$`, `$2^31$`
+- Any mathematical notation: `$<=$ `, `$>=$`
+
+### Examples
+
+**Good:**
+
+```typst
+Given an array `nums` and an integer `target`, return indices...
+
+The time complexity should be $cal(O)(log n)$.
+
+Given $n$ pairs of parentheses, generate all combinations...
+
+The integer range is $[-2^31, 2^31 - 1]$.
+
+Return `true` if `x` is a *palindrome*.
+```
+
+**Bad:**
+
+```typst
+Given an array $nums$ and an integer $target$...  // ❌ Use backticks for code
+Given n pairs of parentheses...                   // ❌ Use $n$ for math variables
+The time complexity should be `O(log n)`.         // ❌ Use $cal(O)(...)$ for complexity
+```
+
+### Key Distinction
+
+- **Code context** → backticks: things that appear in code (variable names, function calls)
+- **Math context** → dollar signs: abstract quantities, formulas, complexity
+
+When a variable appears in both contexts, prefer:
+
+- In "the array `nums`" → backticks (referring to the code parameter)
+- In "$n$ elements" → math (referring to the abstract count)
+
 ## Problem Metadata (problem.toml)
 
 Each problem has a `problem.toml` file with metadata:
