@@ -1,5 +1,4 @@
-// Test cases for Problem 0112
-// Import helpers if needed (e.g., linkedlist, fill, etc.)
+// Test cases for Problem 0113
 #import "../../helpers.typ": binarytree
 
 #let cases = (
@@ -10,5 +9,3 @@
   (root: binarytree((1, 2, 3)), target-sum: 5),
   (root: binarytree(()), target-sum: 0),
 )
-
-#let metadata = (comparator: "unordered-compare")

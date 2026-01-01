@@ -6,8 +6,3 @@
   (nums: range(-10, 20, step: 3)),
   (nums: range(-10, 10)),
 )
-
-// Metadata
-#let metadata = (
-  comparator: "unordered-compare",
-)

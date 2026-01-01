@@ -231,14 +231,15 @@ For advanced control:
 
 ### Main Functions
 
-| Function                | Description                       |
-| ----------------------- | --------------------------------- |
-| `problem(id)`           | Display problem statement         |
-| `test(id, fn, ...)`     | Test solution with built-in cases |
-| `answer(id)`            | Display reference solution code   |
-| `solve(id, code-block)` | Display code and test in one call |
-| `get-test-cases(id)`    | Get built-in test cases as array  |
-| `get-problem-path(id)`  | Get problem directory path        |
+| Function                | Description                              |
+| ----------------------- | ---------------------------------------- |
+| `problem(id)`           | Display problem with difficulty badge    |
+| `test(id, fn, ...)`     | Test solution with built-in cases        |
+| `answer(id)`            | Display reference solution code          |
+| `solve(id, code-block)` | Display code and test in one call        |
+| `get-test-cases(id)`    | Get built-in test cases as array         |
+| `get-problem-path(id)`  | Get problem directory path               |
+| `get-problem-info(id)`  | Get metadata (title, difficulty, labels) |
 
 ### Data Structure Functions
 
@@ -274,9 +275,22 @@ Each problem is organized as:
 
 ```
 problems/XXXX/
+├── problem.toml       # Metadata (title, difficulty, labels)
 ├── description.typ    # Problem statement
 ├── solution.typ       # Reference solution
-└── testcases.typ      # Test cases + metadata
+└── testcases.typ      # Test cases (pure data)
+```
+
+**problem.toml structure**:
+
+```toml
+title = "Two Sum"
+difficulty = "easy"
+labels = ["array", "hash-table"]
+
+# Optional: for special handling
+# comparator = "unordered-compare"
+# render-chessboard = true
 ```
 
 **Testcases can use helper functions**:
@@ -294,7 +308,7 @@ This design ensures:
 
 - **High cohesion**: All files for a problem are together
 - **Built-in tests**: No need to write test cases
-- **Metadata support**: Comparators and rendering options included
+- **Metadata support**: Difficulty badges, comparators, and rendering options
 - **Helper access**: Testcases can use linkedlist, fill, etc.
 
 ## Tips

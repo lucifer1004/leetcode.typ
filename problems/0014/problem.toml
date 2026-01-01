@@ -1,0 +1,4 @@
+title = "Longest Common Prefix"
+difficulty = "easy"
+labels = ["string", "trie"]
+

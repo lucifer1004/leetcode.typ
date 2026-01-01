@@ -1,7 +1,4 @@
 // Test cases for Problem 0200
-// Import helpers if needed (e.g., linkedlist, fill, etc.)
-// #import "../../helpers.typ": linkedlist
-
 #let cases = (
   (grid: ((1, 1, 1, 1, 0), (1, 1, 0, 1, 0), (1, 1, 0, 0, 0), (0, 0, 0, 0, 0))),
   (grid: ((1, 1, 0, 0, 0), (1, 1, 0, 0, 0), (0, 0, 1, 0, 0), (0, 0, 0, 1, 1))),
@@ -26,5 +23,3 @@
     ),
   ),
 )
-
-#let metadata = (render-chessboard: true)

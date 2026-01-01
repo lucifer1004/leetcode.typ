@@ -17,5 +17,3 @@
   }
   ans
 }
-
-#let metadata = (comparator: "float-compare")

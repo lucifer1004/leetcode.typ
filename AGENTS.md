@@ -8,9 +8,10 @@ This is a **Typst package** (`@preview/leetcode`) with modular, DAG-based design
 
 ```
 problems/XXXX/           # Each problem is self-contained
+├── problem.toml         # Metadata (title, difficulty, labels, comparator)
 ├── description.typ      # Problem statement
 ├── solution.typ         # Reference solution (#let solution)
-└── testcases.typ        # Built-in test cases + metadata
+└── testcases.typ        # Built-in test cases (pure data)
 ```
 
 ### Module Structure (DAG - No Circular Dependencies)
@@ -50,28 +51,31 @@ problems/XXXX/           # Each problem is self-contained
 
    ```
    problems/XXXX/
-   ├── description.typ
-   ├── solution.typ
-   └── testcases.typ
+   ├── problem.toml      # Metadata
+   ├── description.typ   # Problem statement
+   ├── solution.typ      # Reference solution
+   └── testcases.typ     # Test cases
    ```
 
-2. Fill in the generated files:
-   - **description.typ**: Problem title and description
-   - **testcases.typ**: Add test cases (can import helpers if needed)
+2. The script will prompt for:
+   - **Title**: Problem name
+   - **Difficulty**: `easy`, `medium`, or `hard`
+   - **Labels**: Comma-separated tags (e.g., `array,hash-table`)
+   - **Parameters**: Function parameters for the solution
+
+3. Fill in the generated files:
+   - **testcases.typ**: Add test cases
      ```typst
-     #import "../../helpers.typ": linkedlist
      #let cases = (
-       (input: value),
+       (nums: (1, 2, 3), target: 6),
      )
      ```
    - **solution.typ**: Implement `solution` function
 
-3. For problems needing special handling, add metadata to `testcases.typ`:
-   ```typst
-   #let metadata = (
-     comparator: "unordered-compare",
-     render-chessboard: true,
-   )
+4. For problems needing special handling, add to `problem.toml`:
+   ```toml
+   comparator = "unordered-compare"
+   render-chessboard = true
    ```
 
 ## Testing Your Changes
@@ -114,7 +118,7 @@ This creates a comprehensive PDF with all 38 problems and their reference soluti
 
 - **High Cohesion**: All files for Problem 1 live in `problems/0001/`
 - **Built-in Test Cases**: Users get test cases automatically
-- **Metadata Support**: Comparators and rendering options in testcases.typ
+- **Metadata Support**: Comparators and rendering options in `problem.toml`
 
 ### Modular Design (DAG)
 
@@ -219,14 +223,15 @@ Data structure visualization, depends on external packages (cetz, fletcher).
 
 Package API entrypoint, re-exports helpers and adds high-level functions.
 
-| Function                | Description                              |
-| ----------------------- | ---------------------------------------- |
-| `problem(id)`           | Display problem description              |
-| `test(id, fn, ...)`     | Test solution with built-in/custom cases |
-| `answer(id)`            | Display reference solution code          |
-| `solve(id, code-block)` | Display code and test in one call        |
-| `get-test-cases(id)`    | Get built-in test cases                  |
-| `get-problem-path(id)`  | Get problem directory path               |
+| Function                | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| `problem(id)`           | Display problem description with difficulty |
+| `test(id, fn, ...)`     | Test solution with built-in/custom cases    |
+| `answer(id)`            | Display reference solution code             |
+| `solve(id, code-block)` | Display code and test in one call           |
+| `get-test-cases(id)`    | Get built-in test cases                     |
+| `get-problem-path(id)`  | Get problem directory path                  |
+| `get-problem-info(id)`  | Get metadata from problem.toml              |
 
 **Comparator dispatch table** (extensible):
 
@@ -328,9 +333,9 @@ Edit `problems/XXXX/solution.typ` and implement `solution` function.
    )
    ```
 
-3. Use in testcases.typ:
-   ```typst
-   #let metadata = (comparator: "my-compare")
+3. Use in problem.toml:
+   ```toml
+   comparator = "my-compare"
    ```
 
 ### Add a new data structure
@@ -350,6 +355,41 @@ Before committing:
 4. Reference solution passes its own tests
 5. Documentation updated (README, AGENTS.md)
 6. No circular dependencies in module imports
+
+## Problem Metadata (problem.toml)
+
+Each problem has a `problem.toml` file with metadata:
+
+```toml
+title = "Two Sum"
+difficulty = "easy"
+labels = ["array", "hash-table"]
+
+# Optional fields (with defaults)
+# comparator = "unordered-compare"
+# render-chessboard = true
+```
+
+**Required fields**:
+
+- `title`: Problem name
+- `difficulty`: `"easy"`, `"medium"`, or `"hard"`
+- `labels`: Array of topic tags
+
+**Optional fields** (for special handling):
+
+- `comparator`: Custom comparison function for test results
+- `render-chessboard`: Display 2D arrays as chessboards
+
+**Common labels** (based on LeetCode categories):
+
+- `array`, `string`, `hash-table`, `math`
+- `two-pointers`, `sliding-window`, `binary-search`
+- `linked-list`, `tree`, `graph`
+- `stack`, `queue`, `heap`
+- `dynamic-programming`, `greedy`, `backtracking`
+- `divide-and-conquer`, `recursion`
+- `sorting`, `bit-manipulation`
 
 ## Linked List Data Structure
 

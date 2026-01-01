@@ -68,6 +68,10 @@
   if a == b {
     return true
   }
+  // Handle none values
+  if a == none or b == none {
+    return a == b
+  }
   let abs = calc.abs(a - b)
   let rel = if a == 0 {
     calc.abs(b)

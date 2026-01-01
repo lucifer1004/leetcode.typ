@@ -1,0 +1,5 @@
+title = "3Sum"
+difficulty = "medium"
+labels = ["array", "two-pointers", "sorting"]
+comparator = "unordered-compare"
+

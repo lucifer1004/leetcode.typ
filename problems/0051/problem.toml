@@ -1,0 +1,6 @@
+title = "N-Queens"
+difficulty = "hard"
+labels = ["array", "backtracking"]
+comparator = "unordered-compare"
+render-chessboard = true
+
