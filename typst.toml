@@ -4,23 +4,14 @@ version = "0.1.0"
 entrypoint = "lib.typ"
 authors = ["Gabriel Wu <@lucifer1004>"]
 license = "MIT"
-description = "Solve and test LeetCode problems with built-in test cases."
+description = "Practice LeetCode with built-in tests and visualizations."
 repository = "https://github.com/lucifer1004/leetcode.typ"
-keywords = ["leetcode", "algorithms", "testing", "competitive-programming"]
+keywords = [
+  "leetcode",
+  "algorithms",
+  "testing",
+  "competitive-programming",
+  "visualization",
+]
 categories = ["utility", "scripting"]
 compiler = "0.14.0"
-
-exclude = [
-  "build/",
-  "*.pdf",
-  "scripts/",
-  "Justfile",
-  "templates/",
-  ".git*",
-  ".github/",
-  "AGENTS.md",
-  "leetcode.typ",
-  "example.typ",
-  "draft.typ",
-  "docs/",
-]
