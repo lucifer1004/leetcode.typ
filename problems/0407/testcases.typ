@@ -1,5 +1,7 @@
+// Test cases for Problem 0407
+// First 2 cases are from LeetCode Examples
+
 #let cases = (
-  // Example 1: 3x6 grid, traps 4 units of water
   (
     input: (
       heightMap: (
@@ -8,8 +10,8 @@
         (2, 3, 3, 2, 3, 1),
       ),
     ),
+    explanation: [After the rain, water is trapped between the blocks. We have two small ponds 1 and 3 units trapped. The total volume of water trapped is 4.],
   ),
-  // Example 2: 5x5 grid (bowl shape)
   (
     input: (
       heightMap: (
@@ -21,7 +23,7 @@
       ),
     ),
   ),
-  // Example 3: 3x3 simple bowl
+  // Additional test cases
   (
     input: (
       heightMap: (
@@ -31,7 +33,6 @@
       ),
     ),
   ),
-  // Example 4: flat surface (no water)
   (
     input: (
       heightMap: (
@@ -41,7 +42,6 @@
       ),
     ),
   ),
-  // Example 5: 2x2 grid (too small to trap water)
   (
     input: (
       heightMap: (
