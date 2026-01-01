@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: typstyle
+        name: typstyle
+        entry: typstyle -i
+        language: system
+        types: [file]
+        files: \.typ$
+
+      - id: update-docs
+        name: Update README from template
+        entry: python3 scripts/update_docs.py
+        language: system
+        pass_filenames: false
+        files: ^(problems/.*/problem\.toml|README\.md\.template|docs/index\.html\.template)$
+
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: v3.7.4
+    hooks:
+      - id: prettier

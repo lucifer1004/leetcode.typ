@@ -4,6 +4,10 @@ fmt:
   typstyle -i .
   prettier --write .
 
+# Run pre-commit hooks
+pre-commit:
+  pre-commit run --all-files
+
 # Create a new problem (usage: just create 22)
 create id:
   python3 scripts/create.py {{id}}

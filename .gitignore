@@ -4,5 +4,5 @@ draft.typ
 .ruff_cache/
 build/
 
-# Generated from template
+# Generated from template (CI only)
 docs/index.html

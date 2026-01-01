@@ -8,7 +8,7 @@ A Typst package for solving LeetCode problems with beautiful PDF output and auto
 - **Beautiful Output**: Automatic formatting with professional PDF rendering
 - **Test Visualization**: Side-by-side comparison of your output vs. expected results
 - **Auto-Validation**: Instant pass/fail indicators
-- **40 Problems**: Curated collection of classic LeetCode problems
+- **{{PROBLEM_COUNT}} Problems**: Curated collection of classic LeetCode problems
 - **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
@@ -79,48 +79,7 @@ typst watch my-solution.typ
 
 ## Available Problems
 
-| ID  | Title                                          | Difficulty |
-| --- | ---------------------------------------------- | ---------- |
-| 1   | Two Sum                                        | Easy       |
-| 2   | Add Two Numbers                                | Medium     |
-| 3   | Longest Substring Without Repeating Characters | Medium     |
-| 4   | Median of Two Sorted Arrays                    | Hard       |
-| 5   | Longest Palindromic Substring                  | Medium     |
-| 6   | Zigzag Conversion                              | Medium     |
-| 7   | Reverse Integer                                | Medium     |
-| 8   | String to Integer (atoi)                       | Medium     |
-| 9   | Palindrome Number                              | Easy       |
-| 10  | Regular Expression Matching                    | Hard       |
-| 11  | Container With Most Water                      | Medium     |
-| 12  | Integer to Roman                               | Medium     |
-| 13  | Roman to Integer                               | Easy       |
-| 14  | Longest Common Prefix                          | Easy       |
-| 15  | 3Sum                                           | Medium     |
-| 16  | 3Sum Closest                                   | Medium     |
-| 17  | Letter Combinations of a Phone Number          | Medium     |
-| 18  | 4Sum                                           | Medium     |
-| 19  | Remove Nth Node From End of List               | Medium     |
-| 20  | Valid Parentheses                              | Easy       |
-| 21  | Merge Two Sorted Lists                         | Easy       |
-| 22  | Generate Parentheses                           | Medium     |
-| 23  | Merge k Sorted Lists                           | Hard       |
-| 24  | Swap Nodes in Pairs                            | Medium     |
-| 25  | Reverse Nodes in k-Group                       | Hard       |
-| 26  | Remove Duplicates from Sorted Array            | Easy       |
-| 42  | Trapping Rain Water                            | Hard       |
-| 50  | Pow(x, n)                                      | Medium     |
-| 51  | N-Queens                                       | Hard       |
-| 53  | Maximum Subarray                               | Medium     |
-| 70  | Climbing Stairs                                | Easy       |
-| 94  | Binary Tree Inorder Traversal                  | Easy       |
-| 110 | Balanced Binary Tree                           | Easy       |
-| 112 | Path Sum                                       | Easy       |
-| 113 | Path Sum II                                    | Medium     |
-| 144 | Binary Tree Preorder Traversal                 | Easy       |
-| 145 | Binary Tree Postorder Traversal                | Easy       |
-| 200 | Number of Islands                              | Medium     |
-| 289 | Game of Life                                   | Medium     |
-| 814 | Binary Tree Pruning                            | Medium     |
+{{PROBLEM_TABLE}}
 
 ## Multiple Problems in One File
 
