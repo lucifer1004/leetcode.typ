@@ -29,7 +29,10 @@ problems/XXXX/           # Each problem is self-contained
 ### Module DAG
 
 ```
-datastructures.typ → utils.typ → display.typ → testing.typ → helpers.typ → lib.typ
+datastructures.typ → utils.typ → display.typ → testing.typ → helpers.typ
+                                                    ↓
+state.typ ──→ problems.typ ──→ badges.typ ──→ render.typ ──→ workbook.typ ──→ lib.typ
+              validators.typ ────────────────────────↑
 ```
 
 ## Adding a Problem
@@ -232,4 +235,4 @@ let f() = { result.push(x) }  // Error!
 - [ ] `just build` succeeds
 - [ ] Reference solution passes tests
 - [ ] No `expected:` in testcases
-- [ ] Added to `available-problems` in `lib.typ`
+- [ ] Added to `available-problems` in `problems.typ`

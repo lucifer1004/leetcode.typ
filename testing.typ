@@ -20,24 +20,54 @@
   custom-display: none,
   custom-output-display: none,
 ) = {
-  v(2em)
-  heading(level: 2, outlined: false, numbering: none, [Test Results])
-
-  let idx = 0
-  for case in cases {
-    // Extract input from case (new format uses .input, supports both)
+  // Pre-compute all test results
+  let results = cases.map(case => {
     let input = if "input" in case { case.input } else { case }
-
     let expected = reference(..input.values())
     let yours = solution(..input.values())
-
-    // Handle none output (placeholder solution) - always fail
-    let pass = if yours == none {
-      false
-    } else {
+    let is-placeholder = yours == none
+    let pass = if is-placeholder { false } else {
       validator(input, expected, yours)
     }
-    let color = if pass { green } else { red }
+    (
+      input: input,
+      expected: expected,
+      yours: yours,
+      pass: pass,
+      is-placeholder: is-placeholder,
+      case: case,
+    )
+  })
+
+  // Calculate pass rate and check if all are placeholders
+  let total = results.len()
+  let passed = results.filter(r => r.pass).len()
+  let all-placeholder = results.all(r => r.is-placeholder)
+
+  // Determine title color based on pass rate
+  // All placeholder (no valid solution) -> gray
+  // 0% pass -> red, 100% pass -> green, interpolate between
+  let title-color = if all-placeholder {
+    gray
+  } else {
+    let ratio = passed / total
+    // Interpolate from red (0%) to green (100%)
+    color.mix((green, ratio * 100%), (red, (1 - ratio) * 100%))
+  }
+
+  v(2em)
+  heading(level: 2, outlined: false, numbering: none)[
+    #text(fill: title-color)[Test Results (#passed / #total)]
+  ]
+
+  let idx = 0
+  for result in results {
+    let input = result.input
+    let expected = result.expected
+    let yours = result.yours
+    let pass = result.pass
+    let case = result.case
+    let cell-color = if pass { green } else { red }
 
     block(
       breakable: false,
@@ -74,15 +104,25 @@
         display
       }
 
+      // Render yours output with special handling for placeholder (none)
+      #let yours-display = if yours == none {
+        text(
+          fill: red.lighten(50%),
+          style: "italic",
+        )[Got none (check your code)]
+      } else {
+        render-output(yours)
+      }
+
       #table(
         columns: (1fr, 1fr),
         column-gutter: 1em,
         stroke: 0.8pt + gray,
         inset: 0.6em,
         strong("Expected"),
-        table.cell(stroke: color)[#strong("Your Output")],
+        table.cell(stroke: cell-color)[#strong("Your Output")],
         render-output(expected),
-        table.cell(stroke: color)[#render-output(yours)],
+        table.cell(stroke: cell-color)[#yours-display],
       )
     ]
     idx += 1
