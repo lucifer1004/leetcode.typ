@@ -1,5 +1,11 @@
 // lib.typ - LeetCode Package API
 // Public entrypoint for @preview/leetcode package
+//
+// Exported functions:
+// - problem(id), test(id, fn), answer(id), solve(id, code-block), get-test-cases(id), get-problem-path(id)
+// - linkedlist(arr), binarytree(arr), fill(value, n), display(value)
+// - ll-node(list, id), ll-val(list, id), ll-next(list, id), ll-values(list) — linked list helpers
+// - unordered-compare(a, b), float-compare(a, b), testcases(...) — testing utilities
 
 #import "helpers.typ": *
 

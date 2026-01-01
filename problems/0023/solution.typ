@@ -1,11 +1,13 @@
 #import "../../helpers.typ": *
 
 #let solution(lists) = {
-  let heads = lists.map(list => list)
+  // Store (list-ref, current-node-id) pairs
+  let heads = lists.enumerate().map(it => (it.at(0), it.at(1).head))
   let heap = ()
-  for (idx, head) in heads.enumerate() {
-    if head.val != none {
-      heap.push((head.val, idx))
+  for (idx, head-id) in heads {
+    let val = ll-val(lists.at(idx), head-id)
+    if val != none {
+      heap.push((val, idx))
     }
   }
   heap = heap.sorted()
@@ -39,9 +41,11 @@
     }
     // --- end sift-down ---
 
-    if heads.at(idx).next != none {
-      heads.at(idx) = heads.at(idx).next
-      let val = heads.at(idx).val
+    let curr-node-id = heads.at(idx).at(1)
+    let next-id = ll-next(lists.at(idx), curr-node-id)
+    if next-id != none {
+      heads.at(idx) = (idx, next-id)
+      let val = ll-val(lists.at(idx), next-id)
       if val != none {
         heap.push((val, idx))
         let curr = heap.len() - 1
@@ -64,11 +68,13 @@
 
 // Use hold method for sift-down
 #let solution-extra(lists) = {
-  let heads = lists.map(list => list)
+  // Store (list-ref, current-node-id) pairs
+  let heads = lists.enumerate().map(it => (it.at(0), it.at(1).head))
   let heap = ()
-  for (idx, head) in heads.enumerate() {
-    if head.val != none {
-      heap.push((head.val, idx))
+  for (idx, head-id) in heads {
+    let val = ll-val(lists.at(idx), head-id)
+    if val != none {
+      heap.push((val, idx))
     }
   }
   heap = heap.sorted()
@@ -112,9 +118,11 @@
     }
     // --- end sift-down ---
 
-    if heads.at(idx).next != none {
-      heads.at(idx) = heads.at(idx).next
-      let val = heads.at(idx).val
+    let curr-node-id = heads.at(idx).at(1)
+    let next-id = ll-next(lists.at(idx), curr-node-id)
+    if next-id != none {
+      heads.at(idx) = (idx, next-id)
+      let val = ll-val(lists.at(idx), next-id)
       if val != none {
         heap.push((val, idx))
         let curr = heap.len() - 1
@@ -142,19 +150,27 @@
 
   def lst_to_array(lst):
     array = []
-    while lst and lst["val"] is not None:
-      array.append(lst["val"])
-      lst = lst["next"]
+    if not lst or lst.get("head") is None:
+      return array
+    curr = lst["head"]
+    nodes = lst["nodes"]
+    while curr is not None:
+      node = nodes.get(curr)
+      if node is None:
+        break
+      array.append(node["val"])
+      curr = node["next"]
     return array
 
   def array_to_lst(array):
-    dummy = {"val": None, "next": None}
-    curr = dummy
-    for val in array:
-      curr["next"] = {"val": val, "next": None, "type": "linkedlist"}
-      curr = curr["next"]
-    curr["next"] = {"val": None, "next": None, "type": "linkedlist"}
-    return dummy["next"]
+    if not array:
+      return {"type": "linkedlist", "head": None, "nodes": {}}
+    nodes = {}
+    for i, val in enumerate(array):
+      node_id = str(i)
+      next_id = str(i + 1) if i + 1 < len(array) else None
+      nodes[node_id] = {"val": val, "next": next_id}
+    return {"type": "linkedlist", "head": "0", "nodes": nodes}
 
   def merge_k_lists(lists):
     heap = []
@@ -174,7 +190,7 @@
         heapq.heappush(heap, (lists[i][heads[i]], i))
 
     if not ans:
-      return {"val": None, "next": None, "type": "linkedlist"}
+      return {"type": "linkedlist", "head": None, "nodes": {}}
     return array_to_lst(ans)
 
   merge_k_lists(lists)

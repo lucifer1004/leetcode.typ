@@ -1,12 +1,7 @@
 #import "../../helpers.typ": *
 
 #let solution(head, n) = {
-  let values = ()
-  let node = head
-  while node.next != none {
-    values.push(node.val)
-    node = node.next
-  }
+  let values = ll-values(head)
 
   let remove-index = values.len() - n
   let filtered = ()

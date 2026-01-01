@@ -63,7 +63,7 @@
 }
 
 #let visualize-linkedlist(
-  head,
+  list,
   direction: "right",
   step: .85,
   radius: .25,
@@ -71,16 +71,29 @@
   import "@preview/fletcher:0.5.8": diagram, edge, node
 
   if (
-    type(head) != dictionary or head.at("type", default: none) != "linkedlist"
+    type(list) != dictionary or list.at("type", default: none) != "linkedlist"
   ) {
     return ()
   }
 
+  // Extract values from flat linked list structure with cycle detection
   let vals = ()
-  let curr = head
+  let id-to-idx = (:) // Map node ID to its index in vals
+  let cycle-target = none // Index where cycle points back to (if any)
+  let curr = list.head
+  let idx = 0
   while curr != none {
-    vals.push(curr.val)
-    curr = curr.next
+    // Check if we've visited this node before (cycle detected)
+    if curr in id-to-idx {
+      cycle-target = id-to-idx.at(curr)
+      break
+    }
+    let node-data = list.nodes.at(curr, default: none)
+    if node-data == none { break }
+    id-to-idx.insert(curr, idx)
+    vals.push(node-data.val)
+    curr = node-data.next
+    idx += 1
   }
 
   let nodes = vals
@@ -95,6 +108,12 @@
   let edges = range(vals.len() - 1).map(i => {
     edge((i, 0), (i + 1, 0), ``, "-|>")
   })
+
+  // Add cycle edge if cycle was detected
+  if cycle-target != none and vals.len() > 0 {
+    let last-idx = vals.len() - 1
+    edges.push(edge((last-idx, 0), (cycle-target, 0), ``, "-|>", bend: -40deg))
+  }
 
   set text(6pt)
   diagram(

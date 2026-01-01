@@ -76,6 +76,49 @@
   abs < 1e-6 or rel < 1e-6
 }
 
+// Flat linked list structure with string ID pointers
+// This avoids O(n) deep copies on every .next access
+#let linkedlist(arr) = {
+  if arr.len() == 0 {
+    return (type: "linkedlist", head: none, nodes: (:))
+  }
+  let nodes = (:)
+  for (i, val) in arr.enumerate() {
+    let id = str(i)
+    let next = if i + 1 < arr.len() { str(i + 1) } else { none }
+    nodes.insert(id, (val: val, next: next))
+  }
+  (type: "linkedlist", head: "0", nodes: nodes)
+}
+
+// Get node by ID (or none if invalid)
+#let ll-node(list, id) = {
+  if id == none { none } else { list.nodes.at(id, default: none) }
+}
+
+// Get value at current node
+#let ll-val(list, id) = {
+  let node = ll-node(list, id)
+  if node == none { none } else { node.val }
+}
+
+// Get next node ID
+#let ll-next(list, id) = {
+  let node = ll-node(list, id)
+  if node == none { none } else { node.next }
+}
+
+// Iterate over all values (returns array)
+#let ll-values(list) = {
+  let vals = ()
+  let curr = list.head
+  while curr != none {
+    vals.push(ll-val(list, curr))
+    curr = ll-next(list, curr)
+  }
+  vals
+}
+
 #let display(value, render-chessboard: false) = {
   if type(value) == array {
     if render-chessboard and is-chessboard(value) {
@@ -98,12 +141,7 @@
     type(value) == dictionary
       and value.at("type", default: none) == "linkedlist"
   ) {
-    let ret = ()
-    let now = value
-    while now.next != none {
-      ret.push(now.val)
-      now = now.next
-    }
+    let ret = ll-values(value)
 
     // Only visualize linkedlist if it's small
     if ret.len() <= 8 {
@@ -128,15 +166,6 @@
   } else {
     repr(value)
   }
-}
-
-// The implementation is not efficient since we can only do clones
-#let linkedlist(arr) = {
-  let now = (val: none, next: none, type: "linkedlist")
-  for val in arr.rev() {
-    now = (val: val, next: now, type: "linkedlist")
-  }
-  now
 }
 
 #let binarytree(arr) = {

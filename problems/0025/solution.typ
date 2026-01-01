@@ -1,12 +1,7 @@
 #import "../../helpers.typ": *
 
 #let solution(head, k) = {
-  let vals = ()
-  let node = head
-  while node.val != none {
-    vals.push(node.val)
-    node = node.next
-  }
+  let vals = ll-values(head)
   let n = vals.len()
   let ans = ()
   for i in range(0, n, step: k) {
