@@ -1,18 +1,14 @@
+// Test cases for Problem 0116
+// First 2 cases are from LeetCode Examples
 #import "../../helpers.typ": binarytree
 
-// Test cases for Populating Next Right Pointers
-// Input: root (binary tree)
-// Expected output: tree with next pointers populated
-// We verify by checking that each node's next points to correct node ID
-
 #let cases = (
-  // Perfect binary tree [1,2,3,4,5,6,7]
-  // After: 1->none, 2->3, 3->none, 4->5, 5->6, 6->7, 7->none
-  (root: binarytree((1, 2, 3, 4, 5, 6, 7))),
-  // Single node
-  (root: binarytree((1,))),
-  // Empty tree
-  (root: binarytree(())),
-  // Two levels [1,2,3]
-  (root: binarytree((1, 2, 3))),
+  (
+    input: (root: binarytree((1, 2, 3, 4, 5, 6, 7))),
+    explanation: [Given the above perfect binary tree (Figure A), your function should populate each next pointer to point to its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, with `'#'` signifying the end of each level.],
+  ),
+  (input: (root: binarytree(()))),
+  // Additional test cases
+  (input: (root: binarytree((1,)))),
+  (input: (root: binarytree((1, 2, 3)))),
 )

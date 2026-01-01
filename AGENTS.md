@@ -243,6 +243,11 @@ Test framework, depends on display.
 | --------------------------------------------- | ---------------------------- |
 | `testcases(solution, reference, inputs, ...)` | Run and display test results |
 
+**Validation modes**:
+
+- `comparator(expected, yours) => bool` - Compare two outputs for equivalence
+- `custom-validator(input, expected, yours) => bool` - Validate output against input (for multi-answer problems)
+
 ### visualize.typ
 
 Data structure visualization, depends on external packages (cetz, fletcher).
@@ -384,13 +389,67 @@ custom-display = true
   // output is the solution's return value
   // Return content to display in Expected/Your Output columns
 }
+
+// Custom validator (optional, requires custom-validator = true)
+// File: problems/XXXX/validator.typ
+#let validator(input, expected, yours) = {
+  // input: the input parameters dictionary
+  // expected: reference solution output
+  // yours: user solution output
+  // Return: bool (true if yours is a valid answer)
+}
 ```
 
 ### Examples
 
+**Custom Display:**
+
 - **Graph problems** (0207, 0210, 0785, 0997): Visualize input as graph
 - **Matrix problems** (0289): Render input as chessboard
 - **N-Queens** (0051): Custom output display for chessboard solutions
+- **Path Sum** (0112): Highlight valid path nodes in tree
+
+**Custom Validator:**
+
+- **Longest Palindromic Substring** (0005): Multiple valid answers possible
+
+## Custom Validator
+
+For problems with multiple valid answers (e.g., "any valid answer is accepted"), use a custom validator instead of a comparator.
+
+### Setup
+
+1. Create `validator.typ` in the problem directory:
+
+```typst
+// problems/0005/validator.typ
+#let validator(input, expected, yours) = {
+  // Validate that 'yours' is a correct answer for 'input'
+  // Use 'expected' to check properties like length/size
+
+  // Example for Longest Palindromic Substring:
+  // 1. yours must be a substring of input
+  // 2. yours must be a palindrome
+  // 3. yours.len() == expected.len()
+
+  true // or false
+}
+```
+
+2. Add `custom-validator = true` to `problem.toml`:
+
+```toml
+title = "Longest Palindromic Substring"
+difficulty = "medium"
+labels = ["string", "dynamic-programming"]
+custom-validator = true
+```
+
+### Validation Priority
+
+1. `custom-validator` (if provided) - full control over validation logic
+2. `comparator` (if provided) - wrapped to `(input, expected, yours) => comparator(expected, yours)`
+3. Default - direct equality `expected == yours`
 
 ## Common Tasks
 

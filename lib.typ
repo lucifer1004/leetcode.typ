@@ -166,11 +166,19 @@
     custom-output-disp = custom-output-display
   }
 
+  // Try to load custom-validator from validator.typ if flag is set
+  let custom-val = none
+  if info.at("custom-validator", default: false) {
+    import (base + "validator.typ"): validator
+    custom-val = validator
+  }
+
   testcases(
     solution-fn,
     solution,
     cases,
     comparator: comp,
+    custom-validator: custom-val,
     custom-display: custom-disp,
     custom-output-display: custom-output-disp,
   )

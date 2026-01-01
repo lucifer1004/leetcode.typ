@@ -1,11 +1,14 @@
 // Test cases for Problem 0050
-// Import helpers if needed (e.g., linkedlist, fill, etc.)
-// #import "../../helpers.typ": linkedlist
+// First 3 cases are from LeetCode Examples
 
 #let cases = (
-  (x: 2, n: 10),
-  (x: 2.1, n: 3),
-  (x: 2, n: -2),
-  (x: 0, n: 15),
-  (x: 0.9, n: 199),
+  (input: (x: 2, n: 10)),
+  (input: (x: 2.1, n: 3)),
+  (
+    input: (x: 2, n: -2),
+    explanation: [$2^(-2) = 1 / 2^2 = 1/4 = 0.25$],
+  ),
+  // Additional test cases
+  (input: (x: 0, n: 15)),
+  (input: (x: 0.9, n: 199)),
 )

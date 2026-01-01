@@ -1,5 +1,7 @@
 // Test cases for Problem 0078
+// All 2 cases are from LeetCode Examples
+
 #let cases = (
-  (nums: (1, 2, 3)),
-  (nums: (0,)),
+  (input: (nums: (1, 2, 3))),
+  (input: (nums: (0,))),
 )

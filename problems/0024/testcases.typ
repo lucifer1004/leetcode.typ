@@ -1,10 +1,10 @@
 // Test cases for Problem 0024
-// Import helpers if needed (e.g., linkedlist, fill, etc.)
+// All 4 cases are from LeetCode Examples
 #import "../../helpers.typ": linkedlist
 
 #let cases = (
-  (head: linkedlist((1, 2, 3, 4))),
-  (head: linkedlist(())),
-  (head: linkedlist((1,))),
-  (head: linkedlist((1, 2, 3))),
+  (input: (head: linkedlist((1, 2, 3, 4)))),
+  (input: (head: linkedlist(()))),
+  (input: (head: linkedlist((1,)))),
+  (input: (head: linkedlist((1, 2, 3)))),
 )

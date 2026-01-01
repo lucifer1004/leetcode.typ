@@ -114,6 +114,14 @@
   positions
 }
 
+// Highlighted node fill - green gradient
+#let HIGHLIGHT-NODE-FILL = gradient.radial(
+  green.lighten(70%),
+  green,
+  center: (30%, 20%),
+  radius: 80%,
+)
+
 #let visualize-binarytree(
   tree,
   spread: DEFAULT-TREE-SPREAD,
@@ -122,6 +130,8 @@
   show-nulls: false,
   show-next: false,
   node-fill: DEFAULT-NODE-FILL,
+  highlighted-nodes: (), // Set of node IDs to highlight
+  highlight-fill: HIGHLIGHT-NODE-FILL,
 ) = {
   import "@preview/fletcher:0.5.8": diagram, edge, node
 
@@ -147,16 +157,18 @@
   // Calculate positions
   let positions = calc-tree-positions(tree, h-gap: spread, v-gap: grow)
 
-  // Build nodes with fixed size
+  // Build nodes with fixed size, highlighting specified nodes
   let nodes = ()
   for (id, pos) in positions {
     let val = (tree.get-val)(id)
+    let fill = if id in highlighted-nodes { highlight-fill } else { node-fill }
     nodes.push(node(
       pos,
       repr(val),
       width: node-size,
       height: node-size,
       shape: "circle",
+      fill: fill,
     ))
   }
 
@@ -410,4 +422,56 @@
     ..nodes,
     ..edges,
   )
+}
+
+// Find all root-to-leaf paths with a given sum
+// Returns array of paths, where each path is an array of node IDs
+#let find-path-sum-paths(tree, target-sum) = {
+  if tree.root == none {
+    return ()
+  }
+
+  let result = ()
+
+  // DFS using explicit stack: (node-id, current-path, current-sum)
+  let stack = (
+    (id: tree.root, path: (tree.root,), sum: (tree.get-val)(tree.root)),
+  )
+
+  while stack.len() > 0 {
+    let item = stack.pop()
+    let id = item.id
+    let path = item.path
+    let sum = item.sum
+
+    let left = (tree.get-left)(id)
+    let right = (tree.get-right)(id)
+
+    // Check if it's a leaf
+    if left == none and right == none {
+      if sum == target-sum {
+        result.push(path)
+      }
+    } else {
+      // Push children to stack
+      if right != none {
+        let right-val = (tree.get-val)(right)
+        stack.push((
+          id: right,
+          path: (..path, right),
+          sum: sum + right-val,
+        ))
+      }
+      if left != none {
+        let left-val = (tree.get-val)(left)
+        stack.push((
+          id: left,
+          path: (..path, left),
+          sum: sum + left-val,
+        ))
+      }
+    }
+  }
+
+  result
 }

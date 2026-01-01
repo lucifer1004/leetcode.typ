@@ -1,31 +1,51 @@
 // testing.typ - Test framework for running and displaying test cases
 // Depends on: display
+//
+// Testcase format:
+//   (
+//     input: (param1: value1, param2: value2),  // Function parameters
+//     explanation: [Optional Typst content],     // Optional explanation
+//   )
+//
+// Validation modes:
+//   1. comparator(expected, yours) => bool  - Compare two outputs
+//   2. validator(input, expected, yours) => bool  - Validate output against input
 
 #import "display.typ": display
 
 #let testcases(
   solution,
   reference,
-  inputs,
+  cases,
   comparator: none,
+  custom-validator: none, // New: validator(input, expected, yours) => bool
   custom-display: none,
   custom-output-display: none,
 ) = {
-  // Default comparator: direct equality
-  let compare = if comparator == none {
-    (a, b) => a == b
+  // Determine validation function
+  // Priority: custom-validator > comparator > default equality
+  let validate = if custom-validator != none {
+    // Validator takes (input, expected, yours)
+    custom-validator
+  } else if comparator != none {
+    // Wrap comparator to match validator signature
+    (input, expected, yours) => comparator(expected, yours)
   } else {
-    comparator
+    // Default: direct equality
+    (input, expected, yours) => expected == yours
   }
 
   v(2em)
   heading(level: 2, outlined: false, numbering: none, [Test Results])
 
   let idx = 0
-  for input in inputs {
+  for case in cases {
+    // Extract input from case (new format uses .input, supports both)
+    let input = if "input" in case { case.input } else { case }
+
     let expected = reference(..input.values())
     let yours = solution(..input.values())
-    let pass = compare(expected, yours)
+    let pass = validate(input, expected, yours)
     let color = if pass { green } else { red }
 
     block(
@@ -44,6 +64,16 @@
           display(input.at(key))
           linebreak()
         }
+      }
+
+      // Display explanation if present
+      #if "explanation" in case and case.explanation != none {
+        block(
+          inset: (left: 0.5em, top: 0.3em, bottom: 0.3em),
+          stroke: (left: 2pt + gray.lighten(50%)),
+        )[
+          #text(size: 0.9em, fill: gray.darken(20%))[#case.explanation]
+        ]
       }
 
       // Display output using custom-output-display if provided, otherwise default

@@ -1,6 +1,9 @@
 // Test cases for Problem 0017
+// First 2 cases are from LeetCode Examples
+
 #let cases = (
-  (digits: "23"),
-  (digits: ""),
-  (digits: "2"),
+  (input: (digits: "23")),
+  (input: (digits: "2")),
+  // Additional test case (empty string)
+  (input: (digits: "")),
 )

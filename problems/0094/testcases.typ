@@ -1,10 +1,10 @@
 // Test cases for Problem 0094
-// Import helpers if needed (e.g., linkedlist, fill, etc.)
+// All 4 cases are from LeetCode Examples
 #import "../../helpers.typ": binarytree
 
 #let cases = (
-  (root: binarytree((1, none, 2, 3))),
-  (root: binarytree((1, 2, 3, 4, 5, none, 8, none, none, 6, 7, 9))),
-  (root: binarytree(())),
-  (root: binarytree((1,))),
+  (input: (root: binarytree((1, none, 2, 3)))),
+  (input: (root: binarytree((1, 2, 3, 4, 5, none, 8, none, none, 6, 7, 9)))),
+  (input: (root: binarytree(()))),
+  (input: (root: binarytree((1,)))),
 )
