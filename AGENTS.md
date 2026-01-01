@@ -84,10 +84,9 @@ labels = ["array", "hash-table"]
 // my-practice.typ - practice workbook
 #import "lib.typ": conf, solve
 
-#show: conf.with(
-  practice: true,
-  show-answer: false,  // Set true to see reference solutions
-)
+#show: conf.with(practice: true)
+// In practice mode: show-title and show-outline default to false
+// Override with: show-title: true, show-outline: true
 
 // View problem + write solution + test
 #solve(1, code-block: ```typc
