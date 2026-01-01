@@ -1,5 +1,6 @@
 *.pdf
 draft.typ
+test_new.typ
 
 .ruff_cache/
 build/

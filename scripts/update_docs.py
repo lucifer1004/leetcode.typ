@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate docs from templates with actual problem data."""
 
+import json
 import sys
 import tomllib
 from pathlib import Path
@@ -29,6 +30,7 @@ def get_problems() -> list[dict]:
                 "id": problem_id,
                 "title": data.get("title", "Untitled"),
                 "difficulty": data.get("difficulty", "medium").capitalize(),
+                "labels": data.get("labels", []),
             }
         )
 
@@ -49,6 +51,11 @@ def generate_problem_table(problems: list[dict]) -> str:
         lines.append(f"| {p['id']:<3} | {title} | {difficulty} |")
 
     return "\n".join(lines)
+
+
+def generate_problem_json(problems: list[dict]) -> str:
+    """Generate JSON array for frontend."""
+    return json.dumps(problems, ensure_ascii=False)
 
 
 def generate_file(template_path: Path, output_path: Path, replacements: dict) -> bool:
@@ -77,10 +84,12 @@ def main():
     print(f"Found {count} problems")
 
     table = generate_problem_table(problems)
+    problem_json = generate_problem_json(problems)
 
     replacements = {
         "PROBLEM_COUNT": count,
         "PROBLEM_TABLE": table,
+        "PROBLEM_JSON": problem_json,
     }
 
     success = True

@@ -8,7 +8,7 @@ A Typst package for solving LeetCode problems with beautiful PDF output and auto
 - **Beautiful Output**: Automatic formatting with professional PDF rendering
 - **Test Visualization**: Side-by-side comparison of your output vs. expected results
 - **Auto-Validation**: Instant pass/fail indicators
-- **51 Problems**: Curated collection of classic LeetCode problems
+- **57 Problems**: Curated collection of classic LeetCode problems
 - **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
@@ -109,14 +109,19 @@ typst watch my-solution.typ
 | 26  | Remove Duplicates from Sorted Array            | Easy       |
 | 35  | Search Insert Position                         | Easy       |
 | 42  | Trapping Rain Water                            | Hard       |
+| 46  | Permutations                                   | Medium     |
+| 48  | Rotate Image                                   | Medium     |
 | 49  | Group Anagrams                                 | Medium     |
 | 50  | Pow(x, n)                                      | Medium     |
 | 51  | N-Queens                                       | Hard       |
 | 53  | Maximum Subarray                               | Medium     |
+| 54  | Spiral Matrix                                  | Medium     |
 | 55  | Jump Game                                      | Medium     |
+| 56  | Merge Intervals                                | Medium     |
 | 62  | Unique Paths                                   | Medium     |
 | 69  | Sqrt(x)                                        | Easy       |
 | 70  | Climbing Stairs                                | Easy       |
+| 78  | Subsets                                        | Medium     |
 | 94  | Binary Tree Inorder Traversal                  | Easy       |
 | 104 | Maximum Depth of Binary Tree                   | Easy       |
 | 110 | Balanced Binary Tree                           | Easy       |
@@ -129,6 +134,7 @@ typst watch my-solution.typ
 | 200 | Number of Islands                              | Medium     |
 | 206 | Reverse Linked List                            | Easy       |
 | 207 | Course Schedule                                | Medium     |
+| 209 | Minimum Size Subarray Sum                      | Medium     |
 | 289 | Game of Life                                   | Medium     |
 | 347 | Top K Frequent Elements                        | Medium     |
 | 814 | Binary Tree Pruning                            | Medium     |

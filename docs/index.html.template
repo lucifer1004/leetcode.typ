@@ -310,6 +310,207 @@
         text-decoration: underline;
       }
 
+      /* Problem Collection */
+      .problem-collection {
+        padding: 60px 0;
+      }
+
+      .filters {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .filter-label {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .filter-btn {
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .filter-btn:hover {
+        border-color: var(--accent);
+      }
+
+      .filter-btn.active {
+        background: var(--accent);
+        color: var(--bg-primary);
+        border-color: var(--accent);
+      }
+
+      .filter-btn.active.easy {
+        background: var(--accent);
+      }
+
+      .filter-btn.active.medium {
+        background: var(--accent-medium);
+        color: var(--bg-primary);
+        border-color: var(--accent-medium);
+      }
+
+      .filter-btn.active.hard {
+        background: var(--accent-hard);
+        border-color: var(--accent-hard);
+      }
+
+      .search-input {
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        width: 200px;
+        outline: none;
+      }
+
+      .search-input:focus {
+        border-color: var(--accent);
+      }
+
+      .search-input::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      .problem-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        transition: all 0.2s ease;
+        cursor: default;
+      }
+
+      .problem-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .problem-id {
+        font-family: "JetBrains Mono", monospace;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .problem-difficulty {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+
+      .problem-difficulty.easy {
+        background: rgba(0, 184, 163, 0.15);
+        color: var(--accent);
+      }
+
+      .problem-difficulty.medium {
+        background: rgba(255, 192, 30, 0.15);
+        color: var(--accent-medium);
+      }
+
+      .problem-difficulty.hard {
+        background: rgba(255, 55, 95, 0.15);
+        color: var(--accent-hard);
+      }
+
+      .problem-title {
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.4;
+        margin-bottom: 10px;
+      }
+
+      .problem-labels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .problem-label {
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        background: var(--bg-secondary);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 32px;
+      }
+
+      .page-btn {
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .page-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+
+      .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .page-btn.active {
+        background: var(--accent);
+        color: var(--bg-primary);
+        border-color: var(--accent);
+      }
+
+      .page-info {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin: 0 8px;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 48px 24px;
+        color: var(--text-secondary);
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .hero {
@@ -324,6 +525,13 @@
         .cta-group {
           flex-direction: column;
           align-items: center;
+        }
+        .filters {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .search-input {
+          width: 100%;
         }
       }
     </style>
@@ -421,6 +629,27 @@
       </div>
     </section>
 
+    <section class="problem-collection container">
+      <h2 class="section-title">Problem Collection</h2>
+      <div class="filters">
+        <div class="filter-group">
+          <span class="filter-label">Difficulty:</span>
+          <button class="filter-btn active" data-difficulty="all">All</button>
+          <button class="filter-btn easy" data-difficulty="easy">Easy</button>
+          <button class="filter-btn medium" data-difficulty="medium">Medium</button>
+          <button class="filter-btn hard" data-difficulty="hard">Hard</button>
+        </div>
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="Search by title or label..."
+        />
+      </div>
+      <div class="problem-grid" id="problem-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </section>
+
     <section class="code-section container">
       <h2 class="section-title">Quick Start</h2>
       <div class="code-block">
@@ -479,5 +708,128 @@
         </p>
       </div>
     </footer>
+
+    <script>
+      const PROBLEMS = {{PROBLEM_JSON}};
+      const ITEMS_PER_PAGE = 12;
+
+      let currentPage = 1;
+      let currentDifficulty = "all";
+      let searchQuery = "";
+
+      function getFilteredProblems() {
+        return PROBLEMS.filter((p) => {
+          const diffMatch =
+            currentDifficulty === "all" ||
+            p.difficulty.toLowerCase() === currentDifficulty;
+          const searchLower = searchQuery.toLowerCase();
+          const searchMatch =
+            !searchQuery ||
+            p.title.toLowerCase().includes(searchLower) ||
+            p.labels.some((l) => l.toLowerCase().includes(searchLower));
+          return diffMatch && searchMatch;
+        });
+      }
+
+      function renderProblems() {
+        const filtered = getFilteredProblems();
+        const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+        currentPage = Math.min(currentPage, Math.max(1, totalPages));
+
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+        const grid = document.getElementById("problem-grid");
+
+        if (pageItems.length === 0) {
+          grid.innerHTML =
+            '<div class="no-results">No problems found matching your filters.</div>';
+        } else {
+          grid.innerHTML = pageItems
+            .map(
+              (p) => `
+            <div class="problem-card">
+              <div class="problem-header">
+                <span class="problem-id">#${String(p.id).padStart(4, "0")}</span>
+                <span class="problem-difficulty ${p.difficulty.toLowerCase()}">${p.difficulty}</span>
+              </div>
+              <div class="problem-title">${p.title}</div>
+              <div class="problem-labels">
+                ${p.labels.map((l) => `<span class="problem-label">${l}</span>`).join("")}
+              </div>
+            </div>
+          `
+            )
+            .join("");
+        }
+
+        renderPagination(filtered.length, totalPages);
+      }
+
+      function renderPagination(total, totalPages) {
+        const pagination = document.getElementById("pagination");
+
+        if (totalPages <= 1) {
+          pagination.innerHTML = "";
+          return;
+        }
+
+        let html = `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>&lt;</button>`;
+
+        const maxVisible = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+        if (endPage - startPage < maxVisible - 1) {
+          startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        if (startPage > 1) {
+          html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+          if (startPage > 2) html += `<span class="page-info">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+          html += `<button class="page-btn ${i === currentPage ? "active" : ""}" onclick="goToPage(${i})">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) html += `<span class="page-info">...</span>`;
+          html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+        }
+
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>&gt;</button>`;
+        html += `<span class="page-info">(${total} total)</span>`;
+
+        pagination.innerHTML = html;
+      }
+
+      function goToPage(page) {
+        currentPage = page;
+        renderProblems();
+      }
+
+      // Difficulty filter buttons
+      document.querySelectorAll(".filter-btn[data-difficulty]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".filter-btn[data-difficulty]")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentDifficulty = btn.dataset.difficulty;
+          currentPage = 1;
+          renderProblems();
+        });
+      });
+
+      // Search input
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        currentPage = 1;
+        renderProblems();
+      });
+
+      // Initial render
+      renderProblems();
+    </script>
   </body>
 </html>
