@@ -1,0 +1,8 @@
+title = "Course Schedule"
+difficulty = "medium"
+labels = [
+  "graph",
+  "depth-first-search",
+  "breadth-first-search",
+  "topological-sort",
+]

@@ -3,6 +3,7 @@ fmt:
   ruff format .
   typstyle -i .
   prettier --write .
+  taplo fmt
 
 # Run pre-commit hooks
 pre-commit:

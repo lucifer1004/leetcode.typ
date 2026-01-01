@@ -1,5 +1,10 @@
 title = "Number of Islands"
 difficulty = "medium"
-labels = ["array", "depth-first-search", "breadth-first-search", "union-find", "matrix"]
+labels = [
+  "array",
+  "depth-first-search",
+  "breadth-first-search",
+  "union-find",
+  "matrix",
+]
 render-chessboard = true
-

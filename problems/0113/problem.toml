@@ -2,4 +2,3 @@ title = "Path Sum II"
 difficulty = "medium"
 labels = ["tree", "binary-tree", "depth-first-search", "backtracking"]
 comparator = "unordered-compare"
-

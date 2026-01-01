@@ -15,6 +15,12 @@ repos:
         types: [file]
         files: \.typ$
 
+      - id: taplo
+        name: taplo
+        entry: taplo fmt
+        language: system
+        types: [toml]
+
       - id: update-docs
         name: Update README from template
         entry: python3 scripts/update_docs.py

@@ -1,4 +1,9 @@
 title = "Trapping Rain Water"
 difficulty = "hard"
-labels = ["array", "two-pointers", "dynamic-programming", "stack", "monotonic-stack"]
-
+labels = [
+  "array",
+  "two-pointers",
+  "dynamic-programming",
+  "stack",
+  "monotonic-stack",
+]

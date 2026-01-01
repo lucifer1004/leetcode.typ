@@ -1,4 +1,3 @@
 title = "Container With Most Water"
 difficulty = "medium"
 labels = ["array", "two-pointers", "greedy"]
-
