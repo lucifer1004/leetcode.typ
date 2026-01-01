@@ -3,7 +3,9 @@ draft.typ
 test_new.typ
 
 .ruff_cache/
+.venv/
 build/
+drafts/
 
 # Generated from template (CI only)
 docs/index.html

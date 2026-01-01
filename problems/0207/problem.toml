@@ -6,3 +6,4 @@ labels = [
   "breadth-first-search",
   "topological-sort",
 ]
+custom-display = true

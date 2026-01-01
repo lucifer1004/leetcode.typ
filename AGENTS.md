@@ -54,7 +54,8 @@ problems/XXXX/           # Each problem is self-contained
    ├── problem.toml      # Metadata
    ├── description.typ   # Problem statement
    ├── solution.typ      # Reference solution
-   └── testcases.typ     # Test cases
+   ├── testcases.typ     # Test cases
+   └── display.typ       # Optional: custom input display
    ```
 
 2. The script will prompt for:
@@ -75,7 +76,7 @@ problems/XXXX/           # Each problem is self-contained
 4. For problems needing special handling, add to `problem.toml`:
    ```toml
    comparator = "unordered-compare"
-   render-chessboard = true
+   custom-display = true
    ```
 
 ## Testing Your Changes
@@ -338,6 +339,59 @@ These files exist in the repo but are excluded from the published package:
 - `draft.typ` — scratch file
 - `Justfile`, `AGENTS.md` — development docs
 
+## Custom Input Display
+
+For problems where the default input display is not suitable (e.g., graph problems), you can create a custom display function.
+
+### Setup
+
+1. Create `display.typ` in the problem directory:
+
+```typst
+// problems/0207/display.typ
+#import "../../helpers.typ": graph
+#import "../../visualize.typ": visualize-graph
+
+#let custom-display(input) = {
+  let g = graph(input.numCourses, input.prerequisites, directed: true)
+  [*Input:* #input.numCourses courses, #input.prerequisites.len() prerequisites]
+  linebreak()
+  visualize-graph(g)
+}
+```
+
+2. Add `custom-display = true` to `problem.toml`:
+
+```toml
+title = "Course Schedule"
+difficulty = "medium"
+labels = ["graph", "topological-sort"]
+custom-display = true
+```
+
+### Function Signatures
+
+```typst
+// Custom input display (required if custom-display = true)
+#let custom-display(input) = {
+  // input is the full test case dictionary
+  // e.g., (numCourses: 4, prerequisites: ((1, 0), (2, 0)))
+  // Return content to display
+}
+
+// Custom output display (optional, requires custom-output-display = true)
+#let custom-output-display(output) = {
+  // output is the solution's return value
+  // Return content to display in Expected/Your Output columns
+}
+```
+
+### Examples
+
+- **Graph problems** (0207, 0210, 0785, 0997): Visualize input as graph
+- **Matrix problems** (0289): Render input as chessboard
+- **N-Queens** (0051): Custom output display for chessboard solutions
+
 ## Common Tasks
 
 ### Add a new test case to existing problem
@@ -476,7 +530,8 @@ labels = ["array", "hash-table"]
 
 # Optional fields (with defaults)
 # comparator = "unordered-compare"
-# render-chessboard = true
+# custom-display = true
+# custom-output-display = true
 ```
 
 **Required fields**:
@@ -488,7 +543,8 @@ labels = ["array", "hash-table"]
 **Optional fields** (for special handling):
 
 - `comparator`: Custom comparison function for test results
-- `render-chessboard`: Display 2D arrays as chessboards
+- `custom-display`: Use custom input display from `display.typ` (see below)
+- `custom-output-display`: Use custom output display from `display.typ` (see below)
 
 **Common labels** (based on LeetCode categories):
 

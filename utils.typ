@@ -3,20 +3,20 @@
 
 #let fill(value, n) = range(n).map(_ => value)
 
+// Only recognize string-based chessboards (like N-Queens output)
+// 0/1 matrix boards should use custom-display instead
 #let is-chessboard(value) = {
   if type(value) != array or value.len() == 0 {
     return false
   }
+  // Must be array of strings (like [".Q..", "...Q", "Q...", "..Q."])
   let first-row = value.at(0)
-  if type(first-row) != array and type(first-row) != str {
+  if type(first-row) != str {
     return false
   }
-  if is-chessboard(first-row) {
-    return false
-  }
-  let row-size = value.at(0).len()
+  let row-size = first-row.len()
   for row in value {
-    if row.len() != row-size {
+    if type(row) != str or row.len() != row-size {
       return false
     }
   }

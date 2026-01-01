@@ -1,4 +1,5 @@
 title = "Game of Life"
 difficulty = "medium"
 labels = ["array", "matrix", "simulation"]
-render-chessboard = true
+custom-display = true
+custom-output-display = true

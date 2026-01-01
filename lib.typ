@@ -106,8 +106,8 @@
 }
 
 // Load metadata from problem.toml
-// Returns (comparator, render-chessboard) tuple
-#let load-metadata(id-str, default-comp, default-render) = {
+// Returns comparator
+#let load-metadata(id-str, default-comp) = {
   let info = toml("problems/" + id-str + "/problem.toml")
 
   // Resolve comparator from dispatch table
@@ -119,8 +119,7 @@
     }
   }
 
-  let render-chess = info.at("render-chessboard", default: default-render)
-  (comp, render-chess)
+  comp
 }
 
 // Automatic test with built-in test cases and metadata
@@ -129,7 +128,6 @@
   solution-fn,
   extra-cases: none,
   comparator: none,
-  render-chessboard: false,
   default-cases: true,
 ) = {
   let id-str = format-id(id)
@@ -151,18 +149,30 @@
   }
 
   // Load metadata from problem.toml
-  let (comp, render-chess) = load-metadata(
-    id-str,
-    comparator,
-    render-chessboard,
-  )
+  let info = toml(base + "problem.toml")
+  let comp = load-metadata(id-str, comparator)
+
+  // Try to load custom-display from display.typ if flag is set
+  let custom-disp = none
+  if info.at("custom-display", default: false) {
+    import (base + "display.typ"): custom-display
+    custom-disp = custom-display
+  }
+
+  // Try to load custom-output-display from display.typ if flag is set
+  let custom-output-disp = none
+  if info.at("custom-output-display", default: false) {
+    import (base + "display.typ"): custom-output-display
+    custom-output-disp = custom-output-display
+  }
 
   testcases(
     solution-fn,
     solution,
     cases,
     comparator: comp,
-    render-chessboard: render-chess,
+    custom-display: custom-disp,
+    custom-output-display: custom-output-disp,
   )
 }
 

@@ -8,7 +8,8 @@
   reference,
   inputs,
   comparator: none,
-  render-chessboard: false,
+  custom-display: none,
+  custom-output-display: none,
 ) = {
   // Default comparator: direct equality
   let compare = if comparator == none {
@@ -28,15 +29,28 @@
     let color = if pass { green } else { red }
 
     block(
+      breakable: false,
       inset: 0.6em,
       width: 100%,
     )[
       #heading(level: 2, outlined: false, numbering: none, [Case #(idx + 1)])
 
-      #for key in input.keys() {
-        strong(key + ": ")
-        display(input.at(key), render-chessboard: render-chessboard)
-        linebreak()
+      // Display input using custom-display if provided, otherwise default per-key
+      #if custom-display != none {
+        custom-display(input)
+      } else {
+        for key in input.keys() {
+          strong(key + ": ")
+          display(input.at(key))
+          linebreak()
+        }
+      }
+
+      // Display output using custom-output-display if provided, otherwise default
+      #let render-output = if custom-output-display != none {
+        custom-output-display
+      } else {
+        display
       }
 
       #table(
@@ -46,11 +60,8 @@
         inset: 0.6em,
         strong("Expected"),
         table.cell(stroke: color)[#strong("Your Output")],
-        display(expected, render-chessboard: render-chessboard),
-        table.cell(stroke: color)[#display(
-          yours,
-          render-chessboard: render-chessboard,
-        )],
+        render-output(expected),
+        table.cell(stroke: color)[#render-output(yours)],
       )
     ]
     idx += 1

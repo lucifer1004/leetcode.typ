@@ -7,3 +7,4 @@ labels = [
   "stack",
   "monotonic-stack",
 ]
+custom-display = true
