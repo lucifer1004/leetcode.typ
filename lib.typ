@@ -10,10 +10,19 @@
 
 #import "helpers.typ": *
 
-// Comparator dispatch table - add new comparators here
-#let comparators = (
-  "unordered-compare": unordered-compare,
-  "float-compare": float-compare,
+// Default validator - direct equality
+#let default-validator = (input, expected, yours) => expected == yours
+
+// Built-in validators dispatch table
+// All validators have signature: (input, expected, yours) => bool
+#let validators = (
+  "default": default-validator,
+  "unordered-compare": (input, expected, yours) => unordered-compare(
+    expected,
+    yours,
+  ),
+  "float-compare": (input, expected, yours) => float-compare(expected, yours),
+  // "custom" is a special value - loads from validator.typ
 )
 
 // Helper to format problem ID
@@ -105,21 +114,27 @@
   cases
 }
 
-// Load metadata from problem.toml
-// Returns comparator
-#let load-metadata(id-str, default-comp) = {
+// Load validator from problem.toml
+// Returns validator function with signature (input, expected, yours) => bool
+#let load-validator(id-str, base) = {
   let info = toml("problems/" + id-str + "/problem.toml")
 
-  // Resolve comparator from dispatch table
-  let comp = default-comp
-  if "comparator" in info {
-    let comp-name = info.at("comparator")
-    if comp-name in comparators {
-      comp = comparators.at(comp-name)
+  // Check for custom validator file first
+  if info.at("validator", default: none) == "custom" {
+    import (base + "validator.typ"): validator
+    return validator
+  }
+
+  // Check for named validator in dispatch table
+  if "validator" in info {
+    let val-name = info.at("validator")
+    if val-name in validators {
+      return validators.at(val-name)
     }
   }
 
-  comp
+  // Default validator
+  default-validator
 }
 
 // Automatic test with built-in test cases and metadata
@@ -127,7 +142,6 @@
   id,
   solution-fn,
   extra-cases: none,
-  comparator: none,
   default-cases: true,
 ) = {
   let id-str = format-id(id)
@@ -150,7 +164,9 @@
 
   // Load metadata from problem.toml
   let info = toml(base + "problem.toml")
-  let comp = load-metadata(id-str, comparator)
+
+  // Load validator (handles both named and custom validators)
+  let val = load-validator(id-str, base)
 
   // Try to load custom-display from display.typ if flag is set
   let custom-disp = none
@@ -166,19 +182,11 @@
     custom-output-disp = custom-output-display
   }
 
-  // Try to load custom-validator from validator.typ if flag is set
-  let custom-val = none
-  if info.at("custom-validator", default: false) {
-    import (base + "validator.typ"): validator
-    custom-val = validator
-  }
-
   testcases(
     solution-fn,
     solution,
     cases,
-    comparator: comp,
-    custom-validator: custom-val,
+    validator: val,
     custom-display: custom-disp,
     custom-output-display: custom-output-disp,
   )

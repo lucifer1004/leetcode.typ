@@ -1,4 +1,3 @@
-title = "Longest Palindromic Substring"
+title = "Edit Distance"
 difficulty = "medium"
 labels = ["string", "dynamic-programming"]
-validator = "custom"

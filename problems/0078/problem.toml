@@ -1,4 +1,4 @@
 title = "Subsets"
 difficulty = "medium"
 labels = ["array", "backtracking", "bit-manipulation"]
-comparator = "unordered-compare"
+validator = "unordered-compare"

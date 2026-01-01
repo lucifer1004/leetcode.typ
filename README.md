@@ -8,7 +8,7 @@ A Typst package for solving LeetCode problems with beautiful PDF output and auto
 - **Beautiful Output**: Automatic formatting with professional PDF rendering
 - **Test Visualization**: Side-by-side comparison of your output vs. expected results
 - **Auto-Validation**: Instant pass/fail indicators
-- **61 Problems**: Curated collection of classic LeetCode problems
+- **67 Problems**: Curated collection of classic LeetCode problems
 - **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
@@ -107,7 +107,9 @@ typst watch my-solution.typ
 | 24  | Swap Nodes in Pairs                            | Medium     |
 | 25  | Reverse Nodes in k-Group                       | Hard       |
 | 26  | Remove Duplicates from Sorted Array            | Easy       |
+| 33  | Search in Rotated Sorted Array                 | Medium     |
 | 35  | Search Insert Position                         | Easy       |
+| 39  | Combination Sum                                | Medium     |
 | 42  | Trapping Rain Water                            | Hard       |
 | 46  | Permutations                                   | Medium     |
 | 48  | Rotate Image                                   | Medium     |
@@ -121,8 +123,11 @@ typst watch my-solution.typ
 | 62  | Unique Paths                                   | Medium     |
 | 69  | Sqrt(x)                                        | Easy       |
 | 70  | Climbing Stairs                                | Easy       |
+| 72  | Edit Distance                                  | Medium     |
+| 76  | Minimum Window Substring                       | Hard       |
 | 78  | Subsets                                        | Medium     |
 | 94  | Binary Tree Inorder Traversal                  | Easy       |
+| 101 | Symmetric Tree                                 | Easy       |
 | 104 | Maximum Depth of Binary Tree                   | Easy       |
 | 110 | Balanced Binary Tree                           | Easy       |
 | 112 | Path Sum                                       | Easy       |
@@ -139,6 +144,7 @@ typst watch my-solution.typ
 | 210 | Course Schedule II                             | Medium     |
 | 289 | Game of Life                                   | Medium     |
 | 347 | Top K Frequent Elements                        | Medium     |
+| 547 | Number of Provinces                            | Medium     |
 | 785 | Is Graph Bipartite?                            | Medium     |
 | 814 | Binary Tree Pruning                            | Medium     |
 | 997 | Find the Town Judge                            | Easy       |

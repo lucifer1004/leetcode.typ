@@ -1,4 +1,4 @@
-title = "Permutations"
+title = "Combination Sum"
 difficulty = "medium"
 labels = ["array", "backtracking"]
 validator = "unordered-compare"

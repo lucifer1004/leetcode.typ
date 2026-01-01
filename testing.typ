@@ -7,9 +7,8 @@
 //     explanation: [Optional Typst content],     // Optional explanation
 //   )
 //
-// Validation modes:
-//   1. comparator(expected, yours) => bool  - Compare two outputs
-//   2. validator(input, expected, yours) => bool  - Validate output against input
+// Validator signature:
+//   validator(input, expected, yours) => bool
 
 #import "display.typ": display
 
@@ -17,24 +16,10 @@
   solution,
   reference,
   cases,
-  comparator: none,
-  custom-validator: none, // New: validator(input, expected, yours) => bool
+  validator: (input, expected, yours) => expected == yours,
   custom-display: none,
   custom-output-display: none,
 ) = {
-  // Determine validation function
-  // Priority: custom-validator > comparator > default equality
-  let validate = if custom-validator != none {
-    // Validator takes (input, expected, yours)
-    custom-validator
-  } else if comparator != none {
-    // Wrap comparator to match validator signature
-    (input, expected, yours) => comparator(expected, yours)
-  } else {
-    // Default: direct equality
-    (input, expected, yours) => expected == yours
-  }
-
   v(2em)
   heading(level: 2, outlined: false, numbering: none, [Test Results])
 
@@ -45,7 +30,13 @@
 
     let expected = reference(..input.values())
     let yours = solution(..input.values())
-    let pass = validate(input, expected, yours)
+
+    // Handle none output (placeholder solution) - always fail
+    let pass = if yours == none {
+      false
+    } else {
+      validator(input, expected, yours)
+    }
     let color = if pass { green } else { red }
 
     block(

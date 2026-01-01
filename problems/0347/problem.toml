@@ -1,4 +1,4 @@
 title = "Top K Frequent Elements"
 difficulty = "medium"
 labels = ["array", "hash-table", "sorting", "heap"]
-comparator = "unordered-compare"
+validator = "unordered-compare"

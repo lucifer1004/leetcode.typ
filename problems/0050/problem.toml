@@ -1,4 +1,4 @@
 title = "Pow(x, n)"
 difficulty = "medium"
 labels = ["math", "recursion"]
-comparator = "float-compare"
+validator = "float-compare"

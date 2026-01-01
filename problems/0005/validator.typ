@@ -18,11 +18,6 @@
 // - yours must be a palindrome
 // - yours must have the same length as the expected answer
 #let validator(input, expected, yours) = {
-  // Handle none case (e.g., placeholder solution)
-  if yours == none or type(yours) != str {
-    return false
-  }
-
   let s = input.s
 
   // 1. Check if yours is a substring of s

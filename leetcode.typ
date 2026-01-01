@@ -37,58 +37,44 @@
   v(1.5em)
 }
 
-// Discover problems dynamically by scanning the problems directory
-// Each problem directory has a problem.toml file
+// All available problem IDs
+// Use range() for consecutive problems, individual IDs for sparse ones
 #let discover-problems() = {
-  // Read all problem.toml files and extract problem IDs
-  let problem-dirs = (
-    "0001",
-    "0002",
-    "0003",
-    "0004",
-    "0005",
-    "0006",
-    "0007",
-    "0008",
-    "0009",
-    "0010",
-    "0011",
-    "0012",
-    "0013",
-    "0014",
-    "0015",
-    "0016",
-    "0017",
-    "0018",
-    "0019",
-    "0020",
-    "0021",
-    "0022",
-    "0023",
-    "0024",
-    "0025",
-    "0026",
-    "0042",
-    "0050",
-    "0051",
-    "0053",
-    "0070",
-    "0094",
-    "0110",
-    "0112",
-    "0113",
-    "0116",
-    "0144",
-    "0145",
-    "0200",
-    "0207",
-    "0210",
-    "0289",
-    "0785",
-    "0814",
-    "0997",
+  (
+    ..range(1, 27), // 1-26
+    33,
+    35,
+    39,
+    42,
+    46,
+    ..range(48, 52), // 48-51
+    ..range(53, 57), // 53-56
+    62,
+    69,
+    70,
+    72,
+    76,
+    78,
+    94,
+    101,
+    104,
+    110,
+    ..range(112, 114), // 112-113
+    116,
+    121,
+    144,
+    145,
+    155,
+    200,
+    ..range(206, 208), // 206-207
+    ..range(209, 211), // 209-210
+    289,
+    347,
+    547,
+    785,
+    814,
+    997,
   )
-  problem-dirs.map(d => int(d))
 }
 
 #let available-problems = discover-problems()

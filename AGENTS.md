@@ -1,689 +1,188 @@
 # AGENTS Guide
 
-This repository is a Typst package for solving LeetCode problems. It provides a framework with built-in test cases, reference solutions, and beautiful PDF rendering. Use this guide to understand the architecture and contribute.
+LeetCode problem solving framework in Typst. Built-in test cases, reference solutions, beautiful PDF rendering.
 
-## Project Architecture
+## Quick Start
 
-This is a **Typst package** (`@preview/leetcode`) with modular, DAG-based design:
+```bash
+# Create new problem
+just create 123
+
+# Test locally
+typst compile draft.typ --root .
+
+# Build complete PDF
+just build
+```
+
+## Project Structure
 
 ```
 problems/XXXX/           # Each problem is self-contained
-├── problem.toml         # Metadata (title, difficulty, labels, comparator)
+├── problem.toml         # Metadata (title, difficulty, labels)
 ├── description.typ      # Problem statement
-├── solution.typ         # Reference solution (#let solution)
-└── testcases.typ        # Built-in test cases (pure data)
+├── solution.typ         # Reference solution
+├── testcases.typ        # Test cases (no expected values!)
+└── display.typ          # Optional: custom display
 ```
 
-### Module Structure (DAG - No Circular Dependencies)
+### Module DAG
 
 ```
-  datastructures.typ  ← pure data structures, no dependencies
-         ↑
-     utils.typ        ← utility functions
-         ↑
-    display.typ       ← depends on utils, datastructures, visualize
-         ↑
-    testing.typ       ← depends on display
-         ↑
-    helpers.typ       ← re-exports all modules (backward compatibility)
-         ↑
-      lib.typ         ← package API entrypoint
+datastructures.typ → utils.typ → display.typ → testing.typ → helpers.typ → lib.typ
 ```
-
-### Key Files
-
-| File                 | Purpose                                                      |
-| -------------------- | ------------------------------------------------------------ |
-| `lib.typ`            | Package API entrypoint (exports `problem()`, `test()`, etc.) |
-| `helpers.typ`        | Re-exports all helper modules for backward compatibility     |
-| `datastructures.typ` | Data structures: `linkedlist`, `binarytree`, `ll-*` helpers  |
-| `utils.typ`          | Utilities: `fill`, `chessboard`, comparators                 |
-| `display.typ`        | Display logic: `display()` function                          |
-| `testing.typ`        | Test framework: `testcases()` function                       |
-| `visualize.typ`      | Visualization: binary tree and linked list rendering         |
-| `leetcode.typ`       | Generates complete PDF (excluded from package)               |
-| `scripts/create.py`  | Scaffolds new problems                                       |
-| `typst.toml`         | Package manifest                                             |
 
 ## Adding a Problem
 
-1. Run `just create <id>` or `python3 scripts/create.py <id>` to generate:
+### Required Files
 
-   ```
-   problems/XXXX/
-   ├── problem.toml      # Metadata
-   ├── description.typ   # Problem statement
-   ├── solution.typ      # Reference solution
-   ├── testcases.typ     # Test cases
-   └── display.typ       # Optional: custom input display
-   ```
-
-2. The script will prompt for:
-   - **Title**: Problem name
-   - **Difficulty**: `easy`, `medium`, or `hard`
-   - **Labels**: Comma-separated tags (e.g., `array,hash-table`)
-   - **Parameters**: Function parameters for the solution
-
-3. Fill in the generated files:
-   - **testcases.typ**: Add test cases
-     ```typst
-     #let cases = (
-       (nums: (1, 2, 3), target: 6),
-     )
-     ```
-   - **solution.typ**: Implement `solution` function
-
-4. For problems needing special handling, add to `problem.toml`:
-   ```toml
-   comparator = "unordered-compare"
-   custom-display = true
-   ```
-
-## Testing Your Changes
-
-### Test a Single Problem
-
-Package users would use:
-
-```typst
-#import "@preview/leetcode:0.1.0": problem, test
-
-#problem(1)
-#let solution(nums, target) = { /* your implementation */ }
-#test(1, solution)
-```
-
-For local testing, use `lib.typ` directly:
-
-```typst
-#import "lib.typ": problem, test
-
-#problem(1)
-#let solution(nums, target) = { /* your implementation */ }
-#test(1, solution)
-```
-
-### Generate Complete PDF
-
-```bash
-just build
-# or
-typst compile leetcode.typ build/leetcode.pdf
-```
-
-This creates a comprehensive PDF with all 38 problems and their reference solutions.
-
-## Architecture Principles
-
-### Domain-Driven Design
-
-- **High Cohesion**: All files for Problem 1 live in `problems/0001/`
-- **Built-in Test Cases**: Users get test cases automatically
-- **Metadata Support**: Comparators and rendering options in `problem.toml`
-
-### Modular Design (DAG)
-
-- **No circular dependencies**: Each module only imports from modules above it
-- **Single responsibility**: Each file has one clear purpose
-- **Backward compatibility**: `helpers.typ` re-exports everything
-
-### Unified API
-
-```typst
-// Use built-in cases
-#test(1, solution)
-
-// Add extra cases
-#test(1, solution, extra-cases: ((nums: (99, 1), target: 100),))
-
-// Only custom cases
-#test(1, solution, extra-cases: (...), default-cases: false)
-```
-
-## Module Reference
-
-### datastructures.typ
-
-Pure data structure definitions, no dependencies.
-
-| Function                                            | Description                               |
-| --------------------------------------------------- | ----------------------------------------- |
-| `linkedlist(arr)`                                   | Create linked list with closure accessors |
-| `binarytree(arr)`                                   | Create binary tree with closure accessors |
-| `graph(n, edges, directed: false, weighted: false)` | Create graph with closure accessors       |
-| `graph-from-adj(adj-list)`                          | Create graph from adjacency list          |
-
-**Linked list structure** (with closure-based O(1) accessors):
-
-```typst
-#let list = linkedlist((1, 2, 3))
-// Structure:
-// (
-//   type: "linkedlist",
-//   head: "0",
-//   get-val: (id) => ...,    // O(1) get value
-//   get-next: (id) => ...,   // O(1) get next node ID
-//   get-node: (id) => ...,   // O(1) get full node
-//   values: () => ...,       // O(n) get all values
-//   len: () => ...,          // O(1) get length
-//   nodes: (:),              // Internal storage (for visualization)
-// )
-```
-
-**Binary tree structure** (with closure-based O(1) accessors):
-
-```typst
-#let tree = binarytree((1, 2, 3, 4, 5))
-// Structure:
-// (
-//   type: "binarytree",
-//   root: "0",
-//   get-val: (id) => ...,    // O(1) get value
-//   get-left: (id) => ...,   // O(1) get left child ID
-//   get-right: (id) => ...,  // O(1) get right child ID
-//   get-next: (id) => ...,   // O(1) get next pointer (for 116/117)
-//   get-node: (id) => ...,   // O(1) get full node
-//   nodes: (:),              // Internal storage (for visualization/modification)
-// )
-// Node structure: (val: int, left: id|none, right: id|none, next: id|none)
-```
-
-**Graph structure** (with closure-based O(1) accessors):
-
-```typst
-#let g = graph(4, ((0, 1), (1, 2), (2, 3)))  // undirected
-#let g = graph(4, ((0, 1), (1, 2)), directed: true)  // directed
-#let g = graph(3, ((0, 1, 5), (1, 2, 3)), weighted: true)  // weighted
-// Structure:
-// (
-//   type: "graph",
-//   directed: false,
-//   weighted: false,
-//   n: 4,
-//   nodes: ("0": (val: 0), ...),
-//   adj: ("0": ((to: "1", weight: 1), ...), ...),
-//   get-neighbors: (id) => ...,  // O(1) get neighbor IDs
-//   get-edges: (id) => ...,      // O(1) get edges with weights
-//   get-node: (id) => ...,       // O(1) get node
-// )
-```
-
-### utils.typ
-
-Utility functions, no external dependencies.
-
-| Function                  | Description                     |
-| ------------------------- | ------------------------------- |
-| `fill(value, n)`          | Create array with n copies      |
-| `is-chessboard(value)`    | Check if value is a 2D board    |
-| `chessboard(board)`       | Render chessboard visualization |
-| `unordered-compare(a, b)` | Compare ignoring order          |
-| `float-compare(a, b)`     | Compare floats with tolerance   |
-
-### display.typ
-
-Display logic, depends on datastructures, utils, visualize.
-
-| Constant                   | Value | Description                     |
-| -------------------------- | ----- | ------------------------------- |
-| `MAX-ARRAY-DISPLAY`        | 210   | Array truncation threshold      |
-| `MAX-ARRAY-PREVIEW`        | 100   | Elements to show when truncated |
-| `MAX-STRING-DISPLAY`       | 1050  | String truncation threshold     |
-| `MAX-LINKEDLIST-VISUALIZE` | 8     | Max nodes for visual rendering  |
-
-| Function                                   | Description             |
-| ------------------------------------------ | ----------------------- |
-| `display(value, render-chessboard: false)` | Format value for output |
-
-### testing.typ
-
-Test framework, depends on display.
-
-| Function                                      | Description                  |
-| --------------------------------------------- | ---------------------------- |
-| `testcases(solution, reference, inputs, ...)` | Run and display test results |
-
-**Validation modes**:
-
-- `comparator(expected, yours) => bool` - Compare two outputs for equivalence
-- `custom-validator(input, expected, yours) => bool` - Validate output against input (for multi-answer problems)
-
-### visualize.typ
-
-Data structure visualization, depends on external packages (cetz, fletcher).
-
-| Constant               | Value  | Description                   |
-| ---------------------- | ------ | ----------------------------- |
-| `DEFAULT-TREE-SPREAD`  | 0.8    | Binary tree horizontal spread |
-| `DEFAULT-TREE-GROW`    | 0.6    | Binary tree vertical grow     |
-| `DEFAULT-TREE-RADIUS`  | 0.3    | Node circle radius            |
-| `DEFAULT-LIST-SPACING` | 1.2em  | Linked list node spacing      |
-| `DEFAULT-CYCLE-BEND`   | -40deg | Cycle edge bend angle         |
-
-| Function                          | Description                                  |
-| --------------------------------- | -------------------------------------------- |
-| `visualize-binarytree(root, ...)` | Render binary tree diagram                   |
-| `visualize-linkedlist(list, ...)` | Render linked list diagram (supports cycles) |
-
-### lib.typ
-
-Package API entrypoint, re-exports helpers and adds high-level functions.
-
-| Function                | Description                                 |
-| ----------------------- | ------------------------------------------- |
-| `problem(id)`           | Display problem description with difficulty |
-| `test(id, fn, ...)`     | Test solution with built-in/custom cases    |
-| `answer(id)`            | Display reference solution code             |
-| `solve(id, code-block)` | Display code and test in one call           |
-| `get-test-cases(id)`    | Get built-in test cases                     |
-| `get-problem-path(id)`  | Get problem directory path                  |
-| `get-problem-info(id)`  | Get metadata from problem.toml              |
-
-**Comparator dispatch table** (extensible):
-
-```typst
-#let comparators = (
-  "unordered-compare": unordered-compare,
-  "float-compare": float-compare,
-)
-```
-
-## Import Patterns
-
-**In testcases.typ** (if using helpers):
-
-```typst
-#import "../../helpers.typ": linkedlist
-```
-
-**In solution.typ**:
-
-```typst
-#import "../../helpers.typ": *
-```
-
-**In user code** (package users):
-
-```typst
-#import "@preview/leetcode:0.1.0": problem, test, linkedlist
-```
-
-**For fine-grained imports** (advanced):
-
-```typst
-#import "datastructures.typ": linkedlist
-#import "utils.typ": unordered-compare
-```
-
-## Package Development
-
-### Local Testing
-
-Use `lib.typ` directly instead of package import:
-
-```typst
-#import "lib.typ": problem, test
-```
-
-### Before Releasing
-
-1. Run `just build` — ensures complete PDF compiles
-2. Test the package API with example files in `templates/`
-3. Update version in `typst.toml`
-4. Update README with new features
-5. Verify exclusions are correct
-
-### Excluded from Package
-
-These files exist in the repo but are excluded from the published package:
-
-- `leetcode.typ` — local development tool
-- `templates/` — examples (referenced in README)
-- `scripts/` — maintenance tools
-- `build/` — compiled PDFs
-- `draft.typ` — scratch file
-- `Justfile`, `AGENTS.md` — development docs
-
-## Custom Input Display
-
-For problems where the default input display is not suitable (e.g., graph problems), you can create a custom display function.
-
-### Setup
-
-1. Create `display.typ` in the problem directory:
-
-```typst
-// problems/0207/display.typ
-#import "../../helpers.typ": graph
-#import "../../visualize.typ": visualize-graph
-
-#let custom-display(input) = {
-  let g = graph(input.numCourses, input.prerequisites, directed: true)
-  [*Input:* #input.numCourses courses, #input.prerequisites.len() prerequisites]
-  linebreak()
-  visualize-graph(g)
-}
-```
-
-2. Add `custom-display = true` to `problem.toml`:
-
-```toml
-title = "Course Schedule"
-difficulty = "medium"
-labels = ["graph", "topological-sort"]
-custom-display = true
-```
-
-### Function Signatures
-
-```typst
-// Custom input display (required if custom-display = true)
-#let custom-display(input) = {
-  // input is the full test case dictionary
-  // e.g., (numCourses: 4, prerequisites: ((1, 0), (2, 0)))
-  // Return content to display
-}
-
-// Custom output display (optional, requires custom-output-display = true)
-#let custom-output-display(output) = {
-  // output is the solution's return value
-  // Return content to display in Expected/Your Output columns
-}
-
-// Custom validator (optional, requires custom-validator = true)
-// File: problems/XXXX/validator.typ
-#let validator(input, expected, yours) = {
-  // input: the input parameters dictionary
-  // expected: reference solution output
-  // yours: user solution output
-  // Return: bool (true if yours is a valid answer)
-}
-```
-
-### Examples
-
-**Custom Display:**
-
-- **Graph problems** (0207, 0210, 0785, 0997): Visualize input as graph
-- **Matrix problems** (0289): Render input as chessboard
-- **N-Queens** (0051): Custom output display for chessboard solutions
-- **Path Sum** (0112): Highlight valid path nodes in tree
-
-**Custom Validator:**
-
-- **Longest Palindromic Substring** (0005): Multiple valid answers possible
-
-## Custom Validator
-
-For problems with multiple valid answers (e.g., "any valid answer is accepted"), use a custom validator instead of a comparator.
-
-### Setup
-
-1. Create `validator.typ` in the problem directory:
-
-```typst
-// problems/0005/validator.typ
-#let validator(input, expected, yours) = {
-  // Validate that 'yours' is a correct answer for 'input'
-  // Use 'expected' to check properties like length/size
-
-  // Example for Longest Palindromic Substring:
-  // 1. yours must be a substring of input
-  // 2. yours must be a palindrome
-  // 3. yours.len() == expected.len()
-
-  true // or false
-}
-```
-
-2. Add `custom-validator = true` to `problem.toml`:
-
-```toml
-title = "Longest Palindromic Substring"
-difficulty = "medium"
-labels = ["string", "dynamic-programming"]
-custom-validator = true
-```
-
-### Validation Priority
-
-1. `custom-validator` (if provided) - full control over validation logic
-2. `comparator` (if provided) - wrapped to `(input, expected, yours) => comparator(expected, yours)`
-3. Default - direct equality `expected == yours`
-
-## Common Tasks
-
-### Add a new test case to existing problem
-
-Edit `problems/XXXX/testcases.typ`:
-
-```typst
-#let cases = (
-  // existing cases
-  (nums: (1, 2, 3), target: 6),  // add this
-)
-```
-
-### Fix a reference solution
-
-Edit `problems/XXXX/solution.typ` and implement `solution` function.
-
-### Add a new comparator
-
-1. Add function to `utils.typ`:
-
-   ```typst
-   #let my-compare(a, b) = { /* ... */ }
-   ```
-
-2. Add to dispatch table in `lib.typ`:
-
-   ```typst
-   #let comparators = (
-     "unordered-compare": unordered-compare,
-     "float-compare": float-compare,
-     "my-compare": my-compare,  // add this
-   )
-   ```
-
-3. Use in problem.toml:
-   ```toml
-   comparator = "my-compare"
-   ```
-
-### Add a new data structure
-
-1. Add to `datastructures.typ` (no dependencies allowed)
-2. Add visualization to `visualize.typ` if needed
-3. Update `display.typ` to handle the new type
-4. Export from `helpers.typ` (automatic via `*`)
-
-## Verification Checklist
-
-Before committing:
-
-1. Run `just build` — ensures complete PDF compiles
-2. Run `just fmt` — format Python code
-3. New problems have at least one test case
-4. Reference solution passes its own tests
-5. Documentation updated (README, AGENTS.md)
-6. No circular dependencies in module imports
-
-## Problem Description Style Guide
-
-Problem descriptions (`description.typ`) should follow consistent formatting rules.
-
-### Text Formatting
-
-| Element                                                 | Syntax          | Example                                        |
-| ------------------------------------------------------- | --------------- | ---------------------------------------------- |
-| **Code identifiers** (variables, functions, parameters) | `` `name` ``    | `` `nums` ``, `` `target` ``, `` `getMin()` `` |
-| **Emphasis** (keywords, important terms)                | `*text*`        | `*exactly one solution*`, `*palindrome*`       |
-| **Mathematical expressions**                            | `$...$`         | `$n$`, `$k$`, `$m times n$`                    |
-| **Numeric ranges/bounds**                               | `$...$`         | `$[-2^31, 2^31 - 1]$`                          |
-| **Complexity notation**                                 | `$cal(O)(...)$` | `$cal(O)(log n)$`, `$cal(O)(n^2)$`             |
-| **Exponents/formulas**                                  | `$...$`         | `$x^n$`, `$2^31$`                              |
-
-### When to Use Each
-
-**Use backticks `` ` `` for:**
-
-- Variable names: `` `nums` ``, `` `head` ``, `` `prices` ``
-- Function/method names: `` `push()` ``, `` `getMin()` ``
-- Parameter names in descriptions: `` `target` ``
-- String literals: `` `'.'` ``, `` `'*'` ``
-- Return values (boolean): `` `true` ``, `` `false` ``
-- Data structure names when referencing code: `` `MinStack` ``
-
-**Use math mode `$...$` for:**
-
-- Mathematical variables: `$n$`, `$k$`, `$m$`, `$x$`
-- Dimensions: `$m times n$` grid
-- Ranges: `$[-2^31, 2^31 - 1]$`
-- Complexity: `$cal(O)(n log n)$`
-- Powers/exponents: `$x^n$`, `$2^31$`
-- Any mathematical notation: `$<=$ `, `$>=$`
-
-### Examples
-
-**Good:**
-
-```typst
-Given an array `nums` and an integer `target`, return indices...
-
-The time complexity should be $cal(O)(log n)$.
-
-Given $n$ pairs of parentheses, generate all combinations...
-
-The integer range is $[-2^31, 2^31 - 1]$.
-
-Return `true` if `x` is a *palindrome*.
-```
-
-**Bad:**
-
-```typst
-Given an array $nums$ and an integer $target$...  // ❌ Use backticks for code
-Given n pairs of parentheses...                   // ❌ Use $n$ for math variables
-The time complexity should be `O(log n)`.         // ❌ Use $cal(O)(...)$ for complexity
-```
-
-### Key Distinction
-
-- **Code context** → backticks: things that appear in code (variable names, function calls)
-- **Math context** → dollar signs: abstract quantities, formulas, complexity
-
-When a variable appears in both contexts, prefer:
-
-- In "the array `nums`" → backticks (referring to the code parameter)
-- In "$n$ elements" → math (referring to the abstract count)
-
-## Problem Metadata (problem.toml)
-
-Each problem has a `problem.toml` file with metadata:
+**problem.toml**:
 
 ```toml
 title = "Two Sum"
 difficulty = "easy"
 labels = ["array", "hash-table"]
-
-# Optional fields (with defaults)
-# comparator = "unordered-compare"
-# custom-display = true
-# custom-output-display = true
+# Optional: validator = "unordered-compare" | "custom"
+# Optional: custom-display = true
 ```
 
-**Required fields**:
-
-- `title`: Problem name
-- `difficulty`: `"easy"`, `"medium"`, or `"hard"`
-- `labels`: Array of topic tags
-
-**Optional fields** (for special handling):
-
-- `comparator`: Custom comparison function for test results
-- `custom-display`: Use custom input display from `display.typ` (see below)
-- `custom-output-display`: Use custom output display from `display.typ` (see below)
-
-**Common labels** (based on LeetCode categories):
-
-- `array`, `string`, `hash-table`, `math`
-- `two-pointers`, `sliding-window`, `binary-search`
-- `linked-list`, `tree`, `graph`
-- `stack`, `queue`, `heap`
-- `dynamic-programming`, `greedy`, `backtracking`
-- `divide-and-conquer`, `recursion`
-- `sorting`, `bit-manipulation`
-
-## Linked List Data Structure
-
-The linked list uses a **flat dict with string ID pointers** instead of nested dicts:
-
-**Old (nested, O(n²) traversal)**:
+**testcases.typ** — NO `expected:` field, reference solution generates it:
 
 ```typst
-(val: 1, next: (val: 2, next: (val: 3, next: none)))
-```
-
-**New (flat, O(n) traversal)**:
-
-```typst
-(
-  type: "linkedlist",
-  head: "0",
-  nodes: (
-    "0": (val: 1, next: "1"),
-    "1": (val: 2, next: "2"),
-    "2": (val: 3, next: none),
-  )
+#let cases = (
+  (input: (nums: (2, 7, 11, 15), target: 9)),
+  (input: (nums: (3, 2, 4), target: 6)),
 )
 ```
 
-**Benefits**:
-
-- O(1) node access instead of O(n) deep copy
-- Supports cyclic linked lists (just point next to existing ID)
-- More memory efficient for large lists
-
-**Usage in linked list solutions**:
+**solution.typ**:
 
 ```typst
-#let solution(head) = {
-  // Option 1: Get all values as array (most common)
-  let vals = (head.values)()
+#import "../../helpers.typ": *
 
-  // Option 2: Manual traversal with O(1) closure accessors
-  let curr = head.head
-  while curr != none {
-    let val = (head.get-val)(curr)
-    // ... process val ...
-    curr = (head.get-next)(curr)
-  }
+#let solution(nums, target) = {
+  // Implementation
 }
 ```
 
-**Usage in binary tree solutions**:
+### Testing
 
 ```typst
-#let solution(root) = {
-  // Empty tree check
-  if root.root == none { return 0 }
-
-  // Recursive traversal with O(1) closure accessors
-  let dfs(id) = {
-    if id == none { return 0 }
-    let val = (root.get-val)(id)
-    let left = dfs((root.get-left)(id))
-    let right = dfs((root.get-right)(id))
-    1 + calc.max(left, right)
-  }
-
-  dfs(root.root)
-}
-
-// Modify nodes (for tree modification problems)
-#let old-node = root.nodes.at("0")
-#root.nodes.insert("0", (..old-node, val: 99))
+// draft.typ
+#import "lib.typ": problem, test
+#problem(123)
+#import "problems/0123/solution.typ": solution
+#test(123, solution)
 ```
 
-Happy Typst hacking!
+### Special Cases
+
+| Need                   | Add to problem.toml               | Create file     |
+| :--------------------- | :-------------------------------- | :-------------- |
+| Unordered output       | `validator = "unordered-compare"` | —               |
+| Multiple valid answers | `validator = "custom"`            | `validator.typ` |
+| Custom input display   | `custom-display = true`           | `display.typ`   |
+| Custom output display  | `custom-output-display = true`    | `display.typ`   |
+
+See examples: `problems/0005/` (custom validator), `problems/0289/` (custom display), `problems/0547/` (chessboard display).
+
+## Typst Mutability Rules
+
+**Critical for algorithm implementation:**
+
+| Context                     | Mutable? |
+| :-------------------------- | :------: |
+| In for/while loop           |    ✅    |
+| Function parameter          |    ✅    |
+| Closure capturing outer var |    ❌    |
+
+### Implication: Union-Find
+
+Closures can't modify captured state. Do modifications **in the loop**:
+
+```typst
+// find() returns (root, path) — READ-ONLY
+let find(p, x) = { ... (root, path) }
+
+for edge in edges {
+  let (root, path) = find(parent, x)
+  // Modify IN THE LOOP
+  for node in path { parent.at(node) = root }
+}
+```
+
+See: `problems/0547/solution.typ`
+
+### Implication: Backtracking
+
+**Option 1 (preferred): Stack simulation**
+
+```typst
+let stack = (...)
+let result = ()
+while stack.len() > 0 {
+  result.push(...)  // ✅ Modify in loop
+}
+```
+
+**Option 2: Return value accumulation** (has O(k) copy overhead)
+
+```typst
+let backtrack(...) = {
+  result += backtrack(...)  // Each += copies
+}
+```
+
+See: `problems/0039/solution.typ`
+
+## Data Structures
+
+### linkedlist / binarytree
+
+Flat dict with string ID pointers + closure accessors:
+
+```typst
+#let list = linkedlist((1, 2, 3))
+// list.head = "0"
+// (list.get-val)("0") → 1
+// (list.get-next)("0") → "1"
+// (list.values)() → (1, 2, 3)
+```
+
+⚠️ Closures are **read-only** — they capture `nodes` but can't modify it.
+
+See: `datastructures.typ` for full structure definitions.
+
+## Description Style
+
+| Type             | Syntax          | Example                      |
+| :--------------- | :-------------- | :--------------------------- |
+| Code identifiers | `` `name` ``    | `` `nums` ``, `` `target` `` |
+| Math variables   | `$n$`           | `$n$`, `$k$`, `$m times n$`  |
+| Complexity       | `$cal(O)(...)$` | `$cal(O)(n log n)$`          |
+| Emphasis         | `*text*`        | `*unique*`, `*palindrome*`   |
+
+## Common Pitfalls
+
+```typst
+// ❌ Closure can't modify outer var
+let result = ()
+let f() = { result.push(x) }  // Error!
+
+// ❌ Missing input: wrapper
+(nums: (1, 2, 3))
+// ✅ Correct
+(input: (nums: (1, 2, 3)))
+
+// ❌ Hardcoded expected
+(input: (...), expected: 42)
+// ✅ Let reference solution compute it
+(input: (...))
+```
+
+## Verification Checklist
+
+- [ ] `just build` succeeds
+- [ ] Reference solution passes tests
+- [ ] No `expected:` in testcases
+- [ ] Added to `leetcode.typ`
