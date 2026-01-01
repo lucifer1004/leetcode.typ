@@ -1,17 +1,15 @@
-# leetcode - LeetCode Problem-Solving Framework in Typst
+A Typst package for solving LeetCode problems with beautiful PDF output and automatic test case visualization. Import the package and start coding – built-in test cases included!
 
 ![Logo](images/logo.png)
 
-A Typst package for solving LeetCode problems with beautiful PDF output and automatic test case visualization. Import the package and start coding – built-in test cases included!
-
 ## Features
 
-- 📦 **Zero Setup**: Import and start solving – built-in test cases for all problems
-- 🎨 **Beautiful Output**: Automatic formatting with professional PDF rendering  
-- 📝 **Test Visualization**: Side-by-side comparison of your output vs. expected results
-- ✅ **Auto-Validation**: Instant pass/fail indicators
-- 🚀 **21 Problems**: Curated collection of classic LeetCode problems
-- 🔧 **Extensible**: Custom comparators, chessboard rendering, and more
+- **Zero Setup**: Import and start solving – built-in test cases for all problems
+- **Beautiful Output**: Automatic formatting with professional PDF rendering
+- **Test Visualization**: Side-by-side comparison of your output vs. expected results
+- **Auto-Validation**: Instant pass/fail indicators
+- **38 Problems**: Curated collection of classic LeetCode problems
+- **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
 
@@ -47,7 +45,7 @@ Create a new `.typ` file:
 
 If you want to display your solution, you can try
 
-```typst
+````typst
 #import "@preview/leetcode:0.1.0": solve
 
 #solve(1, ```typc
@@ -63,45 +61,64 @@ let solution(nums, target) = {
   ans
 }
 ```)
-```
+````
 
 - The main function name needs to be `solution` when using the `solve()` API.
 
 Compile:
+
 ```bash
 typst compile my-solution.typ
 ```
 
 Or live preview:
+
 ```bash
 typst watch my-solution.typ
 ```
 
 ## Available Problems
 
-| ID | Title | Difficulty |
-|----|-------|------------|
-| 1 | Two Sum | Easy |
-| 2 | Add Two Numbers | Medium |
-| 3 | Longest Substring Without Repeating Characters | Medium |
-| 4 | Median of Two Sorted Arrays | Hard |
-| 5 | Longest Palindromic Substring | Medium |
-| 6 | Zigzag Conversion | Medium |
-| 7 | Reverse Integer | Medium |
-| 8 | String to Integer (atoi) | Medium |
-| 9 | Palindrome Number | Easy |
-| 10 | Regular Expression Matching | Hard |
-| 11 | Container With Most Water | Medium |
-| 12 | Integer to Roman | Medium |
-| 13 | Roman to Integer | Easy |
-| 14 | Longest Common Prefix | Easy |
-| 15 | 3Sum | Medium |
-| 16 | 3Sum Closest | Medium |
-| 17 | Letter Combinations of a Phone Number | Medium |
-| 18 | 4Sum | Medium |
-| 19 | Remove Nth Node From End of List | Medium |
-| 20 | Valid Parentheses | Easy |
-| 51 | N-Queens | Hard |
+| ID  | Title                                          | Difficulty |
+| --- | ---------------------------------------------- | ---------- |
+| 1   | Two Sum                                        | Easy       |
+| 2   | Add Two Numbers                                | Medium     |
+| 3   | Longest Substring Without Repeating Characters | Medium     |
+| 4   | Median of Two Sorted Arrays                    | Hard       |
+| 5   | Longest Palindromic Substring                  | Medium     |
+| 6   | Zigzag Conversion                              | Medium     |
+| 7   | Reverse Integer                                | Medium     |
+| 8   | String to Integer (atoi)                       | Medium     |
+| 9   | Palindrome Number                              | Easy       |
+| 10  | Regular Expression Matching                    | Hard       |
+| 11  | Container With Most Water                      | Medium     |
+| 12  | Integer to Roman                               | Medium     |
+| 13  | Roman to Integer                               | Easy       |
+| 14  | Longest Common Prefix                          | Easy       |
+| 15  | 3Sum                                           | Medium     |
+| 16  | 3Sum Closest                                   | Medium     |
+| 17  | Letter Combinations of a Phone Number          | Medium     |
+| 18  | 4Sum                                           | Medium     |
+| 19  | Remove Nth Node From End of List               | Medium     |
+| 20  | Valid Parentheses                              | Easy       |
+| 21  | Merge Two Sorted Lists                         | Easy       |
+| 22  | Generate Parentheses                           | Medium     |
+| 23  | Merge k Sorted Lists                           | Hard       |
+| 24  | Swap Nodes in Pairs                            | Medium     |
+| 25  | Reverse Nodes in k-Group                       | Hard       |
+| 26  | Remove Duplicates from Sorted Array            | Easy       |
+| 42  | Trapping Rain Water                            | Hard       |
+| 50  | Pow(x, n)                                      | Medium     |
+| 51  | N-Queens                                       | Hard       |
+| 94  | Binary Tree Inorder Traversal                  | Easy       |
+| 110 | Balanced Binary Tree                           | Easy       |
+| 112 | Path Sum                                       | Easy       |
+| 113 | Path Sum II                                    | Medium     |
+| 144 | Binary Tree Preorder Traversal                 | Easy       |
+| 145 | Binary Tree Postorder Traversal                | Easy       |
+| 200 | Number of Islands                              | Medium     |
+| 289 | Game of Life                                   | Medium     |
+| 814 | Binary Tree Pruning                            | Medium     |
 
 ## Multiple Problems in One File
 
@@ -146,7 +163,7 @@ Add your own test cases on top of built-in ones:
 Override built-in cases completely:
 
 ```typst
-#test(1, solution, 
+#test(1, solution,
   extra-cases: (
     (nums: (1, 2, 3), target: 5),
   ),
@@ -214,25 +231,40 @@ For advanced control:
 
 ### Main Functions
 
-- `problem(id)` - Display problem statement
-- `test(id, fn)` - Test with built-in cases (recommended)
-- `test(id, fn, extra-cases: (...), default-cases: false)` - Customize test cases
-- `solution(id)` - Display reference solution code (when stuck)
-- `get-test-cases(id)` - Get built-in test cases
-- `get-problem-path(id)` - Get problem directory path
+| Function                | Description                       |
+| ----------------------- | --------------------------------- |
+| `problem(id)`           | Display problem statement         |
+| `test(id, fn, ...)`     | Test solution with built-in cases |
+| `answer(id)`            | Display reference solution code   |
+| `solve(id, code-block)` | Display code and test in one call |
+| `get-test-cases(id)`    | Get built-in test cases as array  |
+| `get-problem-path(id)`  | Get problem directory path        |
 
-### Helper Functions
+### Data Structure Functions
 
-- `testcases(fn, ref, cases, ...)` - Manual test comparison
-- `linkedlist(array)` - Create linked list from array
-- `display(value)` - Format values for output
-- `unordered-compare(a, b)` - Compare ignoring order
-- `fill(value, n)` - Create array with n copies
-- `chessboard(board)` - Render chessboard visualization
+| Function            | Description                               |
+| ------------------- | ----------------------------------------- |
+| `linkedlist(array)` | Create linked list from array             |
+| `ll-val(list, id)`  | Get value at node ID                      |
+| `ll-next(list, id)` | Get next node ID                          |
+| `ll-values(list)`   | Get all values as array                   |
+| `binarytree(array)` | Create binary tree from level-order array |
+
+### Utility Functions
+
+| Function                         | Description                     |
+| -------------------------------- | ------------------------------- |
+| `display(value)`                 | Format value for output         |
+| `fill(value, n)`                 | Create array with n copies      |
+| `chessboard(board)`              | Render chessboard visualization |
+| `unordered-compare(a, b)`        | Compare ignoring order          |
+| `float-compare(a, b)`            | Compare floats with tolerance   |
+| `testcases(fn, ref, cases, ...)` | Manual test comparison          |
 
 ## Examples
 
 Check out [templates/](templates/) for examples:
+
 - `single-problem.typ` - Single problem workflow
 - `multiple-problems.typ` - Multiple problems in one file
 
@@ -248,6 +280,7 @@ problems/XXXX/
 ```
 
 **Testcases can use helper functions**:
+
 ```typst
 // testcases.typ
 #import "../../helpers.typ": linkedlist
@@ -258,6 +291,7 @@ problems/XXXX/
 ```
 
 This design ensures:
+
 - **High cohesion**: All files for a problem are together
 - **Built-in tests**: No need to write test cases
 - **Metadata support**: Comparators and rendering options included
@@ -268,10 +302,19 @@ This design ensures:
 ### Linked Lists
 
 ```typst
-#import "@preview/leetcode:0.1.0": linkedlist
+#import "@preview/leetcode:0.1.0": linkedlist, ll-values
 
-#let l1 = linkedlist((1, 2, 3))
-#let l2 = linkedlist((4, 5, 6))
+#let list = linkedlist((1, 2, 3))
+#let values = ll-values(list)  // (1, 2, 3)
+```
+
+### Binary Trees
+
+```typst
+#import "@preview/leetcode:0.1.0": binarytree
+
+// Level-order array: [1, 2, 3, null, 4]
+#let tree = binarytree((1, 2, 3, none, 4))
 ```
 
 ### Live Preview
@@ -303,6 +346,7 @@ This project explores Typst as a functional programming language for algorithms,
 Maintained at [github.com/lucifer1004/leetcode.typ](https://github.com/lucifer1004/leetcode.typ).
 
 To add problems, use:
+
 ```bash
 python3 scripts/create.py <problem-id>
 ```
@@ -311,4 +355,4 @@ python3 scripts/create.py <problem-id>
 
 MIT License - see LICENSE file for details.
 
-LeetCode problems © LeetCode.
+LeetCode problems are the property of © LeetCode.

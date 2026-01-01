@@ -2,6 +2,7 @@ fmt:
   ruff check --fix .
   ruff format .
   typstyle -i .
+  prettier --write .
 
 # Create a new problem (usage: just create 22)
 create id:

@@ -4,7 +4,7 @@ This repository is a Typst package for solving LeetCode problems. It provides a 
 
 ## Project Architecture
 
-This is now a **Typst package** (`@preview/leetcode`) with domain-driven design:
+This is a **Typst package** (`@preview/leetcode`) with modular, DAG-based design:
 
 ```
 problems/XXXX/           # Each problem is self-contained
@@ -13,18 +13,41 @@ problems/XXXX/           # Each problem is self-contained
 └── testcases.typ        # Built-in test cases + metadata
 ```
 
+### Module Structure (DAG - No Circular Dependencies)
+
+```
+  datastructures.typ  ← pure data structures, no dependencies
+         ↑
+     utils.typ        ← utility functions
+         ↑
+    display.typ       ← depends on utils, datastructures, visualize
+         ↑
+    testing.typ       ← depends on display
+         ↑
+    helpers.typ       ← re-exports all modules (backward compatibility)
+         ↑
+      lib.typ         ← package API entrypoint
+```
+
 ### Key Files
 
-- `lib.typ` — Package API entrypoint (exports `problem()`, `test()`, etc.)
-- `helpers.typ` — Shared utilities (`linkedlist`, `display`, `testcases`, comparators)
-- `leetcode.typ` — Generates complete PDF with all problems (excluded from package)
-- `templates/` — Example usage files for package users (excluded from package)
-- `scripts/create.py` — Scaffolds new problems in the correct structure
-- `typst.toml` — Package manifest
+| File                 | Purpose                                                      |
+| -------------------- | ------------------------------------------------------------ |
+| `lib.typ`            | Package API entrypoint (exports `problem()`, `test()`, etc.) |
+| `helpers.typ`        | Re-exports all helper modules for backward compatibility     |
+| `datastructures.typ` | Data structures: `linkedlist`, `binarytree`, `ll-*` helpers  |
+| `utils.typ`          | Utilities: `fill`, `chessboard`, comparators                 |
+| `display.typ`        | Display logic: `display()` function                          |
+| `testing.typ`        | Test framework: `testcases()` function                       |
+| `visualize.typ`      | Visualization: binary tree and linked list rendering         |
+| `leetcode.typ`       | Generates complete PDF (excluded from package)               |
+| `scripts/create.py`  | Scaffolds new problems                                       |
+| `typst.toml`         | Package manifest                                             |
 
 ## Adding a Problem
 
 1. Run `just create <id>` or `python3 scripts/create.py <id>` to generate:
+
    ```
    problems/XXXX/
    ├── description.typ
@@ -56,6 +79,7 @@ problems/XXXX/           # Each problem is self-contained
 ### Test a Single Problem
 
 Package users would use:
+
 ```typst
 #import "@preview/leetcode:0.1.0": problem, test
 
@@ -65,6 +89,7 @@ Package users would use:
 ```
 
 For local testing, use `lib.typ` directly:
+
 ```typst
 #import "lib.typ": problem, test
 
@@ -81,23 +106,24 @@ just build
 typst compile leetcode.typ build/leetcode.pdf
 ```
 
-This creates a comprehensive PDF with all 21 problems and their reference solutions.
+This creates a comprehensive PDF with all 38 problems and their reference solutions.
 
 ## Architecture Principles
 
 ### Domain-Driven Design
 
-✅ **High Cohesion**: All files for Problem 1 live in `problems/0001/`
-- Easy to find everything related to a problem
-- Clear ownership and organization
-- Simple to add/remove problems
+- **High Cohesion**: All files for Problem 1 live in `problems/0001/`
+- **Built-in Test Cases**: Users get test cases automatically
+- **Metadata Support**: Comparators and rendering options in testcases.typ
 
-✅ **Built-in Test Cases**: Users get test cases automatically
-- No need to write test cases manually
-- Consistent testing across all problems
-- Metadata for special requirements (comparators, rendering)
+### Modular Design (DAG)
 
-✅ **Unified API**: Single `test()` function with flexible modes
+- **No circular dependencies**: Each module only imports from modules above it
+- **Single responsibility**: Each file has one clear purpose
+- **Backward compatibility**: `helpers.typ` re-exports everything
+
+### Unified API
+
 ```typst
 // Use built-in cases
 #test(1, solution)
@@ -109,74 +135,162 @@ This creates a comprehensive PDF with all 21 problems and their reference soluti
 #test(1, solution, extra-cases: (...), default-cases: false)
 ```
 
-### Import Patterns
+## Module Reference
+
+### datastructures.typ
+
+Pure data structure definitions, no dependencies.
+
+| Function            | Description                               |
+| ------------------- | ----------------------------------------- |
+| `linkedlist(arr)`   | Create flat linked list from array        |
+| `ll-node(list, id)` | Get node by ID                            |
+| `ll-val(list, id)`  | Get value at node ID                      |
+| `ll-next(list, id)` | Get next node ID                          |
+| `ll-values(list)`   | Get all values as array                   |
+| `binarytree(arr)`   | Create binary tree from level-order array |
+
+**Linked list structure** (flat dict with string ID pointers):
+
+```typst
+(
+  type: "linkedlist",
+  head: "0",
+  nodes: (
+    "0": (val: 1, next: "1"),
+    "1": (val: 2, next: none),
+  )
+)
+```
+
+### utils.typ
+
+Utility functions, no external dependencies.
+
+| Function                  | Description                     |
+| ------------------------- | ------------------------------- |
+| `fill(value, n)`          | Create array with n copies      |
+| `is-chessboard(value)`    | Check if value is a 2D board    |
+| `chessboard(board)`       | Render chessboard visualization |
+| `unordered-compare(a, b)` | Compare ignoring order          |
+| `float-compare(a, b)`     | Compare floats with tolerance   |
+
+### display.typ
+
+Display logic, depends on datastructures, utils, visualize.
+
+| Constant                   | Value | Description                     |
+| -------------------------- | ----- | ------------------------------- |
+| `MAX-ARRAY-DISPLAY`        | 210   | Array truncation threshold      |
+| `MAX-ARRAY-PREVIEW`        | 100   | Elements to show when truncated |
+| `MAX-STRING-DISPLAY`       | 1050  | String truncation threshold     |
+| `MAX-LINKEDLIST-VISUALIZE` | 8     | Max nodes for visual rendering  |
+
+| Function                                   | Description             |
+| ------------------------------------------ | ----------------------- |
+| `display(value, render-chessboard: false)` | Format value for output |
+
+### testing.typ
+
+Test framework, depends on display.
+
+| Function                                      | Description                  |
+| --------------------------------------------- | ---------------------------- |
+| `testcases(solution, reference, inputs, ...)` | Run and display test results |
+
+### visualize.typ
+
+Data structure visualization, depends on external packages (cetz, fletcher).
+
+| Constant               | Value  | Description                   |
+| ---------------------- | ------ | ----------------------------- |
+| `DEFAULT-TREE-SPREAD`  | 0.8    | Binary tree horizontal spread |
+| `DEFAULT-TREE-GROW`    | 0.6    | Binary tree vertical grow     |
+| `DEFAULT-TREE-RADIUS`  | 0.3    | Node circle radius            |
+| `DEFAULT-LIST-SPACING` | 1.2em  | Linked list node spacing      |
+| `DEFAULT-CYCLE-BEND`   | -40deg | Cycle edge bend angle         |
+
+| Function                          | Description                                  |
+| --------------------------------- | -------------------------------------------- |
+| `visualize-binarytree(root, ...)` | Render binary tree diagram                   |
+| `visualize-linkedlist(list, ...)` | Render linked list diagram (supports cycles) |
+
+### lib.typ
+
+Package API entrypoint, re-exports helpers and adds high-level functions.
+
+| Function                | Description                              |
+| ----------------------- | ---------------------------------------- |
+| `problem(id)`           | Display problem description              |
+| `test(id, fn, ...)`     | Test solution with built-in/custom cases |
+| `answer(id)`            | Display reference solution code          |
+| `solve(id, code-block)` | Display code and test in one call        |
+| `get-test-cases(id)`    | Get built-in test cases                  |
+| `get-problem-path(id)`  | Get problem directory path               |
+
+**Comparator dispatch table** (extensible):
+
+```typst
+#let comparators = (
+  "unordered-compare": unordered-compare,
+  "float-compare": float-compare,
+)
+```
+
+## Import Patterns
 
 **In testcases.typ** (if using helpers):
+
 ```typst
 #import "../../helpers.typ": linkedlist
 ```
 
 **In solution.typ**:
+
 ```typst
 #import "../../helpers.typ": *
 ```
 
 **In user code** (package users):
+
 ```typst
 #import "@preview/leetcode:0.1.0": problem, test, linkedlist
 ```
 
-## Helpers Module
+**For fine-grained imports** (advanced):
 
-`helpers.typ` provides:
-
-- **Data structures**: `linkedlist(array)` — creates linked list nodes
-- **Display**: `display(value, render-chessboard: false)` — pretty-prints values
-- **Testing**: `testcases(fn, ref, cases, ...)` — renders test results
-- **Comparators**: `unordered-compare(a, b)` — order-insensitive comparison
-- **Utilities**: `fill(value, n)`, `chessboard(board)`, `is-chessboard(value)`
-
-When extending helpers:
-- Keep backward-compatible signatures
-- Favor reusable utilities over problem-specific code
-- Document complex functions
-
-## Public API Functions
-
-The `lib.typ` exports these functions for users:
-
-- **`problem(id)`** — Display problem description
-- **`test(id, fn, ...)`** — Test solution with built-in/custom cases
-- **`solution(id)`** — Display reference solution code (for learning)
-- **`get-test-cases(id)`** — Get built-in test cases
-- **`get-problem-path(id)`** — Get problem directory path
-
-These are all available via `#import "@preview/leetcode:0.1.0": problem, test, solution`
+```typst
+#import "datastructures.typ": linkedlist, ll-values
+#import "utils.typ": unordered-compare
+```
 
 ## Package Development
 
 ### Local Testing
 
 Use `lib.typ` directly instead of package import:
+
 ```typst
 #import "lib.typ": problem, test
 ```
 
 ### Before Releasing
 
-1. ✅ All problems compile without errors: `just build`
-2. ✅ Test the package API with example files in `templates/`
-3. ✅ Update version in `typst.toml`
-4. ✅ Update README with new features
-5. ✅ Verify exclusions are correct (no user-solutions, build/, etc.)
+1. Run `just build` — ensures complete PDF compiles
+2. Test the package API with example files in `templates/`
+3. Update version in `typst.toml`
+4. Update README with new features
+5. Verify exclusions are correct
 
 ### Excluded from Package
 
 These files exist in the repo but are excluded from the published package:
+
 - `leetcode.typ` — local development tool
 - `templates/` — examples (referenced in README)
 - `scripts/` — maintenance tools
 - `build/` — compiled PDFs
+- `draft.typ` — scratch file
 - `Justfile`, `AGENTS.md` — development docs
 
 ## Common Tasks
@@ -184,6 +298,7 @@ These files exist in the repo but are excluded from the published package:
 ### Add a new test case to existing problem
 
 Edit `problems/XXXX/testcases.typ`:
+
 ```typst
 #let cases = (
   // existing cases
@@ -195,57 +310,92 @@ Edit `problems/XXXX/testcases.typ`:
 
 Edit `problems/XXXX/solution.typ` and implement `solution` function.
 
-### Update problem description
+### Add a new comparator
 
-Edit `problems/XXXX/description.typ`. 
-⚠️ If using images, use path `../../images/pXXXX.png`
+1. Add function to `utils.typ`:
 
-### Test metadata handling
+   ```typst
+   #let my-compare(a, b) = { /* ... */ }
+   ```
 
-Problems with metadata automatically apply comparators/rendering:
-```typst
-// In testcases.typ
-#let metadata = (
-  comparator: "unordered-compare",
-  render-chessboard: true,
-)
+2. Add to dispatch table in `lib.typ`:
 
-// User doesn't need to specify these!
-#test(51, solution)  // Automatically uses metadata
-```
+   ```typst
+   #let comparators = (
+     "unordered-compare": unordered-compare,
+     "float-compare": float-compare,
+     "my-compare": my-compare,  // add this
+   )
+   ```
+
+3. Use in testcases.typ:
+   ```typst
+   #let metadata = (comparator: "my-compare")
+   ```
+
+### Add a new data structure
+
+1. Add to `datastructures.typ` (no dependencies allowed)
+2. Add visualization to `visualize.typ` if needed
+3. Update `display.typ` to handle the new type
+4. Export from `helpers.typ` (automatic via `*`)
 
 ## Verification Checklist
 
 Before committing:
 
-1. ✅ Run `just build` — ensures complete PDF compiles
-2. ✅ Check `just fmt` — format Python code
-3. ✅ New problems have at least one test case
-4. ✅ Reference solution passes its own tests
-5. ✅ Documentation updated (README, AGENTS.md)
-6. ✅ No references to old structure (user-solutions/, reference-solutions/)
+1. Run `just build` — ensures complete PDF compiles
+2. Run `just fmt` — format Python code
+3. New problems have at least one test case
+4. Reference solution passes its own tests
+5. Documentation updated (README, AGENTS.md)
+6. No circular dependencies in module imports
 
-## Migration Notes
+## Linked List Data Structure
 
-**Old structure (before package conversion)**:
-```
-problems/pXXXX.typ
-reference-solutions/sXXXX.typ  
-user-solutions/uXXXX.typ
-```
+The linked list uses a **flat dict with string ID pointers** instead of nested dicts:
 
-**New structure (domain-driven)**:
-```
-problems/XXXX/
-├── description.typ
-├── solution.typ
-└── testcases.typ
+**Old (nested, O(n²) traversal)**:
+
+```typst
+(val: 1, next: (val: 2, next: (val: 3, next: none)))
 ```
 
-Key changes:
-- Unified `test()` API instead of separate `test-auto()` and `test()`
-- Test cases are data files (can import helpers if needed)
-- Metadata in testcases.typ for special requirements
-- Package-first design for easy distribution
+**New (flat, O(n) traversal)**:
 
-Happy Typst hacking! 🚀
+```typst
+(
+  type: "linkedlist",
+  head: "0",
+  nodes: (
+    "0": (val: 1, next: "1"),
+    "1": (val: 2, next: "2"),
+    "2": (val: 3, next: none),
+  )
+)
+```
+
+**Benefits**:
+
+- O(1) node access instead of O(n) deep copy
+- Supports cyclic linked lists (just point next to existing ID)
+- More memory efficient for large lists
+
+**Usage in solutions**:
+
+```typst
+#let solution(head) = {
+  // Option 1: Get all values as array (most common)
+  let vals = ll-values(head)
+
+  // Option 2: Manual traversal
+  let curr = head.head
+  while curr != none {
+    let val = ll-val(head, curr)
+    // ... process val ...
+    curr = ll-next(head, curr)
+  }
+}
+```
+
+Happy Typst hacking!

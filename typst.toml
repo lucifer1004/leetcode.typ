@@ -2,11 +2,13 @@
 name = "leetcode"
 version = "0.1.0"
 entrypoint = "lib.typ"
-authors = ["lucifer1004"]
+authors = ["Gabriel Wu <@lucifer1004>"]
 license = "MIT"
-description = "LeetCode problem-solving framework in Typst"
+description = "Solve and test LeetCode problems with built-in test cases."
 repository = "https://github.com/lucifer1004/leetcode.typ"
-keywords = ["leetcode", "algorithms", "testing"]
+keywords = ["leetcode", "algorithms", "testing", "competitive-programming"]
+categories = ["utility", "scripting"]
+compiler = "0.14.0"
 
 exclude = [
   "build/",
@@ -18,4 +20,5 @@ exclude = [
   "AGENTS.md",
   "leetcode.typ",
   "example.typ",
+  "draft.typ",
 ]
