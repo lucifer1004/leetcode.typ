@@ -129,6 +129,58 @@
         border-color: var(--accent);
       }
 
+      /* Showcase Section */
+      .showcase {
+        padding: 60px 0;
+      }
+
+      .showcase-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      .showcase-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+      }
+
+      .showcase-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 184, 163, 0.15);
+      }
+
+      .showcase-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .showcase-card-info {
+        padding: 16px;
+      }
+
+      .showcase-card-title {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+
+      .showcase-card-desc {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      @media (max-width: 768px) {
+        .showcase-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       /* Stats Section */
       .stats {
         display: grid;
@@ -559,6 +611,40 @@
       </div>
     </section>
 
+    <section class="showcase container">
+      <h2 class="section-title">Beautiful Visualizations</h2>
+      <div class="showcase-grid">
+        <div class="showcase-card">
+          <img src="showcases/showcase-1.png" alt="The Skyline Problem visualization" />
+          <div class="showcase-card-info">
+            <div class="showcase-card-title">#0218 The Skyline Problem</div>
+            <div class="showcase-card-desc">Gradient sky, colored buildings with windows, and red skyline contour</div>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <img src="showcases/showcase-2.png" alt="Trapping Rain Water II 3D visualization" />
+          <div class="showcase-card-info">
+            <div class="showcase-card-title">#0407 Trapping Rain Water II</div>
+            <div class="showcase-card-desc">3D isometric view with terrain and water blocks</div>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <img src="showcases/showcase-3.png" alt="Trapping Rain Water visualization" />
+          <div class="showcase-card-info">
+            <div class="showcase-card-title">#0042 Trapping Rain Water</div>
+            <div class="showcase-card-desc">Gradient terrain with highlighted water accumulation</div>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <img src="showcases/showcase-4.png" alt="Container With Most Water visualization" />
+          <div class="showcase-card-info">
+            <div class="showcase-card-title">#0011 Container With Most Water</div>
+            <div class="showcase-card-desc">Two-pointer solution with optimal container highlight</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="container">
       <div class="stats">
         <div class="stat-card">
@@ -703,8 +789,10 @@
           Built with ❤️ using <a href="https://typst.app">Typst</a> by
           <a href="https://github.com/lucifer1004">@lucifer1004</a>
         </p>
-        <p style="margin-top: 8px; font-size: 0.875rem">
-          LeetCode problems are the property of © LeetCode.
+        <p style="margin-top: 12px; font-size: 0.875rem; color: var(--text-secondary);">
+          <strong>Disclaimer:</strong> Problem descriptions are the property of © <a href="https://leetcode.com" style="color: var(--accent);">LeetCode</a>.
+          This project is for personal learning and educational purposes only.
+          For official problem statements, please visit <a href="https://leetcode.com" style="color: var(--accent);">leetcode.com</a>.
         </p>
       </div>
     </footer>

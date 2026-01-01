@@ -3,10 +3,10 @@
 #set text(font: "New Computer Modern")
 
 // Import display functions
-#import "../problems/0218/display.typ": custom-display as skyline-display
-#import "../problems/0042/display.typ": custom-display as rain-display
-#import "../problems/0407/display.typ": custom-display as rain3d-display
-#import "../problems/0011/display.typ": custom-display as container-display
+#import "../../problems/0218/display.typ": custom-display as skyline-display
+#import "../../problems/0042/display.typ": custom-display as rain-display
+#import "../../problems/0407/display.typ": custom-display as rain3d-display
+#import "../../problems/0011/display.typ": custom-display as container-display
 
 = LeetCode.typ Visualizations
 
