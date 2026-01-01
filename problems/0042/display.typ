@@ -1,4 +1,4 @@
-// Trapping Rain Water - custom display with water visualization
+// Trapping Rain Water - Enhanced visualization
 #import "../../helpers.typ": display
 
 #let custom-display(input) = {
@@ -33,77 +33,217 @@
     calc.min(left-max.at(i), right-max.at(i)) - height.at(i),
   ))
   let max-height = calc.max(..height)
+  let total-water = water.sum()
 
-  // Render main grid with Y-axis labels
-  let rows = ()
-  for row in range(max-height).rev() {
-    // Y-axis label
-    let y-label = box(
-      width: 2em,
-      height: 1.2em,
-      align(right + horizon, text(size: 0.9em, str(row + 1))),
-    )
+  // Visualization parameters
+  let chart-width = calc.min(320pt, n * 18pt + 50pt)
+  let chart-height = 160pt
+  let margin-left = 30pt
+  let margin-bottom = 25pt
+  let margin-top = 15pt
+  let margin-right = 15pt
 
-    // Grid cells for this row
-    let row-cells = (y-label,)
-    for col in range(n) {
-      let h = height.at(col)
-      let w = water.at(col)
-      let water-level = h + w
+  let plot-width = chart-width - margin-left - margin-right
+  let plot-height = chart-height - margin-bottom - margin-top
 
-      // Determine borders: left border for first column, bottom border for bottom row
-      let borders = (:)
-      if col == 0 {
-        borders.insert("left", 1pt + black)
+  // Continuous bars - no gap
+  let bar-width = plot-width / n
+
+  // Scale functions
+  let scale-x(i) = margin-left + i * bar-width
+  let scale-y(h) = chart-height - margin-bottom - h / max-height * plot-height
+
+  v(0.5em)
+
+  box(
+    width: chart-width,
+    height: chart-height,
+    {
+      // Sky gradient background
+      place(
+        rect(
+          width: chart-width,
+          height: chart-height - margin-bottom,
+          fill: gradient.linear(
+            rgb("#E8F4FD"),
+            rgb("#F5FAFF"),
+            angle: 90deg,
+          ),
+        ),
+      )
+
+      // Ground
+      place(
+        dy: chart-height - margin-bottom,
+        rect(
+          width: chart-width,
+          height: margin-bottom,
+          fill: rgb("#D4A574"),
+        ),
+      )
+
+      // Draw water first (behind bars)
+      for i in range(n) {
+        let h = height.at(i)
+        let w = water.at(i)
+        if w > 0 {
+          let water-top = h + w
+          let x = scale-x(i)
+          let y-top = scale-y(water-top)
+          let y-bottom = scale-y(h)
+
+          // Water column
+          place(
+            dx: x,
+            dy: y-top,
+            rect(
+              width: bar-width,
+              height: y-bottom - y-top,
+              fill: gradient.linear(
+                rgb("#4A90E2").transparentize(20%),
+                rgb("#87CEEB").transparentize(30%),
+                angle: 90deg,
+              ),
+            ),
+          )
+
+          // Water surface highlight
+          place(
+            dx: x,
+            dy: y-top,
+            rect(
+              width: bar-width,
+              height: 2pt,
+              fill: white.transparentize(40%),
+            ),
+          )
+        }
       }
-      if row == 0 {
-        borders.insert("bottom", 1pt + black)
+
+      // Draw terrain bars (continuous, no gap)
+      for i in range(n) {
+        let h = height.at(i)
+        if h > 0 {
+          let x = scale-x(i)
+          let y-top = scale-y(h)
+          let y-bottom = scale-y(0)
+
+          // Bar with gradient
+          place(
+            dx: x,
+            dy: y-top,
+            rect(
+              width: bar-width,
+              height: y-bottom - y-top,
+              fill: gradient.linear(
+                rgb("#2C3E50"),
+                rgb("#34495E"),
+                angle: 0deg,
+              ),
+              stroke: (
+                left: 0.3pt + rgb("#1a252f"),
+                right: 0.3pt + rgb("#4a5a6a"),
+                top: 0.5pt + rgb("#4A5568"),
+              ),
+            ),
+          )
+        }
       }
 
-      let cell = if row < h {
-        box(width: 1.2em, height: 1.2em, fill: black, stroke: borders)
-      } else if row < water-level {
-        box(width: 1.2em, height: 1.2em, fill: rgb("#4A90E2"), stroke: borders)
-      } else {
-        box(width: 1.2em, height: 1.2em, stroke: borders)
+      // Y-axis
+      place(
+        dx: margin-left,
+        dy: margin-top,
+        line(
+          length: plot-height,
+          angle: 90deg,
+          stroke: 1pt + rgb("#333"),
+        ),
+      )
+
+      // X-axis
+      place(
+        dx: margin-left,
+        dy: chart-height - margin-bottom,
+        line(
+          length: plot-width,
+          stroke: 1pt + rgb("#333"),
+        ),
+      )
+
+      // Y-axis labels and ticks
+      let y-step = calc.max(1, calc.ceil(max-height / 4))
+      let y-val = 0
+      while y-val <= max-height {
+        let y = scale-y(y-val)
+        place(
+          dx: 0pt,
+          dy: y - 5pt,
+          box(
+            width: margin-left - 5pt,
+            align(right, text(size: 7pt, str(y-val))),
+          ),
+        )
+        if y-val > 0 {
+          // Grid line
+          place(
+            dx: margin-left,
+            dy: y,
+            line(
+              length: plot-width,
+              stroke: 0.3pt + rgb("#ccc"),
+            ),
+          )
+        }
+        y-val += y-step
       }
-      row-cells.push(cell)
-    }
-    rows.push(row-cells)
-  }
 
-  // X-axis labels
-  let x-labels = (box(width: 2em),) // Empty space for Y-axis corner
-  for i in range(n) {
-    x-labels.push(
-      box(
-        width: 1.2em,
-        height: 1.5em,
-        align(center + top, text(size: 0.9em, str(i))),
-      ),
-    )
-  }
-  rows.push(x-labels)
+      // X-axis labels
+      let x-step = calc.max(1, calc.ceil(n / 10))
+      for i in range(0, n, step: x-step) {
+        let x = scale-x(i) + bar-width / 2
+        place(
+          dx: x - 8pt,
+          dy: chart-height - margin-bottom + 5pt,
+          box(
+            width: 16pt,
+            align(center, text(size: 7pt, str(i))),
+          ),
+        )
+      }
 
-  // Flatten and render
-  let all-cells = ()
-  for row in rows {
-    all-cells = all-cells + row
-  }
+      // Legend at top left
+      place(
+        dx: margin-left + 5pt,
+        dy: 5pt,
+        box(
+          fill: white.transparentize(20%),
+          inset: 3pt,
+          radius: 2pt,
+          {
+            box(width: 8pt, height: 8pt, fill: rgb("#34495E"))
+            h(3pt)
+            text(size: 6pt)[Terrain]
+            h(6pt)
+            box(width: 8pt, height: 8pt, fill: rgb("#4A90E2"))
+            h(3pt)
+            text(size: 6pt)[Water]
+          },
+        ),
+      )
 
-  // Column gutter: only between Y-axis labels (col 0) and data (col 1+)
-  let col-gutters = (0.3em,) + range(n - 1).map(_ => 0pt)
-
-  // Row gutter: only between last data row and X-axis labels
-  let num-gaps = rows.len() - 1
-  let row-gutters = range(num-gaps).map(i => {
-    if i == num-gaps - 1 { 0.3em } else { 0pt }
-  })
-
-  grid(
-    columns: n + 1,
-    column-gutter: col-gutters,
-    row-gutter: row-gutters,
-    ..all-cells
+      // Total water label at bottom center
+      place(
+        dx: (chart-width - 60pt) / 2,
+        dy: chart-height - 5pt,
+        box(
+          fill: rgb("#4A90E2").transparentize(20%),
+          inset: 4pt,
+          radius: 3pt,
+          stroke: 0.5pt + rgb("#4A90E2"),
+          text(size: 8pt, fill: white, weight: "bold")[Total: #total-water],
+        ),
+      )
+    },
   )
 }

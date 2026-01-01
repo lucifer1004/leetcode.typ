@@ -1,4 +1,4 @@
-// Container With Most Water - custom display with water visualization
+// Container With Most Water - Enhanced visualization
 #import "../../helpers.typ": display
 
 #let custom-display(input) = {
@@ -12,118 +12,296 @@
 
   // Find the optimal two lines using two-pointer approach
   let n = height.len()
-  let left = 0
-  let right = n - 1
+  let l-ptr = 0
+  let r-ptr = n - 1
   let max-area = 0
   let best-left = 0
   let best-right = n - 1
 
-  while left < right {
-    let h = calc.min(height.at(left), height.at(right))
-    let area = h * (right - left)
+  while l-ptr < r-ptr {
+    let h = calc.min(height.at(l-ptr), height.at(r-ptr))
+    let area = h * (r-ptr - l-ptr)
     if area > max-area {
       max-area = area
-      best-left = left
-      best-right = right
+      best-left = l-ptr
+      best-right = r-ptr
     }
-    if height.at(left) < height.at(right) {
-      left += 1
+    if height.at(l-ptr) < height.at(r-ptr) {
+      l-ptr += 1
     } else {
-      right -= 1
+      r-ptr -= 1
     }
   }
 
   let max-height = calc.max(..height)
   let water-level = calc.min(height.at(best-left), height.at(best-right))
 
-  // Render grid from top to bottom
-  let rows = ()
-  for row in range(max-height).rev() {
-    // Y-axis label
-    let y-label = box(
-      width: 2em,
-      height: 1.2em,
-      align(end + horizon, text(size: 0.9em, str(row + 1))),
-    )
+  // Visualization parameters
+  let chart-width = calc.min(320pt, n * 20pt + 50pt)
+  let chart-height = 160pt
+  let margin-left = 30pt
+  let margin-bottom = 25pt
+  let margin-top = 15pt
+  let margin-right = 15pt
 
-    // Grid cells for this row
-    let row-cells = (y-label,)
-    for col in range(n) {
-      let h = height.at(col)
-      let is-selected = col == best-left or col == best-right
-      let in-container = col > best-left and col <= best-right
+  let plot-width = chart-width - margin-left - margin-right
+  let plot-height = chart-height - margin-bottom - margin-top
 
-      // Determine borders
-      let borders = (:)
+  let line-width = 4pt
 
-      // Axis lines
-      if col == 0 {
-        borders.insert("left", 1pt + black)
-      }
-      if row == 0 {
-        borders.insert("bottom", 1pt + black)
-      }
+  // Scale functions
+  let scale-x(i) = margin-left + (i + 0.5) * plot-width / n
+  let scale-y(h) = chart-height - margin-bottom - h / max-height * plot-height
 
-      // Vertical line at this position (right border)
-      if row < h {
-        if is-selected {
-          borders.insert("right", 2pt + red)
-        } else {
-          borders.insert("right", 1pt + black)
+  v(0.5em)
+
+  box(
+    width: chart-width,
+    height: chart-height,
+    {
+      // Sky gradient background
+      place(
+        rect(
+          width: chart-width,
+          height: chart-height - margin-bottom,
+          fill: gradient.linear(
+            rgb("#FFF5E6"),
+            rgb("#FFFAF0"),
+            angle: 90deg,
+          ),
+        ),
+      )
+
+      // Ground
+      place(
+        dy: chart-height - margin-bottom,
+        rect(
+          width: chart-width,
+          height: margin-bottom,
+          fill: rgb("#C4A77D"),
+        ),
+      )
+
+      // Draw water area (between the two selected lines)
+      let water-y-top = scale-y(water-level)
+      let water-y-bottom = scale-y(0)
+      let water-x-left = scale-x(best-left)
+      let water-x-right = scale-x(best-right)
+
+      // Water fill
+      place(
+        dx: water-x-left,
+        dy: water-y-top,
+        rect(
+          width: water-x-right - water-x-left,
+          height: water-y-bottom - water-y-top,
+          fill: gradient.linear(
+            rgb("#4A90E2").transparentize(30%),
+            rgb("#87CEEB").transparentize(40%),
+            angle: 90deg,
+          ),
+        ),
+      )
+
+      // Water surface line with wave effect
+      place(
+        dx: water-x-left,
+        dy: water-y-top,
+        rect(
+          width: water-x-right - water-x-left,
+          height: 3pt,
+          fill: gradient.linear(
+            white.transparentize(50%),
+            rgb("#4A90E2").transparentize(60%),
+            white.transparentize(50%),
+            angle: 0deg,
+          ),
+        ),
+      )
+
+      // Draw all vertical lines
+      for i in range(n) {
+        let h = height.at(i)
+        if h > 0 {
+          let x = scale-x(i)
+          let y-top = scale-y(h)
+          let y-bottom = scale-y(0)
+
+          let is-selected = i == best-left or i == best-right
+
+          // Line color and width
+          let line-color = if is-selected {
+            gradient.linear(
+              rgb("#E74C3C"),
+              rgb("#C0392B"),
+              angle: 90deg,
+            )
+          } else {
+            gradient.linear(
+              rgb("#7F8C8D"),
+              rgb("#95A5A6"),
+              angle: 90deg,
+            )
+          }
+
+          let lw = if is-selected { 6pt } else { line-width }
+
+          // Vertical line
+          place(
+            dx: x - lw / 2,
+            dy: y-top,
+            rect(
+              width: lw,
+              height: y-bottom - y-top,
+              fill: line-color,
+              radius: 1pt,
+            ),
+          )
+
+          // Top cap
+          place(
+            dx: x - lw / 2 - 1pt,
+            dy: y-top - 2pt,
+            rect(
+              width: lw + 2pt,
+              height: 3pt,
+              fill: if is-selected { rgb("#E74C3C") } else { rgb("#7F8C8D") },
+              radius: 1pt,
+            ),
+          )
+
+          // Selection glow effect
+          if is-selected {
+            place(
+              dx: x - lw / 2 - 3pt,
+              dy: y-top,
+              rect(
+                width: lw + 6pt,
+                height: y-bottom - y-top,
+                fill: rgb("#E74C3C").transparentize(80%),
+                radius: 2pt,
+              ),
+            )
+          }
         }
       }
 
-      // Fill: only water area
-      let fill-color = if row < water-level and in-container {
-        rgb("#4A90E2")
-      } else {
-        none
+      // Draw arrows pointing to selected lines
+      let arrow-y = margin-top + 5pt
+
+      // Left arrow
+      place(
+        dx: scale-x(best-left) - 3pt,
+        dy: arrow-y,
+        text(size: 10pt, fill: rgb("#E74C3C"))[▼],
+      )
+
+      // Right arrow
+      place(
+        dx: scale-x(best-right) - 3pt,
+        dy: arrow-y,
+        text(size: 10pt, fill: rgb("#E74C3C"))[▼],
+      )
+
+      // Y-axis
+      place(
+        dx: margin-left,
+        dy: margin-top,
+        line(
+          length: plot-height,
+          angle: 90deg,
+          stroke: 1pt + rgb("#333"),
+        ),
+      )
+
+      // X-axis
+      place(
+        dx: margin-left,
+        dy: chart-height - margin-bottom,
+        line(
+          length: plot-width,
+          stroke: 1pt + rgb("#333"),
+        ),
+      )
+
+      // Y-axis labels
+      let y-step = calc.max(1, calc.ceil(max-height / 4))
+      let y-val = 0
+      while y-val <= max-height {
+        let y = scale-y(y-val)
+        place(
+          dx: 0pt,
+          dy: y - 5pt,
+          box(
+            width: margin-left - 5pt,
+            align(right, text(size: 7pt, str(y-val))),
+          ),
+        )
+        if y-val > 0 {
+          place(
+            dx: margin-left,
+            dy: y,
+            line(
+              length: plot-width,
+              stroke: 0.3pt + rgb("#ddd"),
+            ),
+          )
+        }
+        y-val += y-step
       }
 
-      let cell = box(
-        width: 1.2em,
-        height: 1.2em,
-        inset: 1pt,
-        stroke: borders,
-        fill: fill-color,
+      // X-axis labels
+      let x-step = calc.max(1, calc.ceil(n / 10))
+      for i in range(0, n, step: x-step) {
+        let x = scale-x(i)
+        place(
+          dx: x - 8pt,
+          dy: chart-height - margin-bottom + 5pt,
+          box(
+            width: 16pt,
+            align(center, text(size: 7pt, str(i))),
+          ),
+        )
+      }
+
+      // Area label (positioned in the water)
+      let label-x = (water-x-left + water-x-right) / 2
+      let label-y = (water-y-top + water-y-bottom) / 2
+      place(
+        dx: label-x - 25pt,
+        dy: label-y - 8pt,
+        box(
+          fill: white.transparentize(20%),
+          inset: 4pt,
+          radius: 3pt,
+          stroke: 0.5pt + rgb("#4A90E2"),
+          text(
+            size: 9pt,
+            fill: rgb("#2980B9"),
+            weight: "bold",
+          )[Area: #max-area],
+        ),
       )
-      row-cells.push(cell)
-    }
-    rows.push(row-cells)
-  }
 
-  // X-axis labels
-  let x-labels = (box(width: 2em),) // Empty space for Y-axis corner
-  for i in range(n) {
-    x-labels.push(
-      box(
-        width: 1.2em,
-        height: 1.5em,
-        align(center + top, text(size: 0.9em, str(i))),
-      ),
-    )
-  }
-  rows.push(x-labels)
-
-  // Flatten and render
-  let all-cells = ()
-  for row in rows {
-    all-cells = all-cells + row
-  }
-
-  // Column gutter: only between Y-axis labels (col 0) and data (col 1+)
-  let col-gutters = (0.3em,) + range(n - 1).map(_ => 0pt)
-
-  // Row gutter: only between last data row and X-axis labels
-  let num-gaps = rows.len() - 1
-  let row-gutters = range(num-gaps).map(i => {
-    if i == num-gaps - 1 { 0.3em } else { 0pt }
-  })
-
-  grid(
-    columns: n + 1,
-    column-gutter: col-gutters,
-    row-gutter: row-gutters,
-    ..all-cells
+      // Legend
+      place(
+        dx: chart-width - 90pt,
+        dy: 5pt,
+        box(
+          fill: white.transparentize(20%),
+          inset: 3pt,
+          radius: 2pt,
+          {
+            box(width: 8pt, height: 8pt, fill: rgb("#E74C3C"), radius: 1pt)
+            h(3pt)
+            text(size: 6pt)[Selected]
+            h(5pt)
+            box(width: 8pt, height: 8pt, fill: rgb("#7F8C8D"), radius: 1pt)
+            h(3pt)
+            text(size: 6pt)[Other]
+          },
+        ),
+      )
+    },
   )
 }
