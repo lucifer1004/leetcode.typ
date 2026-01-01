@@ -17,8 +17,10 @@ exclude = [
   "Justfile",
   "templates/",
   ".git*",
+  ".github/",
   "AGENTS.md",
   "leetcode.typ",
   "example.typ",
   "draft.typ",
+  "docs/",
 ]

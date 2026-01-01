@@ -1,5 +1,8 @@
 *.pdf
 draft.typ
-!/build/leetcode.pdf
 
 .ruff_cache/
+build/
+
+# Generated from template
+docs/index.html

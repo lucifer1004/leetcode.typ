@@ -37,6 +37,9 @@ jobs:
           path: build/leetcode.pdf
           retention-days: 7
 
+      - name: Generate docs from template
+        run: python3 scripts/update_docs.py
+
       - name: Prepare GitHub Pages
         run: |
           cp build/leetcode.pdf docs/leetcode.pdf

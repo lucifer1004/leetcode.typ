@@ -354,7 +354,7 @@
     <section class="container">
       <div class="stats">
         <div class="stat-card">
-          <div class="stat-number">38</div>
+          <div class="stat-number">{{PROBLEM_COUNT}}</div>
           <div class="stat-label">Problems Included</div>
         </div>
         <div class="stat-card">
@@ -457,7 +457,7 @@
       <div class="container">
         <h2>Ready to Start?</h2>
         <p>
-          Download the complete PDF with all 38 problems and reference
+          Download the complete PDF with all {{PROBLEM_COUNT}} problems and reference
           solutions.
         </p>
         <div class="cta-group">
