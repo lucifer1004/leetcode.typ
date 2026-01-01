@@ -167,7 +167,7 @@ def create_problem(
         print("\nNext steps:")
         print(f"   1. Add test cases to {testcases_path}")
         print(f"   2. Implement reference solution in {solution_path}")
-        print('   3. Use: #import "@preview/leetcode:0.1.0": problem, test')
+        print('   3. Use: #import "lib.typ": problem, test')
         print(f"   4. Then: #problem({problem_id}) and #test({problem_id}, solution)")
 
         return True

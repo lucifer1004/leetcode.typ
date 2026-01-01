@@ -1,4 +1,6 @@
-#import "@preview/leetcode:0.1.0": problem, test
+// For local development, use lib.typ directly
+// After package is published, change to: #import "@preview/leetcode:0.1.0": problem, test
+#import "../lib.typ": problem, test
 
 // ============================================
 // Problem 1: Two Sum

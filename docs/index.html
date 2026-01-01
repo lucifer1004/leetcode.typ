@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LeetCode.typ - Solve LeetCode in Typst</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #0a0a0f;
+        --bg-secondary: #12121a;
+        --bg-card: #1a1a24;
+        --accent: #00b8a3;
+        --accent-medium: #ffc01e;
+        --accent-hard: #ff375f;
+        --text-primary: #f0f0f5;
+        --text-secondary: #8888a0;
+        --border: #2a2a3a;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Outfit",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 80px 0 60px;
+        text-align: center;
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          rgba(0, 184, 163, 0.08) 0%,
+          transparent 60%
+        );
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .logo img {
+        width: 64px;
+        height: 64px;
+      }
+
+      .logo h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--accent) 0%, #00e6c8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .tagline {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: var(--bg-primary);
+      }
+
+      .btn-primary:hover {
+        background: #00d4bc;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 184, 163, 0.3);
+      }
+
+      .btn-secondary {
+        background: var(--bg-card);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--accent);
+      }
+
+      /* Stats Section */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 40px 0;
+      }
+
+      .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .stat-number.medium {
+        color: var(--accent-medium);
+      }
+      .stat-number.hard {
+        color: var(--accent-hard);
+      }
+
+      .stat-label {
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 60px 0;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 48px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+      }
+
+      .feature-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 28px;
+        transition: border-color 0.2s ease;
+      }
+
+      .feature-card:hover {
+        border-color: var(--accent);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 16px;
+      }
+
+      .feature-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .feature-card p {
+        color: var(--text-secondary);
+      }
+
+      /* Code Preview */
+      .code-section {
+        padding: 60px 0;
+      }
+
+      .code-block {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .code-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .code-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .code-dot.red {
+        background: #ff5f57;
+      }
+      .code-dot.yellow {
+        background: #ffbd2e;
+      }
+      .code-dot.green {
+        background: #28ca42;
+      }
+
+      .code-title {
+        margin-left: 12px;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      pre {
+        padding: 24px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      .keyword {
+        color: #c678dd;
+      }
+      .function {
+        color: #61afef;
+      }
+      .string {
+        color: #98c379;
+      }
+      .comment {
+        color: #5c6370;
+      }
+      .number {
+        color: #d19a66;
+      }
+
+      /* Download Section */
+      .download {
+        padding: 80px 0;
+        text-align: center;
+        background: var(--bg-secondary);
+        border-top: 1px solid var(--border);
+      }
+
+      .download h2 {
+        font-size: 2rem;
+        margin-bottom: 16px;
+      }
+
+      .download p {
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+      }
+
+      /* Footer */
+      footer {
+        padding: 40px 0;
+        text-align: center;
+        color: var(--text-secondary);
+        border-top: 1px solid var(--border);
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero {
+          padding: 60px 0 40px;
+        }
+        .logo h1 {
+          font-size: 2rem;
+        }
+        .stats {
+          grid-template-columns: 1fr;
+        }
+        .cta-group {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="container">
+        <div class="logo">
+          <img src="logo.png" alt="LeetCode.typ Logo" />
+          <h1>LeetCode.typ</h1>
+        </div>
+        <p class="tagline">
+          Solve LeetCode problems in Typst with beautiful PDF output, built-in
+          test cases, and automatic visualization.
+        </p>
+        <div class="cta-group">
+          <a href="leetcode.pdf" class="btn btn-primary"> 📄 Download PDF </a>
+          <a
+            href="https://github.com/lucifer1004/leetcode.typ"
+            class="btn btn-secondary"
+          >
+            ⭐ View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">38</div>
+          <div class="stat-label">Problems Included</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number medium">100%</div>
+          <div class="stat-label">Built-in Test Cases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number hard">0</div>
+          <div class="stat-label">Setup Required</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features container">
+      <h2 class="section-title">Why LeetCode.typ?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Zero Configuration</h3>
+          <p>
+            Import the package and start solving. All test cases are built-in
+            and ready to use.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3>Beautiful Output</h3>
+          <p>
+            Professional PDF rendering with syntax highlighting, tree
+            visualization, and more.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧪</div>
+          <h3>Auto Validation</h3>
+          <p>
+            Instant pass/fail indicators with side-by-side comparison of
+            expected vs actual.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌳</div>
+          <h3>Data Structures</h3>
+          <p>
+            Visual rendering for binary trees, linked lists, and chessboards.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3>Functional Style</h3>
+          <p>
+            Explore algorithms with Typst's expressive functional programming
+            syntax.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3>Extensible</h3>
+          <p>
+            Custom comparators, extra test cases, and flexible rendering
+            options.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="code-section container">
+      <h2 class="section-title">Quick Start</h2>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot red"></span>
+          <span class="code-dot yellow"></span>
+          <span class="code-dot green"></span>
+          <span class="code-title">solution.typ</span>
+        </div>
+        <pre><code><span class="comment">// Import the package</span>
+<span class="comment">// For local development, use lib.typ directly</span>
+<span class="keyword">#import</span> <span class="string">"lib.typ"</span>: problem, test
+
+<span class="comment">// Display the problem</span>
+<span class="keyword">#problem</span>(<span class="number">1</span>)
+
+<span class="comment">// Write your solution</span>
+<span class="keyword">#let</span> <span class="function">solution</span>(nums, target) = {
+  <span class="keyword">let</span> d = (:)
+  <span class="keyword">for</span> (i, num) <span class="keyword">in</span> nums.<span class="function">enumerate</span>() {
+    <span class="keyword">if</span> <span class="function">str</span>(target - num) <span class="keyword">in</span> d {
+      <span class="keyword">return</span> (d.<span class="function">at</span>(<span class="function">str</span>(target - num)), i)
+    }
+    d.<span class="function">insert</span>(<span class="function">str</span>(num), i)
+  }
+}
+
+<span class="comment">// Test with built-in cases!</span>
+<span class="keyword">#test</span>(<span class="number">1</span>, solution)</code></pre>
+      </div>
+    </section>
+
+    <section class="download">
+      <div class="container">
+        <h2>Ready to Start?</h2>
+        <p>
+          Download the complete PDF with all 38 problems and reference
+          solutions.
+        </p>
+        <div class="cta-group">
+          <a href="leetcode.pdf" class="btn btn-primary">
+            📄 Download PDF (Latest Build)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>
+          Built with ❤️ using <a href="https://typst.app">Typst</a> by
+          <a href="https://github.com/lucifer1004">@lucifer1004</a>
+        </p>
+        <p style="margin-top: 8px; font-size: 0.875rem">
+          LeetCode problems are the property of © LeetCode.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
