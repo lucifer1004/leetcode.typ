@@ -68,11 +68,58 @@ labels = ["array", "hash-table"]
 ### Testing
 
 ```typst
-// draft.typ
+// draft.typ - basic testing
 #import "lib.typ": problem, test
 #problem(123)
 #import "problems/0123/solution.typ": solution
 #test(123, solution)
+```
+
+### Practice Mode
+
+````typst
+// my-practice.typ - practice workbook
+#import "lib.typ": conf, solve
+
+#show: conf.with(
+  practice: true,
+  show-answer: false,  // Set true to see reference solutions
+)
+
+// View problem + write solution + test
+#solve(1, code-block: ```typc
+let solution(nums, target) = {
+  // Your implementation
+  none
+}
+```)
+
+// Just view problem (no solution yet)
+#solve(15)
+
+// View with reference answer
+#solve(42, show-answer: true)
+
+// Add extra test cases
+#solve(1, code-block: ```typc
+let solution(nums, target) = { ... }
+```, extra-cases: (
+  (input: (nums: (99, 1), target: 100)),
+))
+````
+
+### Filtered Mode
+
+```typst
+// filtered.typ - auto-render filtered problems
+#import "lib.typ": conf
+
+#show: conf.with(
+  difficulty: "easy",        // Filter by difficulty
+  labels: ("array",),        // Filter by labels
+  id-range: (1, 50),         // Filter by ID range
+  show-answer: true,         // Show reference solutions
+)
 ```
 
 ### Special Cases
@@ -185,4 +232,4 @@ let f() = { result.push(x) }  // Error!
 - [ ] `just build` succeeds
 - [ ] Reference solution passes tests
 - [ ] No `expected:` in testcases
-- [ ] Added to `leetcode.typ`
+- [ ] Added to `available-problems` in `lib.typ`

@@ -1,17 +1,22 @@
+// Single Problem Practice Template
 // For local development, use lib.typ directly
-// After package is published, change to: #import "@preview/leetcode:0.1.0": problem, test
-#import "../lib.typ": problem, test
+// After package is published, change to: #import "@preview/leetcode:0.1.0": conf, solve
+#import "../lib.typ": conf, solve
 
-// Display the problem statement
-#problem(1)
+// Practice mode with document styling
+#show: conf.with(
+  practice: true,
+  show-title: false,
+  show-outline: false,
+  show-answer: false, // Set to true to see reference solution
+)
 
-// Your solution implementation
-#let solution(nums, target) = {
+// ============ Problem 1: Two Sum ============
+#solve(1, code-block: ```typc
+let solution(nums, target) = {
   // TODO: Implement your solution here
-  // This example problem expects you to return indices of two numbers that add up to target
+  // Return indices of two numbers that add up to target
 
   none
 }
-
-// Test your solution against the reference (uses built-in test cases)
-#test(1, solution)
+```)

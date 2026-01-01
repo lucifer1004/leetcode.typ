@@ -1,50 +1,36 @@
+// Multiple Problems Practice Template
 // For local development, use lib.typ directly
-// After package is published, change to: #import "@preview/leetcode:0.1.0": problem, test
-#import "../lib.typ": problem, test
+// After package is published, change to: #import "@preview/leetcode:0.1.0": conf, solve
+#import "../lib.typ": conf, solve
 
-// ============================================
-// Problem 1: Two Sum
-// ============================================
-#problem(1)
+// Practice mode with document styling
+#show: conf.with(
+  practice: true,
+  show-title: true,
+  show-outline: true,
+  show-answer: false, // Set to true to see reference solutions
+)
 
-#let solution(nums, target) = {
+// ============ Problem 1: Two Sum ============
+#solve(1, code-block: ```typc
+let solution(nums, target) = {
   // TODO: Implement Two Sum
   none
 }
+```)
 
-// Use built-in test cases
-#test(1, solution)
-
-// ============================================
-// Problem 2: Add Two Numbers
-// ============================================
-#pagebreak()
-#problem(2)
-
-// You can reuse the same 'solution' name for different problems
-#let solution(l1, l2) = {
+// ============ Problem 2: Add Two Numbers ============
+#solve(2, code-block: ```typc
+let solution(l1, l2) = {
   // TODO: Implement Add Two Numbers
   none
 }
+```)
 
-// Use built-in test cases
-#test(2, solution)
+// ============ Problem 3: Longest Substring ============
+// Just view the problem (not solving yet)
+#solve(3)
 
-// ============================================
-// Problem 3: Longest Substring Without Repeating Characters
-// ============================================
-#pagebreak()
-#problem(3)
-
-#let solution(s) = {
-  // TODO: Implement solution
-  none
-}
-
-// Or add extra test cases
-#test(3, solution, extra-cases: (
-  (s: "abcabcbb"),
-  (s: "bbbbb"),
-  (s: "pwwkew"),
-  (s: "myowntest"),
-))
+// ============ Problem 4: Median of Two Sorted Arrays ============
+// View problem with reference answer
+#solve(4, show-answer: true)

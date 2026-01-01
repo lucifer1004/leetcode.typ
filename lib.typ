@@ -2,13 +2,37 @@
 // Public entrypoint for @preview/leetcode package
 //
 // Exported functions:
+// - conf(...) — document configuration with filtering and practice mode
 // - problem(id), test(id, fn), answer(id), solve(id, code-block), get-test-cases(id), get-problem-path(id)
 // - get-problem-info(id) — returns metadata from problem.toml
+// - filter-problems(...), available-problems — filtering utilities
 // - linkedlist(arr), binarytree(arr), fill(value, n), display(value)
 // - ll-node(list, id), ll-val(list, id), ll-next(list, id), ll-values(list) — linked list helpers
 // - unordered-compare(a, b), float-compare(a, b), testcases(...) — testing utilities
+//
+// Usage examples:
+//   // Default mode - show all problems with test results
+//   #show: conf.with()
+//
+//   // Practice mode - manual control, user writes solutions
+//   #show: conf.with(practice: true)
+//   #problem(1)
+//   #let my-solution(...) = { ... }
+//   #test(1, my-solution)
+//
+//   // Filtered mode - show only specific problems
+//   #show: conf.with(difficulty: "easy", labels: ("array",))
 
 #import "helpers.typ": *
+
+// ============================================================================
+// Global Configuration State
+// ============================================================================
+
+// Global state for sharing configuration between conf() and solve()
+#let leetcode-config = state("leetcode-config", (
+  show-answer: false,
+))
 
 // Default validator - direct equality
 #let default-validator = (input, expected, yours) => expected == yours
@@ -212,19 +236,243 @@
   raw(solution-content, block: true, lang: "typst")
 }
 
-// Complete workflow: display code + test solution
-// Usage: pass a raw block with function definition ending with the function name
-// The main function name must be "solution"
-#let solve(id, code-block) = {
+// Complete workflow: display problem + code + test solution
+// Usage:
+//   #solve(1, code-block: ```typst
+//   let solution(nums, target) = { ... }
+//   ```)
+//
+// Or just view the problem without solving:
+//   #solve(1)
+//
+// Parameters:
+// - id: problem ID
+// - code-block: user's solution code (optional)
+// - show-answer: show reference solution (auto = use global config, true/false = override)
+// - extra-cases: additional test cases to add
+// - default-cases: if false, only use extra-cases (ignore built-in cases)
+//
+// Note: Don't use # prefix in code-block (it's eval'd in code mode)
+// The main function name must be "solution" when code-block is provided
+#let solve(
+  id,
+  code-block: none,
+  show-answer: auto,
+  extra-cases: none,
+  default-cases: true,
+) = {
   // Display problem
   problem(id)
 
+  // Determine whether to show answer (global config or local override)
+  context {
+    let cfg = leetcode-config.get()
+    let should-show-answer = if show-answer == auto {
+      cfg.show-answer
+    } else {
+      show-answer
+    }
+
+    if should-show-answer {
+      answer(id)
+    }
+  }
+
+  // If no code block provided, just show the problem (and possibly answer)
+  if code-block == none {
+    return
+  }
+
   // Display user's solution code
   heading(level: 2, outlined: false, numbering: none)[My Solution \##id]
-  show raw: it => block(stroke: 0.8pt + gray, inset: 0.6em, it)
-  code-block
+  {
+    show raw: it => block(stroke: 0.8pt + gray, inset: 0.6em, it)
+    code-block
+  }
 
   // Execute the code and test
   let solution-fn = eval(code-block.text + "\n" + "solution")
-  test(id, solution-fn)
+  test(id, solution-fn, extra-cases: extra-cases, default-cases: default-cases)
+}
+
+// ============================================================================
+// Practice Mode & Filtering API
+// ============================================================================
+
+// All available problem IDs in the repository
+#let available-problems = (
+  ..range(1, 27), // 1-26
+  33,
+  35,
+  39,
+  42,
+  46,
+  ..range(48, 52), // 48-51
+  ..range(53, 57), // 53-56
+  62,
+  69,
+  70,
+  72,
+  76,
+  78,
+  94,
+  101,
+  104,
+  110,
+  ..range(112, 114), // 112-113
+  116,
+  121,
+  144,
+  145,
+  155,
+  200,
+  ..range(206, 208), // 206-207
+  ..range(209, 211), // 209-210
+  289,
+  347,
+  547,
+  785,
+  814,
+  997,
+)
+
+// Filter problems by various criteria
+// - ids: specific problem IDs to include (takes precedence if provided)
+// - id-range: (start, end) inclusive range
+// - difficulty: "easy" | "medium" | "hard"
+// - labels: array of labels (matches if problem has ANY of these labels)
+// All conditions are combined with AND logic (except labels which use OR internally)
+#let filter-problems(
+  ids: none,
+  id-range: none,
+  difficulty: none,
+  labels: none,
+) = {
+  // Start with all available problems or specified IDs
+  let result = if ids != none { ids } else { available-problems }
+
+  // Filter by id-range (inclusive)
+  if id-range != none {
+    let (start, end) = id-range
+    result = result.filter(id => id >= start and id <= end)
+  }
+
+  // Filter by difficulty
+  if difficulty != none {
+    result = result.filter(id => {
+      let info = get-problem-info(id)
+      info.at("difficulty", default: "") == difficulty
+    })
+  }
+
+  // Filter by labels (OR logic: match if problem has ANY of the specified labels)
+  if labels != none and labels.len() > 0 {
+    result = result.filter(id => {
+      let info = get-problem-info(id)
+      let problem-labels = info.at("labels", default: ())
+      // Check if any of the filter labels match
+      labels.any(label => label in problem-labels)
+    })
+  }
+
+  result
+}
+
+// Document configuration function for practice workbook mode
+// Usage: #show: conf.with(ids: (1, 2, 3), difficulty: "medium", practice: true)
+//
+// Parameters:
+// - ids: specific problem IDs to include
+// - id-range: (start, end) inclusive range filter
+// - difficulty: "easy" | "medium" | "hard" filter
+// - labels: array of labels (matches problems with ANY of these labels)
+// - practice: if true, don't auto-render problems (user controls via solve())
+// - show-answer: if true, show reference solution code after each problem
+// - show-title: if true, show the title page
+// - show-outline: if true, show table of contents
+#let conf(
+  ids: none,
+  id-range: none,
+  difficulty: none,
+  labels: none,
+  practice: false,
+  show-answer: false,
+  show-title: true,
+  show-outline: true,
+  body,
+) = {
+  // Update global config state (for solve() to read)
+  leetcode-config.update(cfg => (
+    show-answer: show-answer,
+  ))
+
+  // Title page
+  if show-title {
+    align(center)[
+      #v(3fr)
+      #box(baseline: 12pt)[#image("images/logo.png", height: 48pt)]
+      #h(12pt)
+      #text(48pt)[*Leetcode.typ*]
+      #v(6fr)
+      // Authors
+      #if not practice {
+        text(
+          size: 24pt,
+        )[Gabriel Wu (#link("https://github.com/lucifer1004", "@lucifer1004"))]
+      }
+      #v(1fr)
+      // Build date
+      #text(size: 20pt)[
+        #datetime.today().display("[month repr:long] [day], [year]")
+      ]
+      #v(2cm)
+    ]
+    pagebreak()
+  }
+
+  // Table of contents
+  if show-outline {
+    show outline.entry: set block(above: 1.2em)
+    outline()
+  }
+
+  // Document styling
+  counter(page).update(0)
+  set smartquote(enabled: false)
+  set par(justify: true)
+  set page(numbering: "1")
+  show link: it => {
+    set text(blue)
+    underline(it)
+  }
+  show heading.where(level: 1, outlined: true): it => {
+    pagebreak(weak: true)
+    it
+    v(1.5em)
+  }
+
+  // Get filtered problems
+  let problems-to-show = filter-problems(
+    ids: ids,
+    id-range: id-range,
+    difficulty: difficulty,
+    labels: labels,
+  )
+
+  // Render problems based on mode
+  if not practice {
+    // Normal mode: auto-render all filtered problems with test results
+    for problem-id in problems-to-show {
+      problem(problem-id)
+      if show-answer {
+        answer(problem-id)
+      }
+      test(problem-id, (..args) => none)
+    }
+  }
+  // Practice mode: don't auto-render problems
+  // User has full control via problem() and test() in body
+
+  // Include body content (user's solutions, tests, etc.)
+  body
 }
