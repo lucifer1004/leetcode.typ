@@ -235,7 +235,7 @@
       // Total water label at bottom center
       place(
         dx: (chart-width - 60pt) / 2,
-        dy: chart-height - 5pt,
+        dy: chart-height - 12pt,
         box(
           fill: rgb("#4A90E2").transparentize(20%),
           inset: 4pt,

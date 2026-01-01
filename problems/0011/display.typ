@@ -264,12 +264,11 @@
         )
       }
 
-      // Area label (positioned in the water)
-      let label-x = (water-x-left + water-x-right) / 2
-      let label-y = (water-y-top + water-y-bottom) / 2
+      // Area label (positioned at bottom center)
+      let label-x = chart-width / 2
       place(
         dx: label-x - 25pt,
-        dy: label-y - 8pt,
+        dy: chart-height - 12pt,
         box(
           fill: white.transparentize(20%),
           inset: 4pt,
