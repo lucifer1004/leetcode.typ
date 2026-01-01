@@ -1,47 +1,51 @@
 // datastructures.typ - Pure data structure definitions
 // No external dependencies - this is a leaf module in the DAG
 
-// Flat linked list structure with string ID pointers
-// This avoids O(n) deep copies on every .next access
+// Linked list with closure-based accessors
+// Closures capture the internal nodes dict, avoiding O(n) parameter copying
+//
+// Usage:
+//   let list = linkedlist((1, 2, 3))
+//   let curr = list.head
+//   while curr != none {
+//     let val = (list.get-val)(curr)
+//     curr = (list.get-next)(curr)
+//   }
+//   let all-vals = (list.values)()
+//
 #let linkedlist(arr) = {
   if arr.len() == 0 {
-    return (type: "linkedlist", head: none, nodes: (:))
+    return (
+      type: "linkedlist",
+      head: none,
+      get-val: id => none,
+      get-next: id => none,
+      get-node: id => none,
+      values: () => (),
+      len: () => 0,
+      nodes: (:),
+    )
   }
+
   let nodes = (:)
   for (i, val) in arr.enumerate() {
     let id = str(i)
     let next = if i + 1 < arr.len() { str(i + 1) } else { none }
     nodes.insert(id, (val: val, next: next))
   }
-  (type: "linkedlist", head: "0", nodes: nodes)
-}
 
-// Get node by ID (or none if invalid)
-#let ll-node(list, id) = {
-  if id == none { none } else { list.nodes.at(id, default: none) }
-}
-
-// Get value at current node
-#let ll-val(list, id) = {
-  let node = ll-node(list, id)
-  if node == none { none } else { node.val }
-}
-
-// Get next node ID
-#let ll-next(list, id) = {
-  let node = ll-node(list, id)
-  if node == none { none } else { node.next }
-}
-
-// Iterate over all values (returns array)
-#let ll-values(list) = {
-  let vals = ()
-  let curr = list.head
-  while curr != none {
-    vals.push(ll-val(list, curr))
-    curr = ll-next(list, curr)
-  }
-  vals
+  (
+    type: "linkedlist",
+    head: "0",
+    // Closure accessors - O(1) without copying the whole structure
+    get-val: id => if id == none { none } else { nodes.at(id).val },
+    get-next: id => if id == none { none } else { nodes.at(id).next },
+    get-node: id => if id == none { none } else { nodes.at(id) },
+    values: () => nodes.values().map(n => n.val),
+    len: () => nodes.len(),
+    // Keep nodes for visualization (read-only)
+    nodes: nodes,
+  )
 }
 
 // Binary tree from level-order array
@@ -97,4 +101,3 @@
 
   dfs(0)
 }
-

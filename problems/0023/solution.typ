@@ -5,7 +5,8 @@
   let heads = lists.enumerate().map(it => (it.at(0), it.at(1).head))
   let heap = ()
   for (idx, head-id) in heads {
-    let val = ll-val(lists.at(idx), head-id)
+    let list = lists.at(idx)
+    let val = (list.get-val)(head-id)
     if val != none {
       heap.push((val, idx))
     }
@@ -41,11 +42,12 @@
     }
     // --- end sift-down ---
 
+    let list = lists.at(idx)
     let curr-node-id = heads.at(idx).at(1)
-    let next-id = ll-next(lists.at(idx), curr-node-id)
+    let next-id = (list.get-next)(curr-node-id)
     if next-id != none {
       heads.at(idx) = (idx, next-id)
-      let val = ll-val(lists.at(idx), next-id)
+      let val = (list.get-val)(next-id)
       if val != none {
         heap.push((val, idx))
         let curr = heap.len() - 1
@@ -72,7 +74,8 @@
   let heads = lists.enumerate().map(it => (it.at(0), it.at(1).head))
   let heap = ()
   for (idx, head-id) in heads {
-    let val = ll-val(lists.at(idx), head-id)
+    let list = lists.at(idx)
+    let val = (list.get-val)(head-id)
     if val != none {
       heap.push((val, idx))
     }
@@ -118,11 +121,12 @@
     }
     // --- end sift-down ---
 
+    let list = lists.at(idx)
     let curr-node-id = heads.at(idx).at(1)
-    let next-id = ll-next(lists.at(idx), curr-node-id)
+    let next-id = (list.get-next)(curr-node-id)
     if next-id != none {
       heads.at(idx) = (idx, next-id)
-      let val = ll-val(lists.at(idx), next-id)
+      let val = (list.get-val)(next-id)
       if val != none {
         heap.push((val, idx))
         let curr = heap.len() - 1

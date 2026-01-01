@@ -6,7 +6,7 @@
   }
 
   // Get values and reverse
-  let values = ll-values(head)
+  let values = (head.values)()
   let reversed = values.rev()
 
   // Build new linked list

@@ -1,7 +1,7 @@
 // display.typ - Display and visualization logic
 // Depends on: datastructures, utils, visualize
 
-#import "datastructures.typ": ll-values
+// No imports needed - linkedlist now has closure methods
 #import "utils.typ": chessboard, is-chessboard
 #import "visualize.typ": visualize-binarytree, visualize-linkedlist
 
@@ -35,12 +35,12 @@
   } else if type(value) == dictionary {
     let t = value.at("type", default: none)
     if t == "linkedlist" {
-      // Linked list display
-      let ret = ll-values(value)
-      if ret.len() <= MAX-LINKEDLIST-VISUALIZE {
+      // Linked list display - use closure method
+      let vals = (value.values)()
+      if vals.len() <= MAX-LINKEDLIST-VISUALIZE {
         visualize-linkedlist(value)
       } else {
-        ret
+        vals
           .map(v => display(v, render-chessboard: render-chessboard))
           .join($->$)
       }

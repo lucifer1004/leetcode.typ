@@ -1,7 +1,7 @@
 #import "../../helpers.typ": *
 
 #let solution(head) = {
-  let vals = ll-values(head)
+  let vals = (head.values)()
   let n = vals.len()
   for i in range(n) {
     if calc.rem(i, 2) == 1 {

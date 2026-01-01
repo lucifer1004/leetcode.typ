@@ -145,26 +145,26 @@ This creates a comprehensive PDF with all 38 problems and their reference soluti
 
 Pure data structure definitions, no dependencies.
 
-| Function            | Description                               |
-| ------------------- | ----------------------------------------- |
-| `linkedlist(arr)`   | Create flat linked list from array        |
-| `ll-node(list, id)` | Get node by ID                            |
-| `ll-val(list, id)`  | Get value at node ID                      |
-| `ll-next(list, id)` | Get next node ID                          |
-| `ll-values(list)`   | Get all values as array                   |
-| `binarytree(arr)`   | Create binary tree from level-order array |
+| Function          | Description                               |
+| ----------------- | ----------------------------------------- |
+| `linkedlist(arr)` | Create linked list with closure accessors |
+| `binarytree(arr)` | Create binary tree from level-order array |
 
-**Linked list structure** (flat dict with string ID pointers):
+**Linked list structure** (with closure-based O(1) accessors):
 
 ```typst
-(
-  type: "linkedlist",
-  head: "0",
-  nodes: (
-    "0": (val: 1, next: "1"),
-    "1": (val: 2, next: none),
-  )
-)
+#let list = linkedlist((1, 2, 3))
+// Structure:
+// (
+//   type: "linkedlist",
+//   head: "0",
+//   get-val: (id) => ...,    // O(1) get value
+//   get-next: (id) => ...,   // O(1) get next node ID
+//   get-node: (id) => ...,   // O(1) get full node
+//   values: () => ...,       // O(n) get all values
+//   len: () => ...,          // O(1) get length
+//   nodes: (:),              // Internal storage (for visualization)
+// )
 ```
 
 ### utils.typ
@@ -265,7 +265,7 @@ Package API entrypoint, re-exports helpers and adds high-level functions.
 **For fine-grained imports** (advanced):
 
 ```typst
-#import "datastructures.typ": linkedlist, ll-values
+#import "datastructures.typ": linkedlist
 #import "utils.typ": unordered-compare
 ```
 
@@ -495,14 +495,14 @@ The linked list uses a **flat dict with string ID pointers** instead of nested d
 ```typst
 #let solution(head) = {
   // Option 1: Get all values as array (most common)
-  let vals = ll-values(head)
+  let vals = (head.values)()
 
-  // Option 2: Manual traversal
+  // Option 2: Manual traversal with O(1) closure accessors
   let curr = head.head
   while curr != none {
-    let val = ll-val(head, curr)
+    let val = (head.get-val)(curr)
     // ... process val ...
-    curr = ll-next(head, curr)
+    curr = (head.get-next)(curr)
   }
 }
 ```
