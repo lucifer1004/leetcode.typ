@@ -145,10 +145,12 @@ This creates a comprehensive PDF with all 38 problems and their reference soluti
 
 Pure data structure definitions, no dependencies.
 
-| Function          | Description                               |
-| ----------------- | ----------------------------------------- |
-| `linkedlist(arr)` | Create linked list with closure accessors |
-| `binarytree(arr)` | Create binary tree with closure accessors |
+| Function                                            | Description                               |
+| --------------------------------------------------- | ----------------------------------------- |
+| `linkedlist(arr)`                                   | Create linked list with closure accessors |
+| `binarytree(arr)`                                   | Create binary tree with closure accessors |
+| `graph(n, edges, directed: false, weighted: false)` | Create graph with closure accessors       |
+| `graph-from-adj(adj-list)`                          | Create graph from adjacency list          |
 
 **Linked list structure** (with closure-based O(1) accessors):
 
@@ -183,6 +185,26 @@ Pure data structure definitions, no dependencies.
 //   nodes: (:),              // Internal storage (for visualization/modification)
 // )
 // Node structure: (val: int, left: id|none, right: id|none, next: id|none)
+```
+
+**Graph structure** (with closure-based O(1) accessors):
+
+```typst
+#let g = graph(4, ((0, 1), (1, 2), (2, 3)))  // undirected
+#let g = graph(4, ((0, 1), (1, 2)), directed: true)  // directed
+#let g = graph(3, ((0, 1, 5), (1, 2, 3)), weighted: true)  // weighted
+// Structure:
+// (
+//   type: "graph",
+//   directed: false,
+//   weighted: false,
+//   n: 4,
+//   nodes: ("0": (val: 0), ...),
+//   adj: ("0": ((to: "1", weight: 1), ...), ...),
+//   get-neighbors: (id) => ...,  // O(1) get neighbor IDs
+//   get-edges: (id) => ...,      // O(1) get edges with weights
+//   get-node: (id) => ...,       // O(1) get node
+// )
 ```
 
 ### utils.typ

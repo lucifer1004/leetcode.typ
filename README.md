@@ -8,7 +8,7 @@ A Typst package for solving LeetCode problems with beautiful PDF output and auto
 - **Beautiful Output**: Automatic formatting with professional PDF rendering
 - **Test Visualization**: Side-by-side comparison of your output vs. expected results
 - **Auto-Validation**: Instant pass/fail indicators
-- **58 Problems**: Curated collection of classic LeetCode problems
+- **61 Problems**: Curated collection of classic LeetCode problems
 - **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
@@ -136,9 +136,12 @@ typst watch my-solution.typ
 | 206 | Reverse Linked List                            | Easy       |
 | 207 | Course Schedule                                | Medium     |
 | 209 | Minimum Size Subarray Sum                      | Medium     |
+| 210 | Course Schedule II                             | Medium     |
 | 289 | Game of Life                                   | Medium     |
 | 347 | Top K Frequent Elements                        | Medium     |
+| 785 | Is Graph Bipartite?                            | Medium     |
 | 814 | Binary Tree Pruning                            | Medium     |
+| 997 | Find the Town Judge                            | Easy       |
 
 ## Multiple Problems in One File
 

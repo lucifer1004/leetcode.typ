@@ -146,3 +146,98 @@
     get-node: id => if id == none { none } else { nodes.at(id) },
   )
 }
+
+// Graph with closure-based accessors
+// Supports directed/undirected and weighted/unweighted graphs
+//
+// Usage:
+//   let g = graph(4, ((0, 1), (1, 2), (2, 3)))  // undirected
+//   let g = graph(4, ((0, 1), (1, 2)), directed: true)  // directed
+//   let g = graph(3, ((0, 1, 5), (1, 2, 3)), weighted: true)  // weighted
+//   let neighbors = (g.get-neighbors)("0")  // => ("1",)
+//   let edges = (g.get-edges)("0")  // => ((to: "1", weight: 1),)
+//
+#let graph(n, edges, directed: false, weighted: false) = {
+  if n == 0 {
+    return (
+      type: "graph",
+      directed: directed,
+      weighted: weighted,
+      n: 0,
+      nodes: (:),
+      adj: (:),
+      get-neighbors: id => (),
+      get-edges: id => (),
+      get-node: id => none,
+    )
+  }
+
+  // Initialize nodes and adjacency lists
+  let nodes = (:)
+  let adj = (:)
+  for i in range(n) {
+    let id = str(i)
+    nodes.insert(id, (val: i))
+    adj.insert(id, ())
+  }
+
+  // Add edges
+  for edge in edges {
+    let u = str(edge.at(0))
+    let v = str(edge.at(1))
+    let weight = if weighted { edge.at(2) } else { 1 }
+
+    adj.at(u).push((to: v, weight: weight))
+    if not directed {
+      adj.at(v).push((to: u, weight: weight))
+    }
+  }
+
+  (
+    type: "graph",
+    directed: directed,
+    weighted: weighted,
+    n: n,
+    nodes: nodes,
+    adj: adj,
+    // Closure accessors
+    get-neighbors: id => if id == none { () } else {
+      adj.at(id).map(e => e.to)
+    },
+    get-edges: id => if id == none { () } else { adj.at(id) },
+    get-node: id => if id == none { none } else { nodes.at(id) },
+  )
+}
+
+// Create graph from adjacency list (for problems like 785)
+// Input: adj-list where adj-list[i] is array of neighbors of node i
+//
+// Usage:
+//   let g = graph-from-adj(((1, 2, 3), (0, 2), (0, 1, 3), (0, 2)))
+//   // Creates undirected graph with 4 nodes
+//
+#let graph-from-adj(adj-list) = {
+  let n = adj-list.len()
+  if n == 0 {
+    return graph(0, ())
+  }
+
+  // Convert adjacency list to edge list (avoid duplicates for undirected)
+  let edges = ()
+  let seen = (:)
+
+  for (u, neighbors) in adj-list.enumerate() {
+    for v in neighbors {
+      // Only add edge once (u < v) to avoid duplicates
+      let key = if u < v { str(u) + "-" + str(v) } else {
+        str(v) + "-" + str(u)
+      }
+      if key not in seen {
+        seen.insert(key, true)
+        edges.push((u, v))
+      }
+    }
+  }
+
+  graph(n, edges, directed: false)
+}

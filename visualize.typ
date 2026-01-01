@@ -300,3 +300,114 @@
     ..edges,
   )
 }
+
+// Graph visualization defaults
+#let DEFAULT-GRAPH-RADIUS = 2.0 // Layout radius
+#let DEFAULT-GRAPH-NODE-SIZE = 1.8em
+
+// Graph visualization using circular layout
+#let visualize-graph(
+  g,
+  radius: DEFAULT-GRAPH-RADIUS,
+  node-size: DEFAULT-GRAPH-NODE-SIZE,
+  node-fill: DEFAULT-NODE-FILL,
+) = {
+  import "@preview/fletcher:0.5.8": diagram, edge, node
+
+  // Validate input
+  if type(g) != dictionary or g.at("type", default: none) != "graph" {
+    return none
+  }
+
+  // Handle empty graph
+  if g.n == 0 {
+    return {
+      set text(6pt)
+      diagram(
+        node-fill: gray.lighten(60%),
+        spacing: 1.2em,
+        node((0, 0), "∅", width: node-size, height: node-size, shape: "circle"),
+      )
+    }
+  }
+
+  // Calculate positions using circular layout
+  let positions = (:)
+  for i in range(g.n) {
+    let id = str(i)
+    let angle = 2 * calc.pi * i / g.n - calc.pi / 2 // Start from top
+    let x = radius * calc.cos(angle)
+    let y = radius * calc.sin(angle)
+    positions.insert(id, (x, y))
+  }
+
+  // Build nodes
+  let nodes = ()
+  for i in range(g.n) {
+    let id = str(i)
+    let pos = positions.at(id)
+    nodes.push(node(
+      pos,
+      str(i),
+      width: node-size,
+      height: node-size,
+      shape: "circle",
+    ))
+  }
+
+  // Build edges (avoid duplicates for undirected graphs)
+  let edges = ()
+  let seen-edges = (:)
+
+  for i in range(g.n) {
+    let u = str(i)
+    let u-pos = positions.at(u)
+
+    for e in g.adj.at(u) {
+      let v = e.to
+      let v-pos = positions.at(v)
+
+      // For undirected graphs, only draw each edge once
+      let edge-key = if g.directed {
+        u + "->" + v
+      } else {
+        let (a, b) = if u < v { (u, v) } else { (v, u) }
+        a + "-" + b
+      }
+
+      if edge-key not in seen-edges {
+        seen-edges.insert(edge-key, true)
+
+        // Edge style
+        let mark = if g.directed { "->" } else { "-" }
+
+        if g.weighted and e.weight != 1 {
+          edges.push(edge(
+            u-pos,
+            v-pos,
+            [#e.weight],
+            mark,
+            stroke: DEFAULT-EDGE-STROKE,
+            label-side: center,
+          ))
+        } else {
+          edges.push(edge(
+            u-pos,
+            v-pos,
+            mark,
+            stroke: DEFAULT-EDGE-STROKE,
+          ))
+        }
+      }
+    }
+  }
+
+  set text(6pt)
+  diagram(
+    node-fill: node-fill,
+    node-stroke: DEFAULT-EDGE-STROKE,
+    spacing: 1.2em,
+    ..nodes,
+    ..edges,
+  )
+}

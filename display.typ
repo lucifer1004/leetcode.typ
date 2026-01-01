@@ -3,7 +3,9 @@
 
 // No imports needed - linkedlist now has closure methods
 #import "utils.typ": chessboard, is-chessboard
-#import "visualize.typ": visualize-binarytree, visualize-linkedlist
+#import "visualize.typ": (
+  visualize-binarytree, visualize-graph, visualize-linkedlist,
+)
 
 // Display thresholds - avoid magic numbers
 #let MAX-ARRAY-DISPLAY = 210
@@ -52,6 +54,9 @@
         .values()
         .any(n => n.at("next", default: none) != none)
       visualize-binarytree(value, show-nulls: false, show-next: has-next)
+    } else if t == "graph" {
+      // Graph display
+      visualize-graph(value)
     } else {
       repr(value)
     }
