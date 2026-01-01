@@ -1,19 +1,21 @@
 #import "../../helpers.typ": *
 
 #let solution(root) = {
-  if root == none or root.val == none {
+  if root.root == none {
     return ()
   }
 
-  let stack = (root,)
+  let stack = (root.root,)
   let output = ()
 
   while stack.len() > 0 {
-    let node = stack.pop()
-    output.push(node.val)
+    let id = stack.pop()
+    output.push((root.get-val)(id))
 
-    if node.right != none { stack.push(node.right) }
-    if node.left != none { stack.push(node.left) }
+    let right-id = (root.get-right)(id)
+    let left-id = (root.get-left)(id)
+    if right-id != none { stack.push(right-id) }
+    if left-id != none { stack.push(left-id) }
   }
   output
 }

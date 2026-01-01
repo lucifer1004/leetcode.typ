@@ -17,4 +17,3 @@
 
   sorted.slice(0, k).map(pair => int(pair.at(0)))
 }
-

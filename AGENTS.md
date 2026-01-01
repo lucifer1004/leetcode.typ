@@ -148,7 +148,7 @@ Pure data structure definitions, no dependencies.
 | Function          | Description                               |
 | ----------------- | ----------------------------------------- |
 | `linkedlist(arr)` | Create linked list with closure accessors |
-| `binarytree(arr)` | Create binary tree from level-order array |
+| `binarytree(arr)` | Create binary tree with closure accessors |
 
 **Linked list structure** (with closure-based O(1) accessors):
 
@@ -165,6 +165,24 @@ Pure data structure definitions, no dependencies.
 //   len: () => ...,          // O(1) get length
 //   nodes: (:),              // Internal storage (for visualization)
 // )
+```
+
+**Binary tree structure** (with closure-based O(1) accessors):
+
+```typst
+#let tree = binarytree((1, 2, 3, 4, 5))
+// Structure:
+// (
+//   type: "binarytree",
+//   root: "0",
+//   get-val: (id) => ...,    // O(1) get value
+//   get-left: (id) => ...,   // O(1) get left child ID
+//   get-right: (id) => ...,  // O(1) get right child ID
+//   get-next: (id) => ...,   // O(1) get next pointer (for 116/117)
+//   get-node: (id) => ...,   // O(1) get full node
+//   nodes: (:),              // Internal storage (for visualization/modification)
+// )
+// Node structure: (val: int, left: id|none, right: id|none, next: id|none)
 ```
 
 ### utils.typ
@@ -490,7 +508,7 @@ The linked list uses a **flat dict with string ID pointers** instead of nested d
 - Supports cyclic linked lists (just point next to existing ID)
 - More memory efficient for large lists
 
-**Usage in solutions**:
+**Usage in linked list solutions**:
 
 ```typst
 #let solution(head) = {
@@ -505,6 +523,30 @@ The linked list uses a **flat dict with string ID pointers** instead of nested d
     curr = (head.get-next)(curr)
   }
 }
+```
+
+**Usage in binary tree solutions**:
+
+```typst
+#let solution(root) = {
+  // Empty tree check
+  if root.root == none { return 0 }
+
+  // Recursive traversal with O(1) closure accessors
+  let dfs(id) = {
+    if id == none { return 0 }
+    let val = (root.get-val)(id)
+    let left = dfs((root.get-left)(id))
+    let right = dfs((root.get-right)(id))
+    1 + calc.max(left, right)
+  }
+
+  dfs(root.root)
+}
+
+// Modify nodes (for tree modification problems)
+#let old-node = root.nodes.at("0")
+#root.nodes.insert("0", (..old-node, val: 99))
 ```
 
 Happy Typst hacking!

@@ -6,4 +6,3 @@
   (head: linkedlist((1, 2))),
   (head: linkedlist(())),
 )
-

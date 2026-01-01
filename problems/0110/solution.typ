@@ -1,15 +1,20 @@
 #import "../../helpers.typ": *
 
 #let solution(root) = {
-  let balanced(node) = if node == none or node.val == none {
-    (true, 0)
-  } else {
-    let left = balanced(node.left)
-    let right = balanced(node.right)
+  let balanced(id) = {
+    if id == none {
+      return (true, 0)
+    }
+    let left = balanced((root.get-left)(id))
+    let right = balanced((root.get-right)(id))
     (
       left.at(0) and right.at(0) and calc.abs(left.at(1) - right.at(1)) <= 1,
       calc.max(left.at(1), right.at(1)) + 1,
     )
   }
-  balanced(root).at(0)
+
+  if root.root == none {
+    return true
+  }
+  balanced(root.root).at(0)
 }

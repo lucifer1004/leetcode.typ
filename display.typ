@@ -46,7 +46,12 @@
       }
     } else if t == "binarytree" {
       // Binary tree display
-      visualize-binarytree(value, show-nulls: false)
+      // Auto-detect if tree has populated next pointers
+      let has-next = value
+        .nodes
+        .values()
+        .any(n => n.at("next", default: none) != none)
+      visualize-binarytree(value, show-nulls: false, show-next: has-next)
     } else {
       repr(value)
     }

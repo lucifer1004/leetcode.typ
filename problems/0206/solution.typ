@@ -12,4 +12,3 @@
   // Build new linked list
   linkedlist(reversed)
 }
-

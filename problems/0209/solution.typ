@@ -18,4 +18,3 @@
 
   if min-len == n + 1 { 0 } else { min-len }
 }
-

@@ -8,7 +8,7 @@ A Typst package for solving LeetCode problems with beautiful PDF output and auto
 - **Beautiful Output**: Automatic formatting with professional PDF rendering
 - **Test Visualization**: Side-by-side comparison of your output vs. expected results
 - **Auto-Validation**: Instant pass/fail indicators
-- **57 Problems**: Curated collection of classic LeetCode problems
+- **58 Problems**: Curated collection of classic LeetCode problems
 - **Extensible**: Custom comparators, chessboard rendering, and more
 
 ## Installation
@@ -127,6 +127,7 @@ typst watch my-solution.typ
 | 110 | Balanced Binary Tree                           | Easy       |
 | 112 | Path Sum                                       | Easy       |
 | 113 | Path Sum II                                    | Medium     |
+| 116 | Populating Next Right Pointers in Each Node    | Medium     |
 | 121 | Best Time to Buy and Sell Stock                | Easy       |
 | 144 | Binary Tree Preorder Traversal                 | Easy       |
 | 145 | Binary Tree Postorder Traversal                | Easy       |

@@ -28,7 +28,7 @@ SOLUTION_TEMPLATE = """#import "../../helpers.typ": *
 
 #let solution({params}) = {{
   // Reference solution implementation
-  
+
   none
 }}
 """

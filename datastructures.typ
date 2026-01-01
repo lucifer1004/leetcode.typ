@@ -48,56 +48,101 @@
   )
 }
 
-// Binary tree from level-order array
+// Binary tree with closure-based accessors
+// Flat structure with string ID pointers, similar to linkedlist
+//
+// Usage:
+//   let tree = binarytree((1, 2, 3, 4, 5))
+//   let root = tree.root
+//   let val = (tree.get-val)(root)
+//   let left-id = (tree.get-left)(root)
+//   // Modify: tree.nodes.insert(id, (..tree.nodes.at(id), val: new-val))
+//
 #let binarytree(arr) = {
   let n = arr.len()
   if n == 0 or arr.at(0) == none {
-    return (val: none, left: none, right: none, type: "binarytree")
+    return (
+      type: "binarytree",
+      root: none,
+      nodes: (:),
+      get-val: id => none,
+      get-left: id => none,
+      get-right: id => none,
+      get-next: id => none,
+      get-node: id => none,
+    )
   }
 
-  // left/right child index arrays, length n, init to none
-  let left = ()
-  let right = ()
-  for _ in range(n) {
-    left.push(none)
-    right.push(none)
-  }
+  let nodes = (:)
 
-  // queue of indices (implemented by array + head pointer)
+  // BFS to build node relationships
   let q = (0,)
   let qh = 0
   let pos = 1
 
+  // Initialize root node (next: none for 116/117 compatibility)
+  nodes.insert("0", (val: arr.at(0), left: none, right: none, next: none))
+
   while qh < q.len() and pos < n {
     let parent = q.at(qh)
+    let parent-id = str(parent)
     qh += 1
 
-    // left child
+    let left-id = none
+    let right-id = none
+
+    // Left child
     if pos < n {
       if arr.at(pos) != none {
-        left.at(parent) = pos
+        left-id = str(pos)
+        nodes.insert(left-id, (
+          val: arr.at(pos),
+          left: none,
+          right: none,
+          next: none,
+        ))
         q.push(pos)
       }
       pos += 1
     }
 
-    // right child
+    // Right child
     if pos < n {
       if arr.at(pos) != none {
-        right.at(parent) = pos
+        right-id = str(pos)
+        nodes.insert(right-id, (
+          val: arr.at(pos),
+          left: none,
+          right: none,
+          next: none,
+        ))
         q.push(pos)
       }
       pos += 1
     }
+
+    // Update parent's left/right pointers (preserve next)
+    let parent-node = nodes.at(parent-id)
+    nodes.insert(
+      parent-id,
+      (
+        val: parent-node.val,
+        left: left-id,
+        right: right-id,
+        next: parent-node.next,
+      ),
+    )
   }
 
-  // expand indices into nested dicts
-  let dfs(i) = (
-    val: arr.at(i),
-    left: if left.at(i) == none { none } else { dfs(left.at(i)) },
-    right: if right.at(i) == none { none } else { dfs(right.at(i)) },
+  (
     type: "binarytree",
+    root: "0",
+    nodes: nodes,
+    // Closure accessors - O(1) without copying the whole structure
+    get-val: id => if id == none { none } else { nodes.at(id).val },
+    get-left: id => if id == none { none } else { nodes.at(id).left },
+    get-right: id => if id == none { none } else { nodes.at(id).right },
+    get-next: id => if id == none { none } else { nodes.at(id).next },
+    get-node: id => if id == none { none } else { nodes.at(id) },
   )
-
-  dfs(0)
 }

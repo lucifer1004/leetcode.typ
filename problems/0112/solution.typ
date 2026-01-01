@@ -1,22 +1,25 @@
 #import "../../helpers.typ": *
 
 #let solution(root, target-sum) = {
-  if root.val == none {
+  if root.root == none {
     return false
   }
 
-  let dfs(node, sum) = {
-    if node == none or node.val == none {
+  let dfs(id, sum) = {
+    if id == none {
       return false
     }
-    let result = node.val + sum == target-sum
-    result = (
-      result
-        or dfs(node.left, node.val + sum)
-        or dfs(node.right, node.val + sum)
-    )
-    result
+    let val = (root.get-val)(id)
+    let left-id = (root.get-left)(id)
+    let right-id = (root.get-right)(id)
+
+    // Leaf node check
+    if left-id == none and right-id == none {
+      return val + sum == target-sum
+    }
+
+    dfs(left-id, val + sum) or dfs(right-id, val + sum)
   }
 
-  dfs(root, 0)
+  dfs(root.root, 0)
 }

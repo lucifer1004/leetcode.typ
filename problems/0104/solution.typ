@@ -2,19 +2,18 @@
 
 #let solution(root) = {
   // Empty tree check
-  if root.val == none {
+  if root.root == none {
     return 0
   }
 
-  let max-depth(node) = {
-    if node == none or node.val == none {
+  let max-depth(id) = {
+    if id == none {
       return 0
     }
-    let left = max-depth(node.left)
-    let right = max-depth(node.right)
+    let left = max-depth((root.get-left)(id))
+    let right = max-depth((root.get-right)(id))
     1 + calc.max(left, right)
   }
 
-  max-depth(root)
+  max-depth(root.root)
 }
-

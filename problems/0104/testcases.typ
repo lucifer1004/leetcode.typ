@@ -6,4 +6,3 @@
   (root: binarytree((1, none, 2))),
   (root: binarytree((0,))),
 )
-
