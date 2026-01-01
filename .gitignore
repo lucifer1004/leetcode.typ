@@ -1,10 +1,5 @@
 *.pdf
-/*.typ
-!/example.typ
-!/lib.typ
-!/visualize.typ
-!/helpers.typ
-!/leetcode.typ
+draft.typ
 !/build/leetcode.pdf
 
 .ruff_cache/

@@ -9,6 +9,12 @@
 
 #import "helpers.typ": *
 
+// Comparator dispatch table - add new comparators here
+#let comparators = (
+  "unordered-compare": unordered-compare,
+  "float-compare": float-compare,
+)
+
 // Helper to format problem ID
 #let format-id(id) = {
   let id-str = str(id)
@@ -31,6 +37,34 @@
   let path = "problems/" + id-str + "/testcases.typ"
   import path: cases
   cases
+}
+
+// Try to load metadata from testcases file
+// Returns (comparator, render-chessboard) tuple
+#let load-metadata(base, default-comp, default-render) = {
+  let testcases-content = read(base + "testcases.typ")
+
+  // Check for metadata definition (must be at start of line to avoid comments)
+  if (
+    not testcases-content.contains("\n#let metadata")
+      and not testcases-content.starts-with("#let metadata")
+  ) {
+    return (default-comp, default-render)
+  }
+
+  import (base + "testcases.typ"): metadata
+
+  // Resolve comparator from dispatch table
+  let comp = default-comp
+  if "comparator" in metadata {
+    let comp-name = metadata.at("comparator")
+    if comp-name in comparators {
+      comp = comparators.at(comp-name)
+    }
+  }
+
+  let render-chess = metadata.at("render-chessboard", default: default-render)
+  (comp, render-chess)
 }
 
 // Automatic test with built-in test cases and metadata
@@ -60,26 +94,8 @@
     extra-cases
   }
 
-  // Check if metadata exists by reading the file
-  let comp = comparator
-  let render-chess = render-chessboard
-
-  let testcases-content = read(base + "testcases.typ")
-  if testcases-content.contains("#let metadata") {
-    import (base + "testcases.typ"): metadata
-
-    // Resolve comparator
-    if "comparator" in metadata {
-      let comp-name = metadata.at("comparator")
-      if comp-name == "unordered-compare" {
-        comp = unordered-compare
-      }
-      if comp-name == "float-compare" {
-        comp = float-compare
-      }
-    }
-    render-chess = metadata.at("render-chessboard", default: false)
-  }
+  // Load metadata if present
+  let (comp, render-chess) = load-metadata(base, comparator, render-chessboard)
 
   testcases(
     solution-fn,

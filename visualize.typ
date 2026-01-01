@@ -1,12 +1,26 @@
+// visualize.typ - Data structure visualization
+// Depends on: cetz, fletcher (external packages)
+
 #import "@preview/cetz:0.4.2" as cetz
 #import cetz.tree
+
+// Binary tree visualization defaults
+#let DEFAULT-TREE-SPREAD = 0.8
+#let DEFAULT-TREE-GROW = 0.6
+#let DEFAULT-TREE-RADIUS = 0.3
+#let DEFAULT-STROKE-THICKNESS = 1pt
+
+// Linked list visualization defaults
+#let DEFAULT-LIST-SPACING = 1.2em
+#let DEFAULT-LIST-FONT-SIZE = 6pt
+#let DEFAULT-CYCLE-BEND = -40deg
 
 #let visualize-binarytree(
   root,
   direction: "down",
-  spread: 0.8,
-  grow: 0.6,
-  radius: 0.3,
+  spread: DEFAULT-TREE-SPREAD,
+  grow: DEFAULT-TREE-GROW,
+  radius: DEFAULT-TREE-RADIUS,
   show-nulls: false,
 ) = {
   // dict tree -> CeTZ tree node array
@@ -32,7 +46,9 @@
     import cetz.draw: *
 
     if data == none {
-      circle((0, 0), radius: radius, fill: white, stroke: (thickness: 1pt))
+      circle((0, 0), radius: radius, fill: white, stroke: (
+        thickness: DEFAULT-STROKE-THICKNESS,
+      ))
       content((0, 0), "∅")
       return
     }
@@ -43,19 +59,20 @@
       spread: spread,
       grow: grow,
 
-      // draw-node must draw at (0,0) in the node's local coord system :contentReference[oaicite:1]{index=1}
       draw-node: node => {
         if node.content != none or show-nulls {
-          circle((0, 0), radius: radius, fill: white, stroke: (thickness: 1pt))
+          circle((0, 0), radius: radius, fill: white, stroke: (
+            thickness: DEFAULT-STROKE-THICKNESS,
+          ))
           content((0, 0), if node.content != none { node.content } else { "∅" })
         }
       },
 
-      // draw-edge gets names + nodes; use names as anchors :contentReference[oaicite:2]{index=2}
       draw-edge: (source, target, parent, child) => {
-        // simplest: connect node anchors directly
         if child != none and (child.content != none or show-nulls) {
-          line(source + ".south", target + ".north", stroke: (thickness: 1pt))
+          line(source + ".south", target + ".north", stroke: (
+            thickness: DEFAULT-STROKE-THICKNESS,
+          ))
         }
       },
     )
@@ -65,8 +82,8 @@
 #let visualize-linkedlist(
   list,
   direction: "right",
-  step: .85,
-  radius: .25,
+  spacing: DEFAULT-LIST-SPACING,
+  font-size: DEFAULT-LIST-FONT-SIZE,
 ) = {
   import "@preview/fletcher:0.5.8": diagram, edge, node
 
@@ -76,14 +93,25 @@
     return ()
   }
 
+  // Handle empty linked list - display special ∅ node
+  if list.head == none or list.nodes.len() == 0 {
+    return {
+      set text(font-size)
+      diagram(
+        node-fill: gray.lighten(60%),
+        spacing: spacing,
+        node((0, 0), "∅"),
+      )
+    }
+  }
+
   // Extract values from flat linked list structure with cycle detection
   let vals = ()
-  let id-to-idx = (:) // Map node ID to its index in vals
-  let cycle-target = none // Index where cycle points back to (if any)
+  let id-to-idx = (:)
+  let cycle-target = none
   let curr = list.head
   let idx = 0
   while curr != none {
-    // Check if we've visited this node before (cycle detected)
     if curr in id-to-idx {
       cycle-target = id-to-idx.at(curr)
       break
@@ -112,10 +140,16 @@
   // Add cycle edge if cycle was detected
   if cycle-target != none and vals.len() > 0 {
     let last-idx = vals.len() - 1
-    edges.push(edge((last-idx, 0), (cycle-target, 0), ``, "-|>", bend: -40deg))
+    edges.push(edge(
+      (last-idx, 0),
+      (cycle-target, 0),
+      ``,
+      "-|>",
+      bend: DEFAULT-CYCLE-BEND,
+    ))
   }
 
-  set text(6pt)
+  set text(font-size)
   diagram(
     node-fill: gradient.radial(
       blue.lighten(80%),
@@ -123,7 +157,7 @@
       center: (30%, 20%),
       radius: 80%,
     ),
-    spacing: 1.2em,
+    spacing: spacing,
     ..nodes,
     ..edges,
   )
