@@ -6,12 +6,16 @@
   if type(value) != array or value.len() == 0 {
     return false
   }
-  if type(value.at(0)) != str {
+  let first-row = value.at(0)
+  if type(first-row) != array and type(first-row) != str {
     return false
   }
-  let size = value.len()
+  if is-chessboard(first-row) {
+    return false
+  }
+  let row-size = value.at(0).len()
   for row in value {
-    if type(row) != str or row.len() != size {
+    if row.len() != row-size {
       return false
     }
   }
@@ -25,7 +29,9 @@
   let width = board.at(0).len()
   let cells = ()
   for r in range(board.len()) {
-    let chars = board.at(r).clusters()
+    let chars = if type(board.at(r)) == array { board.at(r) } else {
+      board.at(r).clusters()
+    }
     for c in range(width) {
       let ch = chars.at(c)
       let content = if ch == "Q" {
@@ -33,7 +39,7 @@
       } else if ch == "." {
         text(fill: gray)[·]
       } else {
-        text(weight: "bold")[ch]
+        text(weight: "bold")[#ch]
       }
       cells.push(content)
     }
