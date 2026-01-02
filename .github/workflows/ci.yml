@@ -24,11 +24,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
       - name: Install typstyle
         run: |
           sudo curl -fsSL -o /usr/local/bin/typstyle https://github.com/typstyle-rs/typstyle/releases/latest/download/typstyle-x86_64-unknown-linux-gnu
@@ -40,8 +35,8 @@ jobs:
           sudo mv /tmp/taplo /usr/local/bin/taplo
           sudo chmod +x /usr/local/bin/taplo
 
-      - name: Run pre-commit
-        uses: pre-commit/action@v3.0.1
+      - name: Run prek
+        uses: j178/prek-action@v1
 
   build:
     runs-on: ubuntu-latest

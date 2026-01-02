@@ -1,13 +1,11 @@
-fmt:
-  ruff check --fix .
-  ruff format .
-  typstyle -i .
-  prettier --write .
-  taplo fmt
-
-# Run pre-commit hooks
+# Run pre-commit hooks (prefer prek, fallback to pre-commit)
+[unix]
 pre-commit:
-  pre-commit run --all-files
+  @if command -v prek > /dev/null 2>&1; then prek run --all-files; else pre-commit run --all-files; fi
+
+[windows]
+pre-commit:
+  @if where prek >nul 2>&1 (prek run --all-files) else (pre-commit run --all-files)
 
 # Create a new problem (usage: just create 22)
 create id:
