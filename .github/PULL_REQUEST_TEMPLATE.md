@@ -12,6 +12,7 @@ Brief description of what this PR does.
 
 ## Checklist
 
+- [ ] I have run `just pre-commit` and all hooks pass
 - [ ] I have run `just build` and it compiles without errors
 - [ ] My code follows the existing code style
 - [ ] I have updated the documentation (README.md, AGENTS.md) if needed
@@ -25,6 +26,7 @@ If adding a new problem:
 - Problem ID: #
 - Problem Title:
 - Files added:
+  - [ ] `problems/XXXX/problem.toml`
   - [ ] `problems/XXXX/description.typ`
   - [ ] `problems/XXXX/solution.typ`
   - [ ] `problems/XXXX/testcases.typ`
