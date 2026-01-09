@@ -5,7 +5,7 @@ pre-commit:
 
 [windows]
 pre-commit:
-  @if where prek >nul 2>&1 (prek run --all-files) else (pre-commit run --all-files)
+  @where prek >nul 2>&1 (prek run --all-files) else (pre-commit run --all-files)
 
 # Create a new problem (usage: just create 22)
 create id:
