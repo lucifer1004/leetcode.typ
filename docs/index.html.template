@@ -747,7 +747,7 @@
         </div>
         <pre><code><span class="comment">// Import the package</span>
 <span class="comment">// For local development, use lib.typ directly</span>
-<span class="keyword">#import</span> <span class="string">"lib.typ"</span>: problem, test
+<span class="keyword">#import</span> <span class="string">"@preview/leetcode-livebook:0.1.1"</span>: problem, test
 
 <span class="comment">// Display the problem</span>
 <span class="keyword">#problem</span>(<span class="number">1</span>)

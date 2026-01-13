@@ -1,6 +1,6 @@
 [package]
 name = "leetcode-livebook"
-version = "0.1.0"
+version = "0.1.1"
 entrypoint = "lib.typ"
 authors = ["Gabriel Wu <@lucifer1004>"]
 license = "MIT"

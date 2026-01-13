@@ -17,7 +17,7 @@ Steps to reproduce the behavior:
 1. Create a file with this content:
 
 ```typst
-#import "@preview/leetcode:0.1.0": problem, test
+#import "@preview/leetcode:0.1.1": problem, test
 
 // your code here
 ```
@@ -36,7 +36,7 @@ What actually happened.
 ## Environment
 
 - Typst version: [e.g., 0.14.0]
-- Package version: [e.g., 0.1.0]
+- Package version: [e.g., 0.1.1]
 - OS: [e.g., macOS 14.0, Windows 11, Ubuntu 22.04]
 
 ## Additional Context
